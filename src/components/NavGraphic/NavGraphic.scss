@@ -1,0 +1,122 @@
+.GraphicNav {
+            $widthNavBtn: 100px;
+            max-width: 1280px;
+            width: 100%;
+            position: relative;
+            min-height: 70px;
+            display: flex;
+            justify-content: space-around;
+            padding-left: $widthNavBtn;
+            padding-right: $widthNavBtn;
+            margin: 0 auto;
+
+            .calendar {
+                        height: 100%;
+                        width: 70%;
+                        display: flex;
+                        justify-content: space-around;
+                        align-items: center;
+
+                        .calendar__startDate,
+                        .calendar__endDate {
+                                    position: relative;
+                                    width: 200px;
+
+                                    height: 50px;
+
+                                    .dateShow {
+                                                position: absolute;
+                                                top: 0;
+                                                left: 0;
+                                                width: 100%;
+                                                height: 100%;
+                                                font-size: 25px;
+                                    }
+
+                                    input {
+                                                position: absolute;
+                                                height: 100%;
+                                                width: 100%;
+                                                top: 0;
+                                                left: 0;
+                                                opacity: 1;
+                                                z-index: 2;
+                                                opacity: 0;
+                                                cursor: pointer;
+
+                                                &::-webkit-calendar-picker-indicator {
+                                                            display: block;
+                                                            opacity: 1;
+                                                            width: 100%;
+                                                            position: absolute;
+                                                            height: 100%;
+                                                }
+                                    }
+                        }
+
+                        // input {
+                        //             height: 50%;
+                        //             font-size: 29px;
+                        //             background-color: inherit;
+                        //             text-align: center;
+                        //             outline: none;
+                        //             border: none;
+                        //             opacity: 0;
+
+                        //             &::-webkit-inner-spin-button {
+                        //                         display: none;
+                        //             }
+
+                        //             &::-webkit-calendar-picker-indicator {
+                        //                         display: block;
+                        //                         opacity: 1;
+                        //                         width: 100%;
+                        //                         height: 100%;
+                        //                         opacity: 0;
+                        //             }
+
+                        //             &::-webkit-datetime-edit {
+                        //                         padding: 1em;
+                        //             }
+                        // }
+            }
+
+            .GraphicNav__navigation {
+                        position: absolute;
+                        width: $widthNavBtn;
+                        height: 100%;
+                        left: 0;
+                        top: 0;
+                        background: #bbb;
+                        background: linear-gradient(top, #efefef 0%, #bbb 100%);
+                        border: 1px solid #aaa;
+                        cursor: pointer;
+                        overflow: hidden;
+
+                        svg {
+                                    transform: rotate(-90deg);
+                                    height: 100%;
+
+                                    .arrowIcon {
+                                                // fill: #94d31b;
+                                    }
+                        }
+
+                        &.GraphicNav__navigation--next {
+                                    right: 0;
+                                    left: auto;
+
+                                    svg {
+                                                transform: rotate(90deg);
+                                    }
+                        }
+
+                        &:hover {
+                                    svg {
+                                                .arrowIcon {
+                                                            fill: #94d31b;
+                                                }
+                                    }
+                        }
+            }
+}
