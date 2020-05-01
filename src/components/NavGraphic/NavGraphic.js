@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './NavGraphic.scss';
 
+
 const NavGraphic = ({ className, setDateEnd, dateEnd, dateStart, setDateStart }) => {
+            useEffect(() => {
+                        handleChangeDate(new Date());
+            }, [])
             const additionDays = (date, days) => {
                         const dateObject = new Date(date);
                         const newDate = new Date(dateObject.setTime(dateObject.getTime() + (days * 24 * 60 * 60 * 1000)));
@@ -16,23 +20,23 @@ const NavGraphic = ({ className, setDateEnd, dateEnd, dateStart, setDateStart })
                         const day = newDate.getDate() < 10 ? `0${newDate.getDate()}` : newDate.getDate();
                         const month = newDate.getMonth() + 1 < 10 ? `0${newDate.getMonth() + 1}` : newDate.getMonth() + 1;
                         const year = newDate.getFullYear();
-                        return `${year}-${month}-${day}`
+                        return `${year}-${month}-${day}`;
             }
 
-            const handleChangeDate = (e) => {
-                        const day = new Date(e.target.value).getDay();
+            const handleChangeDate = (date) => {
+                        const day = new Date(date).getDay();
                         if (day === 0) {
-                                    setDateStart(subtractionDays(e.target.value, 6));
-                                    setDateEnd(e.target.value);
+                                    setDateStart(subtractionDays(date, 6));
+                                    setDateEnd(date);
                                     return;
                         }
                         if (day === 1) {
-                                    setDateStart(e.target.value);
-                                    setDateEnd(additionDays(e.target.value, 6));
+                                    setDateStart(date);
+                                    setDateEnd(additionDays(date, 6));
                                     return;
                         }
-                        setDateStart(subtractionDays(e.target.value, day - 1));
-                        setDateEnd(additionDays(e.target.value, 7 - day))
+                        setDateStart(subtractionDays(date, day - 1));
+                        setDateEnd(additionDays(date, 7 - day))
 
             }
 
@@ -54,10 +58,10 @@ const NavGraphic = ({ className, setDateEnd, dateEnd, dateStart, setDateStart })
                                                             <div className='dateShow'>
                                                                         <span>{dateStart}</span>
                                                             </div>
-                                                            <input type="date" onChange={handleChangeDate} value={dateStart} />
+                                                            <input type="date" onChange={(e) => handleChangeDate(e.target.value)} value={dateStart} />
                                                 </div>
                                                 <div className='calendar__endDate'>
-                                                            <input type="date" onChange={handleChangeDate} value={dateEnd} />
+                                                            <input type="date" onChange={(e) => handleChangeDate(e.target.value)} value={dateEnd} />
                                                             <div className='dateShow'>
                                                                         <span>{dateEnd}</span>
                                                             </div>

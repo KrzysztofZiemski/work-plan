@@ -11,7 +11,7 @@ const MainNav = () => {
                                                             <Link to="/" >Home</Link>
                                                 </li>
                                                 <li>
-                                                            <Link to="/dashboard">DashboardPage</Link>
+                                                            <Link to="/graphic">Grafik</Link>
                                                 </li>
                                     </ul>
                         </nav>

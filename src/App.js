@@ -4,7 +4,9 @@ import {
   Switch,
   Route
 } from "react-router-dom";
-import DashboardPage from './templates/DashboardPage/DashboardPage';
+import { DndProvider } from 'react-dnd';
+import Backend from 'react-dnd-html5-backend';
+import GraphicPage from './templates/GraphicPage/GraphicPage';
 import HomePage from './templates/HomePage/HomePage';
 import MainNav from './components/MainNav/MainNav';
 
@@ -12,19 +14,23 @@ import './App.scss';
 
 function App() {
   return (
+
     <Router>
       <div className="App">
         <MainNav />
         <Switch>
-          <Route path="/" exact={true}>
-            <HomePage className='page' />
-          </Route>
-          <Route path="/dashboard">
-            <DashboardPage className='page' />
-          </Route>
+          <DndProvider backend={Backend}>
+            <Route path="/" exact={true}>
+              <HomePage className='page' />
+            </Route>
+            <Route path="/graphic">
+              <GraphicPage className='page' />
+            </Route>
+          </DndProvider>
         </Switch>
       </div>
     </Router>
+
   );
 }
 
