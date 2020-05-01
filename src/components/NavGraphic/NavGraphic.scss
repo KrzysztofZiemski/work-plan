@@ -11,8 +11,7 @@
             margin: 0 auto;
 
             .calendar {
-                        height: 100%;
-                        width: 70%;
+                        width: 100%;
                         display: flex;
                         justify-content: space-around;
                         align-items: center;
@@ -20,9 +19,8 @@
                         .calendar__startDate,
                         .calendar__endDate {
                                     position: relative;
-                                    width: 200px;
-
-                                    height: 50px;
+                                    flex-grow: 1;
+                                    height: 100%;
 
                                     .dateShow {
                                                 position: absolute;
@@ -30,7 +28,11 @@
                                                 left: 0;
                                                 width: 100%;
                                                 height: 100%;
+                                                display: flex;
+                                                align-items: center;
+                                                justify-content: center;
                                                 font-size: 25px;
+                                                text-align: center;
                                     }
 
                                     input {
@@ -53,32 +55,6 @@
                                                 }
                                     }
                         }
-
-                        // input {
-                        //             height: 50%;
-                        //             font-size: 29px;
-                        //             background-color: inherit;
-                        //             text-align: center;
-                        //             outline: none;
-                        //             border: none;
-                        //             opacity: 0;
-
-                        //             &::-webkit-inner-spin-button {
-                        //                         display: none;
-                        //             }
-
-                        //             &::-webkit-calendar-picker-indicator {
-                        //                         display: block;
-                        //                         opacity: 1;
-                        //                         width: 100%;
-                        //                         height: 100%;
-                        //                         opacity: 0;
-                        //             }
-
-                        //             &::-webkit-datetime-edit {
-                        //                         padding: 1em;
-                        //             }
-                        // }
             }
 
             .GraphicNav__navigation {
@@ -87,11 +63,9 @@
                         height: 100%;
                         left: 0;
                         top: 0;
-                        background: #bbb;
-                        background: linear-gradient(top, #efefef 0%, #bbb 100%);
-                        border: 1px solid #aaa;
                         cursor: pointer;
                         overflow: hidden;
+                        border: none;
 
                         svg {
                                     transform: rotate(-90deg);

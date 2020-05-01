@@ -1,51 +1,250 @@
 import React, { useState, useEffect } from 'react';
-import { getAllWorkers } from '../../repos/workers';
-import Worker from '../../components/Worker/Worker';
-import Machine from '../../components/Machine/Machine';
+import { getAllEmployee } from '../../repos/workers';
 import NavGraphic from '../../components/NavGraphic/NavGraphic';
+import WorkPlace from './WorkPlace/WorkPlace';
 import './DashboardPage.scss';
 
-const DashboardPage = () => {
-            let [dateStart, setDateStart] = useState('2020-05-27');
-            let [dateEnd, setDateEnd] = useState('2020-06-03');
+const response = {
+            absenceEmployees: [
 
-            console.log('start', dateStart)
-            console.log('end', dateEnd)
-            const setWorkers = (params) => {
-                        return workersAvaible.filter(worker => worker.machine === params).map(worker => {
-                                    return (
-                                                <Worker set={setWorkersAvaible} dragable='true' className='worker' key={`worker${worker.id}`} id={worker.id}>{worker.name}</Worker>
-                                    )
+            ],
+            createAt: "2020-04-25T13:24:26.409Z",
+            createByIdUser: {
+                        id: 0,
+                        name: "string",
+                        surname: "string"
+            },
+            endDay: "2020-04-26",
+            holidaysEmployees: [
+
+            ],
+            "id": 0,
+            infoAbsence: "string",
+            infoHolidays: "string",
+            shifts: [
+                        {
+                                    comments: "string",
+                                    createAt: "2020-04-25T13:24:26.409Z",
+                                    id: 0,
+                                    otherEmployees: [
+
+                                    ],
+                                    shiftNumber: 0,
+                                    updateAt: "2020-04-25T13:24:26.409Z",
+                                    workplaces: [
+                                                {
+                                                            employeeListWorkplaces: [
+
+                                                            ],
+                                                            id: 1,
+                                                            nameWorkplace: "betoniarka"
+                                                },
+                                                {
+                                                            employeeListWorkplaces: [
+
+                                                            ],
+                                                            id: 2,
+                                                            nameWorkplace: "tokarka"
+                                                },
+                                                {
+                                                            employeeListWorkplaces: [
+
+                                                            ],
+                                                            id: 3,
+                                                            nameWorkplace: "tokarka"
+                                                }
+                                    ]
+                        },
+                        {
+                                    comments: "string",
+                                    createAt: "2020-04-25T13:24:26.409Z",
+                                    id: 1,
+                                    otherEmployees: [
+
+                                    ],
+                                    shiftNumber: 1,
+                                    updateAt: "2020-04-25T13:24:26.409Z",
+                                    workplaces: [
+                                                {
+                                                            employeeListWorkplaces: [
+
+                                                            ],
+                                                            id: 1,
+                                                            nameWorkplace: "betoniarka"
+                                                },
+                                                {
+                                                            employeeListWorkplaces: [
+
+                                                            ],
+                                                            id: 2,
+                                                            nameWorkplace: "tokarka"
+                                                }
+                                    ]
+                        }, {
+                                    comments: "string",
+                                    createAt: "2020-04-25T13:24:26.409Z",
+                                    id: 2,
+                                    otherEmployees: [
+
+                                    ],
+                                    shiftNumber: 2,
+                                    updateAt: "2020-04-25T13:24:26.409Z",
+                                    workplaces: [
+                                                {
+                                                            employeeListWorkplaces: [
+
+                                                            ],
+                                                            id: 1,
+                                                            nameWorkplace: "betoniarka"
+                                                },
+                                                {
+                                                            employeeListWorkplaces: [
+
+                                                            ],
+                                                            id: 2,
+                                                            nameWorkplace: "tokarka"
+                                                }
+                                    ]
+                        },
+            ],
+            startDay: "2020-04-20",
+            updateAt: "2020-04-25T13:24:26.409Z",
+            updateByIdUser: {
+                        id: 0,
+                        name: "string",
+                        surname: "string"
+            }
+}
+const employyes = [{
+            id: 232323444253333,
+            lastName: "aaaa",
+            name: "aaaa"
+}, {
+            id: 231123232323,
+            lastName: "ssss",
+            name: "ssss"
+}, {
+            id: 435654,
+            lastName: "laskowski",
+            name: "adam"
+}, {
+            id: 2343434,
+            lastName: "hanna",
+            name: "shift2"
+}, {
+            id: 34453532323523,
+            lastName: "anna",
+            name: "dsotępna"
+}]
+const DashboardPage = ({ className }) => {
+            let [dateStart, setDateStart] = useState(response.startDay);
+            let [dateEnd, setDateEnd] = useState(response.endDay);
+            let [dragable, setDragable] = useState(true);
+            let [allEmployee, setAllEmployee] = useState(employyes);
+            let [calendar, setCalendar] = useState(response);
+            console.log('allEmployee', allEmployee)
+            const setPlacementsOnEmployees = () => {
+                        if (!calendar) return;
+                        const copyCalendar = Object.assign({}, calendar);
+                        let distributedEmployees = [];
+
+                        copyCalendar.absenceEmployees.forEach(employee => {
+                                    employee.placement = 'absence';
+                                    distributedEmployees.push(employee);
+                        });
+
+                        copyCalendar.holidaysEmployees.forEach(employee => {
+                                    employee.placement = 'holiday';
+                                    distributedEmployees.push(employee);
+                        });
+
+                        copyCalendar.shifts[0].workplaces.forEach(workplace => {
+                                    workplace.employeeListWorkplaces.forEach(employee => {
+                                                employee.shift = 0;
+                                                employee.placement = workplace.id;
+                                                distributedEmployees.push(employee);
+                                    })
+
+                        });
+
+                        copyCalendar.shifts[1].workplaces.forEach(workplace => {
+                                    workplace.employeeListWorkplaces.forEach(employee => {
+                                                employee.shift = 1;
+                                                employee.placement = workplace.id;
+                                                distributedEmployees.push(employee);
+                                    })
+
+                        });
+
+                        copyCalendar.shifts[2].workplaces.forEach(workplace => {
+                                    workplace.employeeListWorkplaces.forEach(employee => {
+                                                employee.shift = 2;
+                                                employee.placement = workplace.id;
+                                                distributedEmployees.push(employee);
+                                    })
+
+                        });
+
+                        const subtractionArrays = allEmployee.map(employee => {
+                                    for (let i = 0; i < distributedEmployees.length; i++) {
+                                                if (distributedEmployees[i].id === employee.id) {
+                                                            return distributedEmployees[i];
+                                                };
+                                    }
+                                    employee.placement = null;
+                                    return employee;
                         })
+                        return subtractionArrays;
+            }
+            const getEmployeesBy = (searchValue, numberShift) => {
+                        if (numberShift === null || numberShift === undefined) return allEmployee.filter(employee => employee.placement === searchValue);
+                        console.log('numberShift po ', numberShift)
+                        return allEmployee.filter(employee => employee.placement === searchValue && employee.shift === numberShift);
             }
 
-            const workersFree = [{ id: 1, name: 'julian', machine: 'lichwa' }, { id: 2, name: 'marian', machine: null }, { id: 3, name: 'sebastian', machine: null }];
-            let [workersAvaible, setWorkersAvaible] = useState(workersFree);
+            const renderPlacements = (numberShift) => {
 
-            // let [machine_1, setMachine_1] = useState([]);
-            // let [machine_2, setMachine_2] = useState([]);
-            // let [machine_3, setMachine_3] = useState([]);
-            // useEffect(() => {
-            //             getAllWorkers().then(res => setWorkers(res));
-            // }, [])
+                        let output = []
+                        for (let i = 0; i < calendar.shifts[numberShift].workplaces.length; i++) {
+                                    const workPlace = calendar.shifts[numberShift].workplaces[i];
+                                    output.push(<WorkPlace className={'workplaces'} setAllEmployee={setAllEmployee} allEmployee={allEmployee} dragable numberShift={numberShift} name={workPlace.nameWorkplace} placement={workPlace.id} key={numberShift + workPlace.id} employees={getEmployeesBy(workPlace.id, numberShift)}></WorkPlace>)
+                        }
+                        return output;
+            }
+            useEffect(() => {
+                        getAllEmployee()
+                                    .then(workers => {
+                                                setAllEmployee(setPlacementsOnEmployees(workers))
+                                    })
+                                    .catch(err => {
+                                                console.log(err)
+                                                setAllEmployee(setPlacementsOnEmployees())
+                                    })
+            }, [])
 
             return (
-                        <div className='dashboardPage'>
+                        <div className={`${className} dashboardPage`}>
                                     <NavGraphic className='GraphicNav' dateStart={dateStart} setDateStart={setDateStart} dateEnd={dateEnd} setDateEnd={setDateEnd}></NavGraphic>
                                     <div className='graphic'>
-                                                <Machine name='szprota' id='board-1' className='machine' workers={workersAvaible} setWorkersAvaible={setWorkersAvaible}>
-                                                            <h1>szprota</h1>
-                                                            {setWorkers('szprota')}
-                                                </Machine>
-                                                <Machine name='lichwa' id='board-2' className='machine' workers={workersAvaible} setWorkersAvaible={setWorkersAvaible}>
-                                                            <h1>lichwa</h1>
-                                                            {setWorkers('lichwa')}
+                                                <div className='graphic__shift graphic__shift--1'>
+                                                            <h2> Zmaina 1</h2>
+                                                            {renderPlacements(0)}
+                                                </div>
+                                                <div className='graphic__shift graphic__shift--2'>
+                                                            <h2> Zmaina 2</h2>
+                                                            {renderPlacements(1)}
+                                                </div>
+                                                <div className='graphic__shift graphic__shift--3'>
+                                                            <h2> Zmaina 3</h2>
+                                                            {renderPlacements(2)}
+                                                </div>
+                                                <div className='freeWorkers'>
+                                                            <h2>Panel</h2>
+                                                            <WorkPlace placement={null} setAllEmployee={setAllEmployee} dragable allEmployee={allEmployee} className='freeWorkers__free' name='Dostępni' employees={getEmployeesBy(null)}></WorkPlace>
+                                                            <WorkPlace placement='absence' setAllEmployee={setAllEmployee} dragable allEmployee={allEmployee} className='freeWorkers__absence' name='Nieobecności' employees={getEmployeesBy('absence')}></WorkPlace>
+                                                            <WorkPlace placement='holiday' setAllEmployee={setAllEmployee} allEmployee={allEmployee} dragable className='freeWorkers__holiday' name='Urlopy' employees={getEmployeesBy('holiday')}></WorkPlace>
 
-                                                </Machine>
-                                                <Machine name={null} id='board-3' className='machine' workers={workersAvaible} setWorkersAvaible={setWorkersAvaible}>
-                                                            <h1>Dostępni pracownicy</h1>
-                                                            {setWorkers(null)}
-                                                </Machine>
+                                                </div>
                                     </div>
                         </div>
             )

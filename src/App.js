@@ -17,10 +17,10 @@ function App() {
         <MainNav />
         <Switch>
           <Route path="/" exact={true}>
-            <HomePage />
+            <HomePage className='page' />
           </Route>
           <Route path="/dashboard">
-            <DashboardPage />
+            <DashboardPage className='page' />
           </Route>
         </Switch>
       </div>
