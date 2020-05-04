@@ -24,14 +24,20 @@ const NavGraphic = ({ className, setDateEnd, dateEnd, dateStart, setDateStart })
             }
 
             const handleChangeDate = (date) => {
-                        const day = new Date(date).getDay();
+                        const day = date.getDay();
                         if (day === 0) {
                                     setDateStart(subtractionDays(date, 6));
-                                    setDateEnd(date);
+                                    const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+                                    const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+                                    const year = date.getFullYear();
+                                    setDateEnd(`${year}-${month}-${day}`);
                                     return;
                         }
                         if (day === 1) {
-                                    setDateStart(date);
+                                    const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+                                    const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+                                    const year = date.getFullYear();
+                                    setDateStart(`${year}-${month}-${day}`);
                                     setDateEnd(additionDays(date, 6));
                                     return;
                         }

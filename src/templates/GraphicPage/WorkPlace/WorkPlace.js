@@ -2,16 +2,20 @@ import React, { useContext } from 'react';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../../../utils/ItemTypes';
 import { WorkPlanContext } from '../GraphicPage';
-import Employee from '../Employee/Employee';
 import './WorkPlace.scss';
 
-const WorkPlace = ({ line, shift, workPlace }) => {
+const WorkPlace = ({ line, shift, workPlace, children, className }) => {
 
             const { assignEmployee, removeEmployee, workPlan } = useContext(WorkPlanContext);
 
             const [{ isOver }, drop] = useDrop({
                         accept: ItemTypes.EMPLOYEE,
-                        drop: (item, mointor) => removeEmployee(item.id),
+                        drop: (item, mointor) => {
+
+                                    const deletedItem = removeEmployee({ shift: item.shift, line: item.line, workPlace: item.workPlace }, item.id);
+                                    console.log('deleted', deletedItem)
+                                    assignEmployee({ shift, line, workPlace }, deletedItem)
+                        },
                         collect: monitor => ({
                                     isOver: !!monitor.isOver(),
                         })
@@ -19,11 +23,10 @@ const WorkPlace = ({ line, shift, workPlace }) => {
 
             return (
                         <div
+                                    className={`board ${className ? className : ''}`}
                                     ref={drop}
                         >
-                                    {
-                                                workPlan.workShifts[shift].lines[line].workplaces[workPlace].employeeListWorkplaces.map(employee => <Employee key={`employee${employee.id}`} id={employee.id} line={line} shift={shift} workPlace={workPlace} ></Employee>)
-                                    }
+                                    {children}
                         </div >
             )
 }

@@ -8,26 +8,43 @@ const getTemplateWorkPlan = (startDate, endDate, userId) => {
                         endDay: endDate,
                         startDay: startDate
             }
+
             return fetch(WORK_PLAN_URL, {
                         method: 'POST',
-                        mode: 'cors',
-                        credentials: 'same-origin',
                         headers: {
                                     'Content-Type': 'application/json',
-
+                                    "Accept": "*/*"
                         },
                         body: JSON.stringify(data)
             })
 }
 const getWorkPlanByDate = (startDate, endDate) => {
-            return fetch(`${WORK_PLAN_URL}/${startDate}/${endDate}`, {
+            return fetch(`${WORK_PLAN_URL}/param?start=${startDate}&end=${endDate}`, {
                         method: 'GET',
                         mode: 'cors',
                         credentials: 'same-origin',
                         headers: {
                                     'Content-Type': 'application/json',
+                                    "Accept": "*/*"
 
                         }
             })
 }
-export { getTemplateWorkPlan, getWorkPlanByDate }
+const updateWorkPlane = (idUser, workPlan) => {
+            console.log(workPlan)
+            return fetch(`${WORK_PLAN_URL}?idUser=${idUser}&idWorkPlan=${workPlan.id}`, {
+                        method: 'PUT',
+                        headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(workPlan)
+            })
+                        .then(res => {
+                                    if (res.status === 200) return res.json();
+                                    throw (res.status);
+
+                        })
+}
+
+export { getTemplateWorkPlan, getWorkPlanByDate, updateWorkPlane }

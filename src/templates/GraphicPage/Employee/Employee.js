@@ -1,30 +1,25 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../../../utils/ItemTypes';
-
-const Employee = ({ id, line, shift, workPlace }) => {
-
+import './Employee.scss';
+const Employee = ({ id, line, shift, workPlace, children, className }) => {
             const [{ isDragging }, drag] = useDrag({
                         item: {
-                                    type: ItemTypes.EMPLOYEE
+                                    type: ItemTypes.EMPLOYEE,
+                                    id, line, shift, workPlace
                         },
                         collect: monitor => ({
                                     isDragging: !!monitor.isDragging(),
-                                    id
                         })
             })
-            const style = {
 
-            }
-            const styleDragging = {
-                        opacity: '.5'
-            }
+
             return (
                         <div
                                     ref={drag}
-                                    style={isDragging ? styleDragging : style}
+                                    className={`employee ${isDragging ? 'drag' : ''} ${className ? className : ''}`}
                         >
-                                    sdfdsfds
+                                    {children}
                         </div>
             )
 }

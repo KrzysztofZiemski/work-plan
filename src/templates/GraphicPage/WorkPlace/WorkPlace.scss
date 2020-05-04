@@ -1,20 +1,9 @@
+@import '../../../sass/colors.scss';
+
 .board {
             overflow: auto;
-
-            .employee {
-                        display: block;
-                        background-color: orange;
-                        margin: 2px 0;
-                        padding: 5px;
-                        cursor: pointer;
-                        text-align: center;
-                        border: 3px solid orange;
-                        transition: .2s;
-
-
-                        &:hover {
-                                    border: 3px solid green;
-                        }
-
-            }
+            padding: 5px;
+            background-color: $grey;
+            min-height: 200px;
+            min-width: 200px;
 }
