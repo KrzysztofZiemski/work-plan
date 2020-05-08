@@ -14,7 +14,7 @@ const getAllEmployee = () => {
             })
                         .then(res => {
                                     if (res.status === 200) return res.json();
-                                    throw (res.status);
+                                    return Promise.reject(res.status);
                         });
 };
 const addWEmployee = (name, lastName) => {

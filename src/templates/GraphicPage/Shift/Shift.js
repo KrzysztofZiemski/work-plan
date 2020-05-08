@@ -2,11 +2,11 @@ import React, { useContext } from 'react';
 import { WorkPlanContext } from '../GraphicPage';
 import Line from '../Line/Line';
 
-const Shift = ({ shift, children }) => {
+const Shift = ({ shift, children, className }) => {
             const { workPlan } = useContext(WorkPlanContext);
 
             return (
-                        <div>
+                        <div className={className}>
                                     {children}
                                     {workPlan.workShifts[shift].lines.map((line, index) => (
                                                 <Line key={`line${index}`} shift={shift} line={index}>

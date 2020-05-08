@@ -2,11 +2,12 @@ import React, { useContext } from 'react';
 import WorkPlace from '../WorkPlace/WorkPlace';
 import { WorkPlanContext } from '../GraphicPage';
 import Employee from '../Employee/Employee';
+import './Line.scss';
 
 const Line = ({ shift, line, children }) => {
             const { workPlan } = useContext(WorkPlanContext);
             return (
-                        <div>
+                        <div className='line'>
                                     {children}
                                     {workPlan.workShifts[shift].lines[line].workplaces.map((workplace, index) => (
                                                 <WorkPlace key={`workplace${index}`} shift={shift} line={line} workPlace={index}>

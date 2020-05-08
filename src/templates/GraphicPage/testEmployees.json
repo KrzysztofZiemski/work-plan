@@ -1,0 +1,31 @@
+[{
+                        "name": "adam",
+                        "lastName": "kowalski",
+                        "id": 1
+            },
+            {
+                        "name": "stanisław",
+                        "lastName": "sas",
+                        "id": 2
+            },
+            {
+                        "name": "marcin",
+                        "lastName": "bąbel",
+                        "id": 3
+            },
+            {
+                        "name": "kamil",
+                        "lastName": "ass",
+                        "id": 4
+            },
+            {
+                        "name": "flek",
+                        "lastName": "jaworski",
+                        "id": 5
+            },
+            {
+                        "name": "michał",
+                        "lastName": "transfer",
+                        "id": 6
+            }
+]

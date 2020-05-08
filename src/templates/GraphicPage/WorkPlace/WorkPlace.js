@@ -6,29 +6,29 @@ import './WorkPlace.scss';
 
 const WorkPlace = ({ line, shift, workPlace, children, className }) => {
 
-            const { assignEmployee, removeEmployee, workPlan } = useContext(WorkPlanContext);
+    const { setWorkplaceEmployee, removeEmployee, workPlan } = useContext(WorkPlanContext);
 
-            const [{ isOver }, drop] = useDrop({
-                        accept: ItemTypes.EMPLOYEE,
-                        drop: (item, mointor) => {
+    const [{ isOver }, drop] = useDrop({
+        accept: ItemTypes.EMPLOYEE,
+        drop: (item, mointor) => {
+            const deletedItem = removeEmployee({ shift: item.shift, line: item.line, workPlace: item.workPlace }, item.id);
+            console.log('deletedItem', deletedItem)
 
-                                    const deletedItem = removeEmployee({ shift: item.shift, line: item.line, workPlace: item.workPlace }, item.id);
-                                    console.log('deleted', deletedItem)
-                                    assignEmployee({ shift, line, workPlace }, deletedItem)
-                        },
-                        collect: monitor => ({
-                                    isOver: !!monitor.isOver(),
-                        })
-            })
+            setWorkplaceEmployee({ shift, line, workPlace }, deletedItem)
+        },
+        collect: monitor => ({
+            isOver: !!monitor.isOver(),
+        })
+    })
 
-            return (
-                        <div
-                                    className={`board ${className ? className : ''}`}
-                                    ref={drop}
-                        >
-                                    {children}
-                        </div >
-            )
+    return (
+        <div
+            className={`board ${className ? className : ''}`}
+            ref={drop}
+        >
+            {children}
+        </div >
+    )
 }
 
 export default WorkPlace;
