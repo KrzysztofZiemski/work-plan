@@ -1,21 +1,24 @@
 import React from 'react';
 import './MainNav.scss';
 import { Link } from 'react-router-dom';
+import { Navbar, Nav } from 'react-bootstrap';
+const MainNav = ({ className }) => {
 
-const MainNav = () => {
+    return (
+        <>
+            <nav className={className}>
+                <ul>
+                    <li>
+                        <Link to='/'>Home</Link>
+                    </li>
+                    <li>
+                        <Link to='/graphic'>Grafik</Link>
+                    </li>
+                </ul>
 
-            return (
-                        <nav className='manNav'>
-                                    <ul>
-                                                <li>
-                                                            <Link to="/" >Home</Link>
-                                                </li>
-                                                <li>
-                                                            <Link to="/graphic">Grafik</Link>
-                                                </li>
-                                    </ul>
-                        </nav>
-            )
+            </nav>
+        </>
+    )
 }
 
 export default MainNav;

@@ -3,12 +3,13 @@ import testWorkPlan from './testWorkPlan.json';
 import testEmployee from './testEmployees.json';
 //
 import React, { useState, useEffect, createContext } from 'react';
+import { Container, Row } from 'react-bootstrap';
 import { getAllEmployee } from '../../repos/workersRequest';
 import NavGraphic from '../../components/NavGraphic/NavGraphic';
 import WorkPlace from './WorkPlace/WorkPlace';
 import Employee from './Employee/Employee';
 import { createWorkPlan, getWorkPlanByDate, updateWorkPlane } from '../../repos/workPlanRequest';
-import { workPlaceNames } from './workPlaceNames';
+import { workPlaceNames, initFreeEmployee } from './handlers';
 import './GraphicPage.scss';
 
 export const WorkPlanContext = createContext({
@@ -29,7 +30,7 @@ const GraphicPage = ({ className }) => {
     useEffect(() => {
         //fake data
         setWorkPlan(testWorkPlan)
-        initFreeEmployee(testEmployee, testWorkPlan)
+        initFreeEmployee(testEmployee, testWorkPlan, setFreeEmployees)
 
         //Pobranie planu, jeścli plan nie istnieje stworzenie nowego
 
@@ -55,10 +56,10 @@ const GraphicPage = ({ className }) => {
         // Promise.all([workPlanPromise, employeesPromise]).then(result => {
         //     if (!isSubscribed) return;
         //     setWorkPlan(result[0]);
-        //     initFreeEmployee(result[1], result[0])
+        //     initFreeEmployee(result[1], result[0], setFreeEmployees)
         // }).catch(e => console.log('error promise all', e))
 
-        // // po odmontowaniu elementu zresetuj wartości startowe
+        // po odmontowaniu elementu zresetuj wartości startowe
 
         // return () => {
         //     setWorkPlan(null);
@@ -67,45 +68,8 @@ const GraphicPage = ({ className }) => {
         // };
     }, [dateStart, dateEnd]);
 
-    const isDuplicate = (object1, object2) => {
-        if (object1.id === object2.id) return true;
-        return false;
 
-    }
-    const initFreeEmployee = (allEmployee, workPlan) => {
-        //usuwamy z pobranych pracowników, pracowników już przydzielonych
 
-        let copy = [...allEmployee];
-        workPlan.holidaysEmployees.forEach(holidayEmployee => {
-            copy = copy.filter(employee => !isDuplicate(holidayEmployee, employee))
-        })
-        workPlan.absenceEmployees.forEach(absenceEmployee => {
-            copy = copy.filter(employee => !isDuplicate(absenceEmployee, employee))
-        })
-        workPlan.workShifts.forEach(shift => {
-
-            shift.shiftsLeader.forEach(leader => {
-                copy = copy.filter(employee => !isDuplicate(leader, employee));
-            })
-            shift.supervision.forEach(supervision => {
-                copy = copy.filter(employee => !isDuplicate(supervision, employee));
-            })
-            shift.unskilledWorker.forEach(unskillerWorker => {
-                copy = copy.filter(employee => !isDuplicate(unskillerWorker, employee));
-            })
-            shift.other.forEach(other => {
-                copy = copy.filter(employee => !isDuplicate(other, employee));
-            })
-            shift.lines.forEach(line => {
-                line.workplaces.forEach(workplace => {
-                    workplace.employeeListWorkplaces.forEach(employeeWorkPlace => {
-                        copy = copy.filter(employee => !isDuplicate(employeeWorkPlace, employee));
-                    })
-                })
-            })
-        })
-        setFreeEmployees(copy);
-    }
     //przt upuszczaniu pracownika pobieramy parametry workplace i dodajemy obiekt pracownika w odpowiednim miejscu
     const setWorkplaceEmployee = ({ shift, line, workPlace }, employee) => {
         console.log('workPlace11', workPlace)
@@ -178,7 +142,7 @@ const GraphicPage = ({ className }) => {
     }
 
     return (
-        <div className={`${className} dashboardPage`}>
+        <Container fluid className={`${className} graphicPage`}>
             <h1>Grafik</h1>
             <WorkPlanContext.Provider value={{ setWorkplaceEmployee, removeEmployee, workPlan, dragable }}>
                 <NavGraphic className='GraphicNav' setDragable={setDragable} dateStart={dateStart} setDateStart={setDateStart} dateEnd={dateEnd} setDateEnd={setDateEnd}></NavGraphic>
@@ -189,56 +153,59 @@ const GraphicPage = ({ className }) => {
                         {workPlan ? workPlan.workShifts.map((shift, indexShift) => (
                             <div key={`shift${indexShift}`} className='shift'>
                                 <h2>{`Zmiana ${shift.shiftNumber}`}</h2>
-
-                                <WorkPlace key={`supervision${indexShift}`} shift={indexShift} workPlace={workPlaceNames.supervision}>
-                                    <h3>Supervisior</h3>
-                                    {workPlan.workShifts[indexShift][workPlaceNames.supervision].map(employee => {
-                                        return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.supervision} >
-                                            <span>{`${employee.name} ${employee.lastName}`}</span>
-                                        </Employee>
-                                    })}
-                                </WorkPlace>
-                                <WorkPlace key={`unskilled${indexShift}`} shift={indexShift} workPlace={workPlaceNames.unskilled}>
-                                    <h3>Unskilled</h3>
-                                    {workPlan.workShifts[indexShift][workPlaceNames.unskilled].map(employee => {
-                                        return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.unskilled} >
-                                            <span>{`${employee.name} ${employee.lastName}`}</span>
-                                        </Employee>
-                                    })}
-                                </WorkPlace>
-                                <WorkPlace key={`leader${indexShift}`} shift={indexShift} workPlace={workPlaceNames.leader}>
-                                    <h3>Lider zmiany</h3>
-                                    {workPlan.workShifts[indexShift][workPlaceNames.leader].map(employee => {
-                                        return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.leader} >
-                                            <span>{`${employee.name} ${employee.lastName}`}</span>
-                                        </Employee>
-                                    })}
-                                </WorkPlace>
-                                <WorkPlace key={`other${indexShift}`} shift={indexShift} workPlace={workPlaceNames.other}>
-                                    <h3>Inni</h3>
-                                    {workPlan.workShifts[indexShift][workPlaceNames.other].map(employee => {
-                                        return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.other} >
-                                            <span>{`${employee.name} ${employee.lastName}`}</span>
-                                        </Employee>
-                                    })}
-                                </WorkPlace>
-                                {workPlan.workShifts[indexShift].lines.map((line, indexLine) => (
-                                    <div key={`line${indexLine}`} className='line'>
-                                        <h3>{`Linia ${line.lineNumber}`}</h3>
-                                        {workPlan.workShifts[indexShift].lines[indexLine].workplaces.map((workplace, indexWorkplace) => {
-                                            return <WorkPlace key={`workplace${indexWorkplace}`} shift={indexShift} line={indexLine} workPlace={indexWorkplace}>
-                                                <h4>{workplace.nameWorkplace}</h4>
-                                                {workPlan.workShifts[indexShift].lines[indexLine].workplaces[indexWorkplace].employeeListWorkplaces.map(employee => (
-                                                    <Employee key={`employee${employee.id}`} id={employee.id} line={indexLine} shift={indexShift} workPlace={indexWorkplace} >
-                                                        <span>{`${employee.name} ${employee.lastName}`}</span>
-                                                    </Employee>
-                                                ))}
-
-                                            </WorkPlace>
+                                <div className='workplaces workplaces--other'>
+                                    <WorkPlace key={`supervision${indexShift}`} shift={indexShift} workPlace={workPlaceNames.supervision}>
+                                        <h4>Supervisior</h4>
+                                        {workPlan.workShifts[indexShift][workPlaceNames.supervision].map(employee => {
+                                            return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.supervision} >
+                                                <span>{`${employee.name} ${employee.lastName}`}</span>
+                                            </Employee>
                                         })}
-                                    </div>
-                                )
-                                )}
+                                    </WorkPlace>
+                                    <WorkPlace key={`unskilled${indexShift}`} shift={indexShift} workPlace={workPlaceNames.unskilled}>
+                                        <h4>Unskilled</h4>
+                                        {workPlan.workShifts[indexShift][workPlaceNames.unskilled].map(employee => {
+                                            return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.unskilled} >
+                                                <span>{`${employee.name} ${employee.lastName}`}</span>
+                                            </Employee>
+                                        })}
+                                    </WorkPlace>
+                                    <WorkPlace key={`leader${indexShift}`} shift={indexShift} workPlace={workPlaceNames.leader}>
+                                        <h4>Lider zmiany</h4>
+                                        {workPlan.workShifts[indexShift][workPlaceNames.leader].map(employee => {
+                                            return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.leader} >
+                                                <span>{`${employee.name} ${employee.lastName}`}</span>
+                                            </Employee>
+                                        })}
+                                    </WorkPlace>
+                                    <WorkPlace key={`other${indexShift}`} shift={indexShift} workPlace={workPlaceNames.other}>
+                                        <h4>Inni</h4>
+                                        {workPlan.workShifts[indexShift][workPlaceNames.other].map(employee => {
+                                            return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.other} >
+                                                <span>{`${employee.name} ${employee.lastName}`}</span>
+                                            </Employee>
+                                        })}
+                                    </WorkPlace>
+                                </div>
+                                <div className='lines'>
+                                    {workPlan.workShifts[indexShift].lines.map((line, indexLine) => (
+                                        <div key={`line${indexLine}`} className='line'>
+                                            <h3>{`Linia ${line.lineNumber}`}</h3>
+                                            {workPlan.workShifts[indexShift].lines[indexLine].workplaces.map((workplace, indexWorkplace) => {
+                                                return <WorkPlace key={`workplace${indexWorkplace}`} shift={indexShift} line={indexLine} workPlace={indexWorkplace}>
+                                                    <h4>{workplace.nameWorkplace}</h4>
+                                                    {workPlan.workShifts[indexShift].lines[indexLine].workplaces[indexWorkplace].employeeListWorkplaces.map(employee => (
+                                                        <Employee key={`employee${employee.id}`} id={employee.id} line={indexLine} shift={indexShift} workPlace={indexWorkplace} >
+                                                            <span>{`${employee.name} ${employee.lastName}`}</span>
+                                                        </Employee>
+                                                    ))}
+
+                                                </WorkPlace>
+                                            })}
+                                        </div>
+                                    )
+                                    )}
+                                </div>
                             </div>
                         )) : null}
                     </div>
@@ -274,7 +241,7 @@ const GraphicPage = ({ className }) => {
                 <button onClick={submitWorkPlan}>Zapisz</button>
             </WorkPlanContext.Provider>
 
-        </div >
+        </Container >
     )
 }
 

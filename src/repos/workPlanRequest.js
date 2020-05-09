@@ -42,11 +42,11 @@ const _changeValuesNumber = (workPlan) => {
 const createWorkPlan = (startDate, endDate, userId) => {
 
     const data = {
-        createdByIdUser: userId,
+        createByIdUser: 1,
         endDay: endDate,
         startDay: startDate
     }
-
+    console.log(JSON.stringify(data))
     return fetch(WORK_PLAN_URL, {
         method: 'POST',
         credentials: 'same-origin',

@@ -1,1 +1,14 @@
 @import '../../../sass/colors.scss';
+
+.board {
+    min-height: 110px;
+    margin: 5px;
+    background-color: $grey;
+    border: 3px solid $orange;
+    text-align: center;
+
+    h4 {
+        background-color: $orange;
+        padding: 6px;
+    }
+}

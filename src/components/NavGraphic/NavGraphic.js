@@ -25,6 +25,7 @@ const NavGraphic = ({ className, setDateEnd, dateEnd, dateStart, setDateStart, s
     }
 
     const handleChangeDate = (date) => {
+        console.log(date)
         const day = date.getDay();
         if (day === 0) {
             setDateStart(subtractionDays(date, 6));
@@ -66,10 +67,10 @@ const NavGraphic = ({ className, setDateEnd, dateEnd, dateStart, setDateStart, s
                     <div className='dateShow'>
                         <span>{dateStart}</span>
                     </div>
-                    <input type="date" onChange={(e) => handleChangeDate(e.target.value)} value={dateStart} />
+                    <input type="date" onChange={(e) => handleChangeDate(new Date(e.target.value))} value={dateStart} />
                 </div>
                 <div className='calendar__endDate'>
-                    <input type="date" onChange={(e) => handleChangeDate(e.target.value)} value={dateEnd} />
+                    <input type="date" onChange={(e) => handleChangeDate(new Date(e.target.value))} value={dateEnd} />
                     <div className='dateShow'>
                         <span>{dateEnd}</span>
                     </div>

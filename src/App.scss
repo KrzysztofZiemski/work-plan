@@ -1,7 +1,14 @@
 @import './sass/variables.scss';
+@import "~bootstrap/scss/bootstrap";
 
 .App {
-            .page {
-                        min-height: calc(100vh - var(--navHeight));
-            }
+    display: flex;
+
+    .mainNavbar {
+        width: 140px;
+    }
+
+    .page {
+        min-height: calc(100vh - var(--navHeight));
+    }
 }

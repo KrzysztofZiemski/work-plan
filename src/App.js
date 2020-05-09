@@ -6,6 +6,9 @@ import {
 } from "react-router-dom";
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
+
+import { Container, Row, Col } from 'react-bootstrap';
+
 import GraphicPage from './templates/GraphicPage/GraphicPage';
 import HomePage from './templates/HomePage/HomePage';
 import MainNav from './components/MainNav/MainNav';
@@ -17,19 +20,22 @@ function App() {
 
     <Router>
       <div className="App">
-        <MainNav />
+
+        <MainNav className='mainNavbar' />
         <Switch>
           <DndProvider backend={Backend}>
+
             <Route path="/" exact={true}>
               <HomePage className='page' />
             </Route>
             <Route path="/graphic">
               <GraphicPage className='page' />
             </Route>
+
           </DndProvider>
         </Switch>
       </div>
-    </Router>
+    </Router >
 
   );
 }
