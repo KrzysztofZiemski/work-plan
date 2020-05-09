@@ -1,14 +1,14 @@
 @import '../../../sass/colors.scss';
 
 .employee {
-            background-color: $orange;
-            margin: 2px;
-            text-align: center;
-            padding: 5px;
-            cursor: grab;
+    background-color: $white;
+    margin: 2px;
+    text-align: center;
+    padding: 5px;
+    cursor: grab;
 
-            &.drag {
-                        opacity: .2;
-                        cursor: grabbing;
-            }
+    &.drag {
+        opacity: .2;
+        cursor: grabbing;
+    }
 }

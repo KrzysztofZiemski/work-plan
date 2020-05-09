@@ -1,96 +1,107 @@
-.GraphicNav {
-            $widthNavBtn: 100px;
-            max-width: 1280px;
-            width: 100%;
-            position: relative;
-            min-height: 70px;
-            display: flex;
-            justify-content: space-around;
-            padding-left: $widthNavBtn;
-            padding-right: $widthNavBtn;
-            margin: 0 auto;
+.graphicNav {
+    display: flex;
+    flex-wrap: wrap;
 
-            .calendar {
-                        width: 100%;
-                        display: flex;
-                        justify-content: space-around;
-                        align-items: center;
-
-                        .calendar__startDate,
-                        .calendar__endDate {
-                                    position: relative;
-                                    flex-grow: 1;
-                                    height: 100%;
-
-                                    .dateShow {
-                                                position: absolute;
-                                                top: 0;
-                                                left: 0;
-                                                width: 100%;
-                                                height: 100%;
-                                                display: flex;
-                                                align-items: center;
-                                                justify-content: center;
-                                                font-size: 25px;
-                                                text-align: center;
-                                    }
-
-                                    input {
-                                                position: absolute;
-                                                height: 100%;
-                                                width: 100%;
-                                                top: 0;
-                                                left: 0;
-                                                opacity: 1;
-                                                z-index: 2;
-                                                opacity: 0;
-                                                cursor: pointer;
-
-                                                &::-webkit-calendar-picker-indicator {
-                                                            display: block;
-                                                            opacity: 1;
-                                                            width: 100%;
-                                                            position: absolute;
-                                                            height: 100%;
-                                                }
-                                    }
-                        }
-            }
-
-            .GraphicNav__navigation {
-                        position: absolute;
-                        width: $widthNavBtn;
-                        height: 100%;
-                        left: 0;
-                        top: 0;
-                        cursor: pointer;
-                        overflow: hidden;
-                        border: none;
-
-                        svg {
-                                    transform: rotate(-90deg);
-                                    height: 100%;
-
-                                    .arrowIcon {
-                                                // fill: #94d31b;
-                                    }
-                        }
-
-                        &.GraphicNav__navigation--next {
-                                    right: 0;
-                                    left: auto;
-
-                                    svg {
-                                                transform: rotate(90deg);
-                                    }
-                        }
-
-                        &:hover {
-                                    svg {
-                                                .arrowIcon {
-                                                            fill: #94d31b;
-                                                }
-                                    }
-                        }
-            }
+    .graphicNav__btn {
+        width: 100%;
+    }
 }
+
+
+
+// .GraphicNav {
+//     $widthNavBtn: 100px;
+//     max-width: 1280px;
+//     width: 100%;
+//     position: relative;
+//     min-height: 70px;
+//     display: flex;
+//     justify-content: space-around;
+//     padding-left: $widthNavBtn;
+//     padding-right: $widthNavBtn;
+//     margin: 0 auto;
+
+//     .calendar {
+//         width: 100%;
+//         display: flex;
+//         justify-content: space-around;
+//         align-items: center;
+
+//         .calendar__startDate,
+//         .calendar__endDate {
+//             position: relative;
+//             flex-grow: 1;
+//             height: 100%;
+
+//             .dateShow {
+//                 position: absolute;
+//                 top: 0;
+//                 left: 0;
+//                 width: 100%;
+//                 height: 100%;
+//                 display: flex;
+//                 align-items: center;
+//                 justify-content: center;
+//                 font-size: 25px;
+//                 text-align: center;
+//             }
+
+//             input {
+//                 position: absolute;
+//                 height: 100%;
+//                 width: 100%;
+//                 top: 0;
+//                 left: 0;
+//                 opacity: 1;
+//                 z-index: 2;
+//                 opacity: 0;
+//                 cursor: pointer;
+
+//                 &::-webkit-calendar-picker-indicator {
+//                     display: block;
+//                     opacity: 1;
+//                     width: 100%;
+//                     position: absolute;
+//                     height: 100%;
+//                 }
+//             }
+//         }
+//     }
+
+//     .GraphicNav__navigation {
+//         position: absolute;
+//         width: $widthNavBtn;
+//         height: 100%;
+//         left: 0;
+//         top: 0;
+//         cursor: pointer;
+//         overflow: hidden;
+//         border: none;
+
+//         svg {
+//             transform: rotate(-90deg);
+//             height: 100%;
+
+//             .arrowIcon {
+//                 // fill: #94d31b;
+//             }
+//         }
+
+//         &.GraphicNav__navigation--next {
+//             right: 0;
+//             left: auto;
+
+//             svg {
+//                 transform: rotate(90deg);
+//             }
+//         }
+
+//         &:hover {
+//             svg {
+//                 .arrowIcon {
+//                     fill: #94d31b;
+//                 }
+//             }
+//         }
+//     }
+// }

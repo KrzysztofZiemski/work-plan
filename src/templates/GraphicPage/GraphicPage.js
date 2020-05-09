@@ -9,70 +9,75 @@ import NavGraphic from '../../components/NavGraphic/NavGraphic';
 import WorkPlace from './WorkPlace/WorkPlace';
 import Employee from './Employee/Employee';
 import { createWorkPlan, getWorkPlanByDate, updateWorkPlane } from '../../repos/workPlanRequest';
-import { workPlaceNames, initFreeEmployee } from './handlers';
+import { workPlaceNames, initFreeEmployee, getWorkplanToSend } from './handlers';
 import './GraphicPage.scss';
 
 export const WorkPlanContext = createContext({
     setWorkplaceEmployee: null,
     removeEmployee: null,
     workPlan: null,
-    dragable: null
+    dragable: null,
+    setDragable: null,
+    submitWorkPlan: null
 })
 
 const GraphicPage = ({ className }) => {
     let [dateStart, setDateStart] = useState('');
     let [dateEnd, setDateEnd] = useState('');
-    let [dragable, setDragable] = useState(true);
+    let [dragable, setDragable] = useState(false);
     let [freeEmployees, setFreeEmployees] = useState([]);
     let [workPlan, setWorkPlan] = useState(null);
 
-    //todo czekam na cors
+    //todo po wysyłce na serwer updatu zmienia nie tylko kopie obiektu na same id, ale i obiekt
     useEffect(() => {
-        //fake data
-        setWorkPlan(testWorkPlan)
-        initFreeEmployee(testEmployee, testWorkPlan, setFreeEmployees)
+        //fake data for tests
+        // setWorkPlan(testWorkPlan)
+        // initFreeEmployee(testEmployee, testWorkPlan, setFreeEmployees)
 
         //Pobranie planu, jeścli plan nie istnieje stworzenie nowego
 
-        //nie działa narazie serwer
 
-        // if (!dateStart || !dateEnd) return;
-        // let isSubscribed = true;
-        // const workPlanPromise = getWorkPlanByDate(dateStart, dateEnd)
-        //     .catch(e => {
-        //         if (isSubscribed && e === 404) return createWorkPlan(dateStart, dateEnd, 1)
-        //             .then(resp => console.log(resp));
+        if (!dateStart || !dateEnd) return;
+        let isSubscribed = true;
+        const workPlanPromise = getWorkPlanByDate(dateStart, dateEnd)
+            .then(res => {
+                if (res.status === 200) return res.json();
+                if (res.status === 404) return createWorkPlan(dateStart, dateEnd, 1);
+                Promise.reject(res.status)
+            })
+            .catch(e => {
+                if (isSubscribed && e === 404) return createWorkPlan(dateStart, dateEnd, 1)
+                    .then(resp => console.log(resp));
 
-        //         return Promise.reject('stopped fetch');
-        //     });
+                return Promise.reject('stopped fetch');
+            });
 
-        // // pobranie pracowników
+        // pobranie pracowników
+        const employeesPromise = getAllEmployee()
+        // jak już i plan i pracownicy są pobrani, przefiltruj pracowników, po tych już występujących w grafiku
 
-        // const employeesPromise = getAllEmployee()
-        //     .catch(err => console.log(err));
+        Promise.all([workPlanPromise, employeesPromise]).then(result => {
+            if (!isSubscribed) return;
+            setWorkPlan(result[0]);
+            initFreeEmployee(result[1], result[0], setFreeEmployees)
+        }).catch(e => {
+            if (e === 404) createWorkPlan(dateStart, dateEnd, 1);
 
-        // // jak już i plan i pracownicy są pobrani, przefiltruj pracowników, po tych już występujących w grafiku
-
-        // Promise.all([workPlanPromise, employeesPromise]).then(result => {
-        //     if (!isSubscribed) return;
-        //     setWorkPlan(result[0]);
-        //     initFreeEmployee(result[1], result[0], setFreeEmployees)
-        // }).catch(e => console.log('error promise all', e))
+        })
 
         // po odmontowaniu elementu zresetuj wartości startowe
 
-        // return () => {
-        //     setWorkPlan(null);
-        //     setFreeEmployees([]);
-        //     isSubscribed = false;
-        // };
+        return () => {
+            setWorkPlan(null);
+            setFreeEmployees([]);
+            isSubscribed = false;
+        };
     }, [dateStart, dateEnd]);
 
 
 
     //przt upuszczaniu pracownika pobieramy parametry workplace i dodajemy obiekt pracownika w odpowiednim miejscu
     const setWorkplaceEmployee = ({ shift, line, workPlace }, employee) => {
-        console.log('workPlace11', workPlace)
         const copyWorkPlan = Object.assign({}, workPlan);
         if (workPlace === workPlaceNames.holidays) {
             copyWorkPlan.holidaysEmployees.push(employee);
@@ -84,7 +89,6 @@ const GraphicPage = ({ className }) => {
             copyNoWorkplaneEmployee.push(employee);
             setFreeEmployees(copyNoWorkplaneEmployee);
         } else if (workPlace === workPlaceNames.leader || workPlace === workPlaceNames.other || workPlace === workPlaceNames.supervision || workPlace === workPlaceNames.unskilled) {
-
             copyWorkPlan.workShifts[shift][workPlace].push(employee);
         }
         else {
@@ -118,11 +122,12 @@ const GraphicPage = ({ className }) => {
         }
         //for specific workers
         else if (workPlace === workPlaceNames.leader || workPlace === workPlaceNames.other || workPlace === workPlaceNames.supervision || workPlace === workPlaceNames.unskilled) {
+
             const employeeIndex = copyWorkPlan.workShifts[shift][workPlace].findIndex(empoyee => empoyee.id === id);
             const removerEmployee = copyWorkPlan.workShifts[shift][workPlace].splice(employeeIndex, 1);
 
             setWorkPlan(copyWorkPlan);
-            return removerEmployee;
+            return removerEmployee[0];
         }
         //for workplaces
         else {
@@ -137,18 +142,23 @@ const GraphicPage = ({ className }) => {
 
     //zapisujemy plan
     const submitWorkPlan = () => {
-        updateWorkPlane(1, workPlan)
+        if (!dragable) return;
+        const preparationWorkPlan = getWorkplanToSend(workPlan);
+        updateWorkPlane(1, preparationWorkPlan)
+            .then(res => {
+                console.log(res)
+                if (res.status === 200) return setDragable(false);
+            })
             .catch(err => console.log('err', err))
     }
 
     return (
         <Container fluid className={`${className} graphicPage`}>
             <h1>Grafik</h1>
-            <WorkPlanContext.Provider value={{ setWorkplaceEmployee, removeEmployee, workPlan, dragable }}>
-                <NavGraphic className='GraphicNav' setDragable={setDragable} dateStart={dateStart} setDateStart={setDateStart} dateEnd={dateEnd} setDateEnd={setDateEnd}></NavGraphic>
+            <WorkPlanContext.Provider value={{ setWorkplaceEmployee, removeEmployee, workPlan, dragable, setDragable, submitWorkPlan }}>
+                <NavGraphic className='GraphicNav' dateStart={dateStart} setDateStart={setDateStart} dateEnd={dateEnd} setDateEnd={setDateEnd}></NavGraphic>
 
-                <div className='graphic'>
-
+                <div className={dragable ? 'graphic' : 'graphic block'}>
                     <div className='graphic__shifts'>
                         {workPlan ? workPlan.workShifts.map((shift, indexShift) => (
                             <div key={`shift${indexShift}`} className='shift'>
@@ -191,7 +201,7 @@ const GraphicPage = ({ className }) => {
                                     {workPlan.workShifts[indexShift].lines.map((line, indexLine) => (
                                         <div key={`line${indexLine}`} className='line'>
                                             <h3>{`Linia ${line.lineNumber}`}</h3>
-                                            {workPlan.workShifts[indexShift].lines[indexLine].workplaces.map((workplace, indexWorkplace) => {
+                                            {workPlan.workShifts[indexShift].lines[indexLine].workplaces.map((workplace, indexWorkplace, workplacesArr) => {
                                                 return <WorkPlace key={`workplace${indexWorkplace}`} shift={indexShift} line={indexLine} workPlace={indexWorkplace}>
                                                     <h4>{workplace.nameWorkplace}</h4>
                                                     {workPlan.workShifts[indexShift].lines[indexLine].workplaces[indexWorkplace].employeeListWorkplaces.map(employee => (
@@ -210,7 +220,7 @@ const GraphicPage = ({ className }) => {
                         )) : null}
                     </div>
                     <div className='graphic__other'>
-                        <WorkPlace shift={null} line={null} workPlace={workPlaceNames.free} className='workShift workShift__freeEmployees'>
+                        <WorkPlace shift={null} line={null} workPlace={workPlaceNames.free} className='workShift workShift--freeEmployees'>
                             <h4>Nieprzydzieleni pracownicy</h4>
                             {freeEmployees.map(employee => (
                                 <Employee key={`employee${employee.id}`} id={employee.id} line={null} shift={null} workPlace={workPlaceNames.free} >

@@ -3,42 +3,7 @@ import { SERVER } from '../config.json';
 const WORK_PLAN_URL = `${SERVER}/api/v1/work-plan`
 
 
-const _changeValuesNumber = (workPlan) => {
 
-    return {
-        id: workPlan.id,
-        startDay: workPlan.startDay,
-        endDay: workPlan.endDay,
-        holidaysEmployees: workPlan.holidaysEmployees.map(employee => Number(employee.id)),
-        absenceEmployees: workPlan.absenceEmployees.map(employee => Number(employee.id)),
-        infoHolidays: workPlan.infoHolidays,
-        infoAbsence: workPlan.infoAbsence,
-        workShifts: workPlan.workShifts.map(shift => (
-            {
-                id: shift.id,
-                shiftNumber: shift.shiftNumber,
-                comments: shift.comments,
-                shiftsLeader: shift.shiftsLeader.map(leader => Number(leader.id)),
-                unskilledWorker: shift.unskilledWorker.map(unskilledWorker => Number(unskilledWorker.id)),
-                supervision: shift.supervision.map(supervision => Number(supervision.id)),
-                other: shift.other.map(other => Number(other.id)),
-                lines: shift.lines.map(line => (
-                    {
-                        id: line.id,
-                        lineNumber: line.lineNumber,
-                        workplaces: line.workplaces.map(workplace => (
-                            {
-                                id: workplace.id,
-                                employeeListWorkplaces: workplace.employeeListWorkplaces.map(employee => Number(employee.id))
-                            }
-
-                        ))
-                    }
-                ))
-            }
-        ))
-    }
-}
 const createWorkPlan = (startDate, endDate, userId) => {
 
     const data = {
@@ -70,14 +35,11 @@ const getWorkPlanByDate = (startDate, endDate) => {
             "Accept": "*/*"
 
         }
-    }).then(res => {
-        if (res.status === 200) return res.json();
-        return Promise.reject(res.status);
     })
 }
 const updateWorkPlane = (idUser, workPlan) => {
-
-    return fetch(`${WORK_PLAN_URL}?idUser=${idUser}&idWorkPlan=${workPlan.id}`, {
+    console.log(workPlan)
+    return fetch(`${WORK_PLAN_URL}/${workPlan.id}/user/${idUser}`, {
         method: 'PUT',
         mode: 'cors',
         credentials: 'same-origin',
@@ -85,13 +47,8 @@ const updateWorkPlane = (idUser, workPlan) => {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         },
-        body: JSON.stringify(_changeValuesNumber(workPlan))
+        body: JSON.stringify(workPlan)
     })
-        .then(res => {
-            if (res.status === 200) return res.json();
-            throw (Promise.reject(res.status));
-
-        })
 }
 
 export { createWorkPlan, getWorkPlanByDate, updateWorkPlane }

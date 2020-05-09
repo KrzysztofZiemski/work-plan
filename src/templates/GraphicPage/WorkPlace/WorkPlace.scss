@@ -6,6 +6,9 @@
     background-color: $grey;
     border: 3px solid $orange;
     text-align: center;
+    width: 100px;
+    height: 150px;
+    overflow: auto;
 
     h4 {
         background-color: $orange;

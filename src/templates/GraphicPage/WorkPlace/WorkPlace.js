@@ -4,7 +4,7 @@ import { ItemTypes } from '../../../utils/ItemTypes';
 import { WorkPlanContext } from '../GraphicPage';
 import './WorkPlace.scss';
 
-const WorkPlace = ({ line, shift, workPlace, children, className }) => {
+const WorkPlace = ({ line, shift, workPlace, children, className, style }) => {
 
     const { setWorkplaceEmployee, removeEmployee, workPlan } = useContext(WorkPlanContext);
 
@@ -23,6 +23,7 @@ const WorkPlace = ({ line, shift, workPlace, children, className }) => {
 
     return (
         <div
+            style={style}
             className={`board ${className ? className : ''}`}
             ref={drop}
         >
