@@ -7,8 +7,6 @@ import {
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
 
-import { Container, Row, Col } from 'react-bootstrap';
-
 import GraphicPage from './templates/GraphicPage/GraphicPage';
 import HomePage from './templates/HomePage/HomePage';
 import MainNav from './components/MainNav/MainNav';

@@ -3,11 +3,10 @@ import testWorkPlan from './testWorkPlan.json';
 import testEmployee from './testEmployees.json';
 //
 import React, { useState, useEffect, createContext } from 'react';
-import { Container, Row } from 'react-bootstrap';
 import { getAllEmployee } from '../../repos/workersRequest';
 import NavGraphic from '../../components/NavGraphic/NavGraphic';
-import WorkPlace from './WorkPlace/WorkPlace';
-import Employee from './Employee/Employee';
+import WorkPlace from '../../components/WorkPlace/WorkPlace';
+import Employee from '../../components/Employee/Employee';
 import { createWorkPlan, getWorkPlanByDate, updateWorkPlane } from '../../repos/workPlanRequest';
 import { workPlaceNames, initFreeEmployee, getWorkplanToSend } from './handlers';
 import './GraphicPage.scss';
@@ -71,6 +70,7 @@ const GraphicPage = ({ className }) => {
             setWorkPlan(null);
             setFreeEmployees([]);
             isSubscribed = false;
+            setDragable(false);
         };
     }, [dateStart, dateEnd]);
 
@@ -142,7 +142,7 @@ const GraphicPage = ({ className }) => {
 
     //zapisujemy plan
     const submitWorkPlan = () => {
-        if (!dragable) return;
+        if (!dragable || !workPlan) return;
         const preparationWorkPlan = getWorkplanToSend(workPlan);
         updateWorkPlane(1, preparationWorkPlan)
             .then(res => {
@@ -153,7 +153,7 @@ const GraphicPage = ({ className }) => {
     }
 
     return (
-        <Container fluid className={`${className} graphicPage`}>
+        <div fluid className={`${className} graphicPage`}>
             <h1>Grafik</h1>
             <WorkPlanContext.Provider value={{ setWorkplaceEmployee, removeEmployee, workPlan, dragable, setDragable, submitWorkPlan }}>
                 <NavGraphic className='GraphicNav' dateStart={dateStart} setDateStart={setDateStart} dateEnd={dateEnd} setDateEnd={setDateEnd}></NavGraphic>
@@ -251,7 +251,7 @@ const GraphicPage = ({ className }) => {
                 <button onClick={submitWorkPlan}>Zapisz</button>
             </WorkPlanContext.Provider>
 
-        </Container >
+        </div >
     )
 }
 

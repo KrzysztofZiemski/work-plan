@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDrag } from 'react-dnd';
-import { ItemTypes } from '../../../utils/ItemTypes';
+import { ItemTypes } from '../../utils/ItemTypes';
 import './Employee.scss';
 const Employee = ({ id, line, shift, workPlace, children, className }) => {
     const [{ isDragging }, drag] = useDrag({

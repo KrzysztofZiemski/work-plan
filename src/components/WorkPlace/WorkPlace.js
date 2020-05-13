@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useDrop } from 'react-dnd';
-import { ItemTypes } from '../../../utils/ItemTypes';
-import { WorkPlanContext } from '../GraphicPage';
+import { ItemTypes } from '../../utils/ItemTypes';
+import { WorkPlanContext } from '../../templates/GraphicPage/GraphicPage';
 import './WorkPlace.scss';
 
 const WorkPlace = ({ line, shift, workPlace, children, className, style }) => {
