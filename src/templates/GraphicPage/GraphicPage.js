@@ -3,6 +3,7 @@ import testWorkPlan from './testWorkPlan.json';
 import testEmployee from './testEmployees.json';
 //
 import React, { useState, useEffect, createContext } from 'react';
+import queryString from 'query-string';
 import { getAllEmployee } from '../../repos/workersRequest';
 import NavGraphic from '../../components/NavGraphic/NavGraphic';
 import WorkPlace from '../../components/WorkPlace/WorkPlace';
@@ -20,22 +21,29 @@ export const WorkPlanContext = createContext({
     submitWorkPlan: null
 })
 
-const GraphicPage = ({ className }) => {
+const GraphicPage = (props) => {
     let [dateStart, setDateStart] = useState('');
     let [dateEnd, setDateEnd] = useState('');
-    let [dragable, setDragable] = useState(false);
+    let [dragable, setDragable] = useState(0);
     let [freeEmployees, setFreeEmployees] = useState([]);
     let [workPlan, setWorkPlan] = useState(null);
-
+    console.log('dragable', dragable)
     //todo po wysyłce na serwer updatu zmienia nie tylko kopie obiektu na same id, ale i obiekt
     useEffect(() => {
         //fake data for tests
         // setWorkPlan(testWorkPlan)
         // initFreeEmployee(testEmployee, testWorkPlan, setFreeEmployees)
-
         //Pobranie planu, jeścli plan nie istnieje stworzenie nowego
 
+        const editQuery = queryString.parse(props.location.search).edit;
+        if (editQuery !== dragable) {
+            if (editQuery === undefined) {
+                setDragable(0)
+            } else {
+                setDragable(editQuery)
+            };
 
+        }
         if (!dateStart || !dateEnd) return;
         let isSubscribed = true;
         const workPlanPromise = getWorkPlanByDate(dateStart, dateEnd)
@@ -70,9 +78,8 @@ const GraphicPage = ({ className }) => {
             setWorkPlan(null);
             setFreeEmployees([]);
             isSubscribed = false;
-            setDragable(false);
         };
-    }, [dateStart, dateEnd]);
+    }, [dateStart, dateEnd, props.location.search]);
 
 
 
@@ -153,7 +160,7 @@ const GraphicPage = ({ className }) => {
     }
 
     return (
-        <div fluid className={`${className} graphicPage`}>
+        <div className={`${props.className} graphicPage`}>
             <h1>Grafik</h1>
             <WorkPlanContext.Provider value={{ setWorkplaceEmployee, removeEmployee, workPlan, dragable, setDragable, submitWorkPlan }}>
                 <NavGraphic className='GraphicNav' dateStart={dateStart} setDateStart={setDateStart} dateEnd={dateEnd} setDateEnd={setDateEnd}></NavGraphic>

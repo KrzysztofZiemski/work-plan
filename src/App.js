@@ -15,6 +15,7 @@ import GraphicPage from './templates/GraphicPage/GraphicPage';
 import HomePage from './templates/HomePage/HomePage';
 import NavBarTop from './components/NavBarTop';
 import NavBarLeft from './components/NavBarLeft';
+import { default as routes } from './routes';
 import './App.scss';
 
 const useStyles = makeStyles((theme) => ({
@@ -52,14 +53,13 @@ function App() {
             <NavBarTop className='mainNavbar' onClick={toggleLeftMenu} />
 
             <Switch>
+              <Route path={routes.root} exact={true}>
+                <HomePage className='page' />
+              </Route>
               <DndProvider backend={Backend}>
-                <Route path="/" exact={true}>
-                  <HomePage className='page' />
+                <Route >
+                  <Route path={routes.workPlan} render={(props) => <GraphicPage className='page' {...props} />} />
                 </Route>
-                <Route path="/graphic">
-                  <GraphicPage className='page' />
-                </Route>
-
               </DndProvider>
             </Switch>
           </Grid>
