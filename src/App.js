@@ -19,18 +19,14 @@ import { default as routes } from './routes';
 import './App.scss';
 
 const useStyles = makeStyles((theme) => ({
-  container: {
+  grow: {
     flexGrow: 1
   },
-  hiddenMenu: {
-    width: 0,
-    transition: '.5s'
-  },
-  activeMenu: {
-    width: '200px',
-    transition: '.5s'
+  root: {
+    minHeight: '100vh'
   }
-}))
+}));
+
 function App() {
 
   let [activeLeftMenu, setActiveLeftMenu] = useState(true);
@@ -45,13 +41,12 @@ function App() {
 
     <Router>
       <div className="App" >
-        <Grid container>
+        <Grid container className={classes.root}>
           <Grid item>
             <NavBarLeft isActive={activeLeftMenu} />
           </Grid>
-          <Grid item className={classes.container}>
-            <NavBarTop className='mainNavbar' onClick={toggleLeftMenu} />
-
+          <Grid item className={classes.grow}>
+            <NavBarTop className={classes.grow} onClick={toggleLeftMenu} />
             <Switch>
               <Route path={routes.root} exact={true}>
                 <HomePage className='page' />

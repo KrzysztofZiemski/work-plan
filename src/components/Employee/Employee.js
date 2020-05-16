@@ -1,8 +1,28 @@
 import React from 'react';
+import Chip from '@material-ui/core/Chip';
+import { makeStyles } from '@material-ui/core/styles';
+import FaceIcon from '@material-ui/icons/Face';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../../utils/ItemTypes';
 import './Employee.scss';
-const Employee = ({ id, line, shift, workPlace, children, className }) => {
+
+const useStyles = makeStyles(() => ({
+    root: {
+        width: '90%',
+        padding: 10,
+        margin: 5,
+        justifyContent: 'flex-start',
+        cursor: 'grab'
+    },
+    dragging: {
+        opacity: '.2'
+    }
+}))
+
+const Employee = ({ id, line, shift, workPlace, children, label }) => {
+
+    const classes = useStyles()
+
     const [{ isDragging }, drag] = useDrag({
         item: {
             type: ItemTypes.EMPLOYEE,
@@ -13,14 +33,12 @@ const Employee = ({ id, line, shift, workPlace, children, className }) => {
         })
     })
 
-
     return (
-        <div
+        <Chip
             ref={drag}
-            className={`employee ${isDragging ? 'drag' : ''} ${className ? className : ''}`}
-        >
-            {children}
-        </div>
+            className={isDragging ? `${classes.root} ${classes.dragging}` : classes.root}
+            icon={<FaceIcon />} label={label}
+        />
     )
 }
 

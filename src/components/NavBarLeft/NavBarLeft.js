@@ -1,73 +1,87 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Collapse from '@material-ui/core/Collapse';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
+import ListItemCollapse from '../../components/ListItemCollapse';
 import { Link } from 'react-router-dom';
 import { default as routes } from '../../routes';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     root: {
         width: 240,
         maxWidth: 360,
-        backgroundColor: theme.palette.background.paper,
-        overflow: 'hidden',
-        transition: '.5s'
+        transition: '.5s',
+        height: '100vh',
+        backgroundColor: '#222d32',
+        color: '#fff',
+        position: 'sticky',
+        top: 0,
+        overflow: 'auto'
     },
     rootHidden: ({
         width: 240,
         marginLeft: -240,
         maxWidth: 360,
-        backgroundColor: theme.palette.background.paper,
-        overflow: 'hidden',
-        transition: '.5s'
+        transition: '.5s',
+        height: '100%',
+        flexGrow: 1,
+        backgroundColor: '#222d32',
+        position: 'sticky',
+        top: 0,
+        overflow: 'auto'
     }),
-    nested: {
-        paddingLeft: theme.spacing(4),
-    },
+    subheader: ({
+        color: '#fff',
+        height: 100,
+        textAlign: 'center',
+        fontSize: 20
+    }),
 }));
 
 export const NavBarLeft = ({ isActive }) => {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(true);
 
-    const handleClick = () => {
-        setOpen(!open);
-    };
+    let [selected, setSelected] = useState(null);
 
     return (
-        <List
-            component="nav"
-            aria-labelledby="nested-list-subheader"
-            subheader={
-                <ListSubheader component="div" id="nested-list-subheader">
-                    Jakiś tytuł
-                 </ListSubheader>
-            }
-            className={isActive ? classes.root : classes.rootHidden}
-        >
-            <ListItem button component={Link} to={routes.root}>
-                <ListItemText primary="Start" />
-            </ListItem>
+        <>
+            <List
+                component="nav"
+                varian='primary'
+                subheader={
+                    <ListSubheader component="div" className={classes.subheader}>
+                        Menu
+                    </ListSubheader>
+                }
+                className={isActive ? classes.root : classes.rootHidden}
+            >
+                <ListItem button component={Link} to={routes.root} selected={selected === 0 ? true : false} onClick={() => setSelected(0)}>
+                    <ListItemText primary="Start" />
+                </ListItem>
 
-            <ListItem button onClick={handleClick} >
-                <ListItemText primary="Plan pracy" />
-                {open ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                    <ListItem button className={classes.nested} component={Link} to={routes.workPlan}>
-                        <ListItemText primary="Podgląd planu" />
-                    </ListItem>
-                    <ListItem button className={classes.nested} component={Link} to={routes.workPlanEdit}>
-                        <ListItemText primary="Edycja planu" />
-                    </ListItem>
-                </List>
-            </Collapse>
-        </List>
+                <ListItemCollapse label="Plan pracy">
+                    <List component="div" disablePadding>
+                        <ListItem button component={Link} to={routes.workPlan} selected={selected === 1 ? true : false} onClick={() => setSelected(1)}>
+                            <ListItemText primary="Podgląd planu" />
+                        </ListItem>
+                        <ListItem button component={Link} to={routes.workPlanEdit} selected={selected === 2 ? true : false} onClick={() => setSelected(2)}>
+                            <ListItemText primary="Edycja planu" />
+                        </ListItem>
+                    </List>
+                </ListItemCollapse>
+                <ListItemCollapse label='Statystyki'>
+                    <List component="div" disablePadding>
+                        <ListItem button className={classes.subListItem} component={Link} to={routes.workPlan} selected={selected === 3 ? true : false} onClick={() => setSelected(3)}>
+                            <ListItemText primary="Podgląd statystyk" />
+                        </ListItem>
+                        <ListItem className={classes.subListItem} button component={Link} to={routes.workPlanEdit} selected={selected === 4 ? true : false} onClick={() => setSelected(4)}>
+                            <ListItemText primary="Edycja statystyk" />
+                        </ListItem>
+                    </List>
+                </ListItemCollapse>
+            </List>
+        </>
     );
 }

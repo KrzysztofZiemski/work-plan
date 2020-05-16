@@ -3,6 +3,9 @@ import testWorkPlan from './testWorkPlan.json';
 import testEmployee from './testEmployees.json';
 //
 import React, { useState, useEffect, createContext } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+
 import queryString from 'query-string';
 import { getAllEmployee } from '../../repos/workersRequest';
 import NavGraphic from '../../components/NavGraphic/NavGraphic';
@@ -21,18 +24,37 @@ export const WorkPlanContext = createContext({
     submitWorkPlan: null
 })
 
+const useStyles = makeStyles(theme => ({
+    grow: {
+        flexGrow: 1
+    },
+    otherEmployees: {
+        width: 230,
+        height: '100%',
+        position: 'sticky',
+        top: 0,
+        maxHeight: '70vh',
+        overflow: 'auto'
+    },
+    otherWorkplace: {
+        maxHeight: 300
+    }
+}))
+
 const GraphicPage = (props) => {
     let [dateStart, setDateStart] = useState('');
     let [dateEnd, setDateEnd] = useState('');
     let [dragable, setDragable] = useState(0);
     let [freeEmployees, setFreeEmployees] = useState([]);
     let [workPlan, setWorkPlan] = useState(null);
-    console.log('dragable', dragable)
+
+    const classes = useStyles();
+
     //todo po wysyłce na serwer updatu zmienia nie tylko kopie obiektu na same id, ale i obiekt
     useEffect(() => {
         //fake data for tests
-        // setWorkPlan(testWorkPlan)
-        // initFreeEmployee(testEmployee, testWorkPlan, setFreeEmployees)
+        setWorkPlan(testWorkPlan)
+        initFreeEmployee(testEmployee, testWorkPlan, setFreeEmployees)
         //Pobranie planu, jeścli plan nie istnieje stworzenie nowego
 
         const editQuery = queryString.parse(props.location.search).edit;
@@ -46,31 +68,32 @@ const GraphicPage = (props) => {
         }
         if (!dateStart || !dateEnd) return;
         let isSubscribed = true;
-        const workPlanPromise = getWorkPlanByDate(dateStart, dateEnd)
-            .then(res => {
-                if (res.status === 200) return res.json();
-                if (res.status === 404) return createWorkPlan(dateStart, dateEnd, 1);
-                Promise.reject(res.status)
-            })
-            .catch(e => {
-                if (isSubscribed && e === 404) return createWorkPlan(dateStart, dateEnd, 1)
-                    .then(resp => console.log(resp));
 
-                return Promise.reject('stopped fetch');
-            });
+        // const workPlanPromise = getWorkPlanByDate(dateStart, dateEnd)
+        //     .then(res => {
+        //         if (res.status === 200) return res.json();
+        //         if (res.status === 404) return createWorkPlan(dateStart, dateEnd, 1);
+        //         Promise.reject(res.status)
+        //     })
+        //     .catch(e => {
+        //         if (isSubscribed && e === 404) return createWorkPlan(dateStart, dateEnd, 1)
+        //             .then(resp => console.log(resp));
+
+        //         return Promise.reject('stopped fetch');
+        //     });
 
         // pobranie pracowników
-        const employeesPromise = getAllEmployee()
+        // const employeesPromise = getAllEmployee()
         // jak już i plan i pracownicy są pobrani, przefiltruj pracowników, po tych już występujących w grafiku
 
-        Promise.all([workPlanPromise, employeesPromise]).then(result => {
-            if (!isSubscribed) return;
-            setWorkPlan(result[0]);
-            initFreeEmployee(result[1], result[0], setFreeEmployees)
-        }).catch(e => {
-            if (e === 404) createWorkPlan(dateStart, dateEnd, 1);
+        // Promise.all([workPlanPromise, employeesPromise]).then(result => {
+        //     if (!isSubscribed) return;
+        //     setWorkPlan(result[0]);
+        //     initFreeEmployee(result[1], result[0], setFreeEmployees)
+        // }).catch(e => {
+        //     if (e === 404) createWorkPlan(dateStart, dateEnd, 1);
 
-        })
+        // })
 
         // po odmontowaniu elementu zresetuj wartości startowe
 
@@ -79,7 +102,7 @@ const GraphicPage = (props) => {
             setFreeEmployees([]);
             isSubscribed = false;
         };
-    }, [dateStart, dateEnd, props.location.search]);
+    }, [dateStart, dateEnd, props.location.search, dragable]);
 
 
 
@@ -165,8 +188,8 @@ const GraphicPage = (props) => {
             <WorkPlanContext.Provider value={{ setWorkplaceEmployee, removeEmployee, workPlan, dragable, setDragable, submitWorkPlan }}>
                 <NavGraphic className='GraphicNav' dateStart={dateStart} setDateStart={setDateStart} dateEnd={dateEnd} setDateEnd={setDateEnd}></NavGraphic>
 
-                <div className={dragable ? 'graphic' : 'graphic block'}>
-                    <div className='graphic__shifts'>
+                <Grid container>
+                    <Grid item className={classes.grow}>
                         {workPlan ? workPlan.workShifts.map((shift, indexShift) => (
                             <div key={`shift${indexShift}`} className='shift'>
                                 <h2>{`Zmiana ${shift.shiftNumber}`}</h2>
@@ -225,37 +248,34 @@ const GraphicPage = (props) => {
                                 </div>
                             </div>
                         )) : null}
-                    </div>
-                    <div className='graphic__other'>
-                        <WorkPlace shift={null} line={null} workPlace={workPlaceNames.free} className='workShift workShift--freeEmployees'>
-                            <h4>Nieprzydzieleni pracownicy</h4>
+                    </Grid>
+                    <Grid item className={classes.otherEmployees}>
+                        <WorkPlace shift={null} line={null} workPlace={workPlaceNames.free} title='Nieprzydzieleni pracownicy'>
                             {freeEmployees.map(employee => (
-                                <Employee key={`employee${employee.id}`} id={employee.id} line={null} shift={null} workPlace={workPlaceNames.free} >
+                                <Employee key={`employee${employee.id}`} id={employee.id} line={null} shift={null} workPlace={workPlaceNames.free}
+                                    label={`${employee.name} ${employee.lastName}`} >
                                     <span>{`${employee.name} ${employee.lastName}`}</span>
                                 </Employee>
                             ))}
 
                         </WorkPlace>
-                        <WorkPlace shift={null} line={null} workPlace={workPlaceNames.holidays} className='workShift'>
-                            <h4>Urlopy</h4>
+                        <WorkPlace shift={null} line={null} workPlace={workPlaceNames.holidays} title='Urlopy'>
                             {workPlan ? workPlan.holidaysEmployees.map(employee => (
-                                <Employee key={`employee${employee.id}`} id={employee.id} line={null} shift={null} workPlace={workPlaceNames.holidays} >
+                                <Employee key={`employee${employee.id}`} id={employee.id} line={null} shift={null} workPlace={workPlaceNames.holidays} label={`${employee.name} ${employee.lastName}`}>
                                     <span>{`${employee.name} ${employee.lastName}`}</span>
                                 </Employee>
                             )) : null}
                         </WorkPlace>
-                        <WorkPlace shift={null} line={null} workPlace={workPlaceNames.absence} className='workShift'>
-                            <h4>Nieobecni</h4>
-                            {workPlan ? workPlan.absenceEmployees.map(employee => (
-                                <Employee key={`employee${employee.id}`} id={employee.id} line={null} shift={null} workPlace={workPlaceNames.absence} >
-                                    <span>{`${employee.name} ${employee.lastName}`}</span>
-                                </Employee>
-                            )) : null}
-                        </WorkPlace>
-                    </div>
-                </div>
+                        <WorkPlace shift={null} line={null} workPlace={workPlaceNames.absence} title='Niedostępni'>
 
-                <button onClick={submitWorkPlan}>Zapisz</button>
+                            {workPlan ? workPlan.absenceEmployees.map(employee => (
+                                <Employee key={`employee${employee.id}`} id={employee.id} line={null} shift={null} workPlace={workPlaceNames.absence} label={`${employee.name} ${employee.lastName}`}>
+                                    <span>{`${employee.name} ${employee.lastName}`}</span>
+                                </Employee>
+                            )) : null}
+                        </WorkPlace>
+                    </Grid>
+                </Grid>
             </WorkPlanContext.Provider>
 
         </div >
