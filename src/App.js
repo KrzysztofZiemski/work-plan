@@ -23,7 +23,8 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1
   },
   root: {
-    minHeight: '100vh'
+    minHeight: '100vh',
+    flexWrap: 'nowrap'
   }
 }));
 

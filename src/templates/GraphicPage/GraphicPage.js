@@ -5,6 +5,7 @@ import testEmployee from './testEmployees.json';
 import React, { useState, useEffect, createContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
 import queryString from 'query-string';
 import { getAllEmployee } from '../../repos/workersRequest';
@@ -25,11 +26,16 @@ export const WorkPlanContext = createContext({
 })
 
 const useStyles = makeStyles(theme => ({
+    root: {
+        flexWrap: 'nowrap',
+        fontSize: 10
+    },
     grow: {
         flexGrow: 1
     },
     otherEmployees: {
-        width: 230,
+        width: 240,
+        minWidth: 240,
         height: '100%',
         position: 'sticky',
         top: 0,
@@ -38,6 +44,40 @@ const useStyles = makeStyles(theme => ({
     },
     otherWorkplace: {
         maxHeight: 300
+    },
+    shiftsContainer: {
+        flexGrow: 1
+    },
+    shiftOther: {
+        flexDirection: 'row',
+        display: 'flex',
+        justifyContent: 'space-around'
+    },
+    shiftTitle: {
+        backgroundColor: '#222d32',
+        color: '#fff'
+    },
+    lines: {
+        display: 'flex',
+        justifyContent: 'space-around',
+
+    },
+    line: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+
+    },
+    lineTitle: {
+        marginRight: 40,
+    },
+    workPlaceShift: {
+        width: 250,
+        height: 80,
+        overflow: 'auto'
+    },
+    workPlace: {
+        height: 300
     }
 }))
 
@@ -184,69 +224,75 @@ const GraphicPage = (props) => {
 
     return (
         <div className={`${props.className} graphicPage`}>
-            <h1>Grafik</h1>
             <WorkPlanContext.Provider value={{ setWorkplaceEmployee, removeEmployee, workPlan, dragable, setDragable, submitWorkPlan }}>
                 <NavGraphic className='GraphicNav' dateStart={dateStart} setDateStart={setDateStart} dateEnd={dateEnd} setDateEnd={setDateEnd}></NavGraphic>
 
-                <Grid container>
-                    <Grid item className={classes.grow}>
+                <Grid container className={classes.root}>
+                    <Grid item className={classes.shiftsContainer} >
                         {workPlan ? workPlan.workShifts.map((shift, indexShift) => (
-                            <div key={`shift${indexShift}`} className='shift'>
-                                <h2>{`Zmiana ${shift.shiftNumber}`}</h2>
-                                <div className='workplaces workplaces--other'>
-                                    <WorkPlace key={`supervision${indexShift}`} shift={indexShift} workPlace={workPlaceNames.supervision}>
-                                        <h4>Supervisior</h4>
-                                        {workPlan.workShifts[indexShift][workPlaceNames.supervision].map(employee => {
-                                            return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.supervision} >
-                                                <span>{`${employee.name} ${employee.lastName}`}</span>
-                                            </Employee>
-                                        })}
-                                    </WorkPlace>
-                                    <WorkPlace key={`unskilled${indexShift}`} shift={indexShift} workPlace={workPlaceNames.unskilled}>
-                                        <h4>Unskilled</h4>
-                                        {workPlan.workShifts[indexShift][workPlaceNames.unskilled].map(employee => {
-                                            return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.unskilled} >
-                                                <span>{`${employee.name} ${employee.lastName}`}</span>
-                                            </Employee>
-                                        })}
-                                    </WorkPlace>
-                                    <WorkPlace key={`leader${indexShift}`} shift={indexShift} workPlace={workPlaceNames.leader}>
-                                        <h4>Lider zmiany</h4>
-                                        {workPlan.workShifts[indexShift][workPlaceNames.leader].map(employee => {
-                                            return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.leader} >
-                                                <span>{`${employee.name} ${employee.lastName}`}</span>
-                                            </Employee>
-                                        })}
-                                    </WorkPlace>
-                                    <WorkPlace key={`other${indexShift}`} shift={indexShift} workPlace={workPlaceNames.other}>
-                                        <h4>Inni</h4>
-                                        {workPlan.workShifts[indexShift][workPlaceNames.other].map(employee => {
-                                            return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.other} >
-                                                <span>{`${employee.name} ${employee.lastName}`}</span>
-                                            </Employee>
-                                        })}
-                                    </WorkPlace>
-                                </div>
-                                <div className='lines'>
-                                    {workPlan.workShifts[indexShift].lines.map((line, indexLine) => (
-                                        <div key={`line${indexLine}`} className='line'>
-                                            <h3>{`Linia ${line.lineNumber}`}</h3>
-                                            {workPlan.workShifts[indexShift].lines[indexLine].workplaces.map((workplace, indexWorkplace, workplacesArr) => {
-                                                return <WorkPlace key={`workplace${indexWorkplace}`} shift={indexShift} line={indexLine} workPlace={indexWorkplace}>
-                                                    <h4>{workplace.nameWorkplace}</h4>
-                                                    {workPlan.workShifts[indexShift].lines[indexLine].workplaces[indexWorkplace].employeeListWorkplaces.map(employee => (
-                                                        <Employee key={`employee${employee.id}`} id={employee.id} line={indexLine} shift={indexShift} workPlace={indexWorkplace} >
-                                                            <span>{`${employee.name} ${employee.lastName}`}</span>
-                                                        </Employee>
-                                                    ))}
-
-                                                </WorkPlace>
+                            <Grid item key={`shift${indexShift}`} >
+                                <Typography align='center' variant='button' >
+                                    <Grid component='h2' className={classes.shiftTitle}>
+                                        {`Zmiana ${shift.shiftNumber}`}
+                                    </Grid>
+                                </Typography>
+                                <Grid className={classes.shiftOther} >
+                                    <Grid className={classes.workPlaceShift}>
+                                        <WorkPlace key={`supervision${indexShift}`} shift={indexShift} workPlace={workPlaceNames.supervision} title='Supervisior'>
+                                            {workPlan.workShifts[indexShift][workPlaceNames.supervision].map(employee => {
+                                                return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.supervision} label={`${employee.name} ${employee.lastName}`}>
+                                                </Employee>
                                             })}
-                                        </div>
+                                        </WorkPlace>
+                                    </Grid>
+                                    <Grid className={classes.workPlaceShift}>
+                                        <WorkPlace key={`unskilled${indexShift}`} shift={indexShift} workPlace={workPlaceNames.unskilled} title='Unskilled'>
+                                            {workPlan.workShifts[indexShift][workPlaceNames.unskilled].map(employee => {
+                                                return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.unskilled} label={`${employee.name} ${employee.lastName}`}>
+
+                                                </Employee>
+                                            })}
+                                        </WorkPlace>
+                                    </Grid>
+                                    <Grid className={classes.workPlaceShift}>
+                                        <WorkPlace key={`leader${indexShift}`} shift={indexShift} workPlace={workPlaceNames.leader} title='Lider zmiany'>
+                                            {workPlan.workShifts[indexShift][workPlaceNames.leader].map(employee => {
+                                                return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.leader} label={`${employee.name} ${employee.lastName}`}>
+                                                </Employee>
+                                            })}
+                                        </WorkPlace>
+                                    </Grid>
+                                    <Grid className={classes.workPlaceShift}>
+                                        <WorkPlace key={`other${indexShift}`} shift={indexShift} workPlace={workPlaceNames.other} title='Inni'>
+                                            {workPlan.workShifts[indexShift][workPlaceNames.other].map(employee => {
+                                                return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.other} label={`${employee.name} ${employee.lastName}`}>
+                                                </Employee>
+                                            })}
+                                        </WorkPlace>
+                                    </Grid>
+                                </Grid>
+                                <Grid className={classes.lines}>
+                                    {workPlan.workShifts[indexShift].lines.map((line, indexLine) => (
+                                        <Grid constainer key={`line${indexLine}`} className={classes.line}>
+                                            <Grid item component='h3' className={classes.lineTitle}>{`Linia ${line.lineNumber}`}</Grid>
+                                            <Grid item>
+                                                {workPlan.workShifts[indexShift].lines[indexLine].workplaces.map((workplace, indexWorkplace, workplacesArr) => {
+                                                    return <Grid className={classes.workPlaceShift}>
+                                                        <WorkPlace className={classes.workPlace} key={`workplace${indexWorkplace}`} shift={indexShift} line={indexLine} workPlace={indexWorkplace} title={workplace.nameWorkplace}>
+                                                            {workPlan.workShifts[indexShift].lines[indexLine].workplaces[indexWorkplace].employeeListWorkplaces.map(employee => (
+                                                                <Employee key={`employee${employee.id}`} id={employee.id} line={indexLine} shift={indexShift} workPlace={indexWorkplace} label={`${employee.name} ${employee.lastName}`}>
+                                                                </Employee>
+                                                            ))}
+
+                                                        </WorkPlace>
+                                                    </Grid>
+                                                })}
+                                            </Grid>
+                                        </Grid>
                                     )
                                     )}
-                                </div>
-                            </div>
+                                </Grid>
+                            </Grid>
                         )) : null}
                     </Grid>
                     <Grid item className={classes.otherEmployees}>

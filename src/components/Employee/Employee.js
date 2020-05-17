@@ -9,10 +9,12 @@ import './Employee.scss';
 const useStyles = makeStyles(() => ({
     root: {
         width: '90%',
-        padding: 10,
-        margin: 5,
+        padding: 0,
+        margin: 2,
         justifyContent: 'flex-start',
-        cursor: 'grab'
+        cursor: 'grab',
+        fontSize: 12,
+        height: 20
     },
     dragging: {
         opacity: '.2'

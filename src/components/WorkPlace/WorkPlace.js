@@ -9,8 +9,9 @@ import './WorkPlace.scss';
 
 const useStyles = makeStyles(theme => ({
     card: {
-        minHeight: 200,
-        margin: 20,
+        minHeight: 70,
+        minWidth: 200,
+        margin: '3px 20px',
         textAlign: 'center',
         overflow: 'auto'
     },
@@ -21,16 +22,15 @@ const useStyles = makeStyles(theme => ({
 }))
 const WorkPlace = ({ line, shift, workPlace, children, title }) => {
 
-    const { setWorkplaceEmployee, removeEmployee, workPlan } = useContext(WorkPlanContext);
+    const { setWorkplaceEmployee, removeEmployee, dragable } = useContext(WorkPlanContext);
 
     const classes = useStyles()
 
     const [{ isOver }, drop] = useDrop({
         accept: ItemTypes.EMPLOYEE,
         drop: (item, mointor) => {
+            if (!dragable) return;
             const deletedItem = removeEmployee({ shift: item.shift, line: item.line, workPlace: item.workPlace }, item.id);
-            console.log('deletedItem', deletedItem)
-
             setWorkplaceEmployee({ shift, line, workPlace }, deletedItem)
         },
         collect: monitor => ({
@@ -41,7 +41,7 @@ const WorkPlace = ({ line, shift, workPlace, children, title }) => {
     return (
         <Card
             className={classes.card}
-            ref={drop}
+            ref={dragable ? drop : null}
             content
         >
             <Paper elevation={3} className={classes.title}>
