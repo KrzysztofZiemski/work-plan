@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => ({
     },
     lines: {
         display: 'flex',
-        justifyContent: 'space-around',
+        flexDirection: 'column',
 
     },
     line: {
@@ -275,19 +275,19 @@ const GraphicPage = (props) => {
                                     {workPlan.workShifts[indexShift].lines.map((line, indexLine) => (
                                         <Grid constainer key={`line${indexLine}`} className={classes.line}>
                                             <Grid item component='h3' className={classes.lineTitle}>{`Linia ${line.lineNumber}`}</Grid>
-                                            <Grid item>
-                                                {workPlan.workShifts[indexShift].lines[indexLine].workplaces.map((workplace, indexWorkplace, workplacesArr) => {
-                                                    return <Grid className={classes.workPlaceShift}>
-                                                        <WorkPlace className={classes.workPlace} key={`workplace${indexWorkplace}`} shift={indexShift} line={indexLine} workPlace={indexWorkplace} title={workplace.nameWorkplace}>
-                                                            {workPlan.workShifts[indexShift].lines[indexLine].workplaces[indexWorkplace].employeeListWorkplaces.map(employee => (
-                                                                <Employee key={`employee${employee.id}`} id={employee.id} line={indexLine} shift={indexShift} workPlace={indexWorkplace} label={`${employee.name} ${employee.lastName}`}>
-                                                                </Employee>
-                                                            ))}
 
-                                                        </WorkPlace>
-                                                    </Grid>
-                                                })}
-                                            </Grid>
+                                            {workPlan.workShifts[indexShift].lines[indexLine].workplaces.map((workplace, indexWorkplace, workplacesArr) => {
+                                                return <Grid className={classes.workPlaceShift}>
+                                                    <WorkPlace className={classes.workPlace} key={`workplace${indexWorkplace}`} shift={indexShift} line={indexLine} workPlace={indexWorkplace} title={workplace.nameWorkplace}>
+                                                        {workPlan.workShifts[indexShift].lines[indexLine].workplaces[indexWorkplace].employeeListWorkplaces.map(employee => (
+                                                            <Employee key={`employee${employee.id}`} id={employee.id} line={indexLine} shift={indexShift} workPlace={indexWorkplace} label={`${employee.name} ${employee.lastName}`}>
+                                                            </Employee>
+                                                        ))}
+
+                                                    </WorkPlace>
+                                                </Grid>
+                                            })}
+
                                         </Grid>
                                     )
                                     )}

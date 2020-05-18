@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles'
-import Card from '@material-ui/core/Card';
+import List from '@material-ui/core/List';
 import Paper from '@material-ui/core/Paper';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../../utils/ItemTypes';
@@ -9,15 +9,23 @@ import './WorkPlace.scss';
 
 const useStyles = makeStyles(theme => ({
     card: {
-        minHeight: 70,
+        minHeight: 54,
         minWidth: 200,
         margin: '3px 20px',
         textAlign: 'center',
-        overflow: 'auto'
+        overflow: 'auto',
+        backgroundColor: '#aaa',
+        paddingTop: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+
     },
     title: {
         backgroundColor: '#3c8dbc',
         padding: 4,
+        marginTop: 0,
+        width: '100%'
     }
 }))
 const WorkPlace = ({ line, shift, workPlace, children, title }) => {
@@ -39,7 +47,7 @@ const WorkPlace = ({ line, shift, workPlace, children, title }) => {
     })
 
     return (
-        <Card
+        <List
             className={classes.card}
             ref={dragable ? drop : null}
             content
@@ -48,7 +56,7 @@ const WorkPlace = ({ line, shift, workPlace, children, title }) => {
                 {title}
             </Paper >
             {children}
-        </Card >
+        </List  >
     )
 }
 
