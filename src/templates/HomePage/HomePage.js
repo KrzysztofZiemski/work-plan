@@ -3,9 +3,10 @@ import './HomePage.scss';
 
 const HomePage = () => {
 
-            return (
-                        <div>HomePage</div>
-            )
+    return (
+        <div>Tu na razie jest ściernisko
+                        Ale będzie</div>
+    )
 }
 
 export default HomePage;

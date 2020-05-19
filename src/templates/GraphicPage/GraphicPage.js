@@ -93,8 +93,8 @@ const GraphicPage = (props) => {
     //todo po wysyłce na serwer updatu zmienia nie tylko kopie obiektu na same id, ale i obiekt
     useEffect(() => {
         //fake data for tests
-        setWorkPlan(testWorkPlan)
-        initFreeEmployee(testEmployee, testWorkPlan, setFreeEmployees)
+        // setWorkPlan(testWorkPlan)
+        // initFreeEmployee(testEmployee, testWorkPlan, setFreeEmployees)
         //Pobranie planu, jeścli plan nie istnieje stworzenie nowego
 
         const editQuery = queryString.parse(props.location.search).edit;
@@ -109,31 +109,31 @@ const GraphicPage = (props) => {
         if (!dateStart || !dateEnd) return;
         let isSubscribed = true;
 
-        // const workPlanPromise = getWorkPlanByDate(dateStart, dateEnd)
-        //     .then(res => {
-        //         if (res.status === 200) return res.json();
-        //         if (res.status === 404) return createWorkPlan(dateStart, dateEnd, 1);
-        //         Promise.reject(res.status)
-        //     })
-        //     .catch(e => {
-        //         if (isSubscribed && e === 404) return createWorkPlan(dateStart, dateEnd, 1)
-        //             .then(resp => console.log(resp));
+        const workPlanPromise = getWorkPlanByDate(dateStart, dateEnd)
+            .then(res => {
+                if (res.status === 200) return res.json();
+                if (res.status === 404) return createWorkPlan(dateStart, dateEnd, 1);
+                Promise.reject(res.status)
+            })
+            .catch(e => {
+                if (isSubscribed && e === 404) return createWorkPlan(dateStart, dateEnd, 1)
+                    .then(resp => console.log(resp));
 
-        //         return Promise.reject('stopped fetch');
-        //     });
+                return Promise.reject('stopped fetch');
+            });
 
         // pobranie pracowników
-        // const employeesPromise = getAllEmployee()
+        const employeesPromise = getAllEmployee()
         // jak już i plan i pracownicy są pobrani, przefiltruj pracowników, po tych już występujących w grafiku
 
-        // Promise.all([workPlanPromise, employeesPromise]).then(result => {
-        //     if (!isSubscribed) return;
-        //     setWorkPlan(result[0]);
-        //     initFreeEmployee(result[1], result[0], setFreeEmployees)
-        // }).catch(e => {
-        //     if (e === 404) createWorkPlan(dateStart, dateEnd, 1);
+        Promise.all([workPlanPromise, employeesPromise]).then(result => {
+            if (!isSubscribed) return;
+            setWorkPlan(result[0]);
+            initFreeEmployee(result[1], result[0], setFreeEmployees)
+        }).catch(e => {
+            if (e === 404) createWorkPlan(dateStart, dateEnd, 1);
 
-        // })
+        })
 
         // po odmontowaniu elementu zresetuj wartości startowe
 

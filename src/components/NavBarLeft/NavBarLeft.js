@@ -71,13 +71,56 @@ export const NavBarLeft = ({ isActive }) => {
                         </ListItem>
                     </List>
                 </ListItemCollapse>
+                <ListItemCollapse label='Produktywność'>
+                    <List component="div" disablePadding>
+                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 3 ? true : false} onClick={() => setSelected(3)}>
+                            <ListItemText primary="Dodaj" />
+                        </ListItem>
+                    </List>
+                </ListItemCollapse>
                 <ListItemCollapse label='Statystyki'>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={routes.workPlan} selected={selected === 3 ? true : false} onClick={() => setSelected(3)}>
-                            <ListItemText primary="Podgląd statystyk" />
+                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 4 ? true : false} onClick={() => setSelected(4)}>
+                            <ListItemText primary="Pracownicy" />
                         </ListItem>
-                        <ListItem className={classes.subListItem} button component={Link} to={routes.workPlanEdit} selected={selected === 4 ? true : false} onClick={() => setSelected(4)}>
-                            <ListItemText primary="Edycja statystyk" />
+                    </List>
+                    <List component="div" disablePadding>
+                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 5 ? true : false} onClick={() => setSelected(5)}>
+                            <ListItemText primary="Linie" />
+                        </ListItem>
+                    </List>
+                    <List component="div" disablePadding>
+                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 6 ? true : false} onClick={() => setSelected(6)}>
+                            <ListItemText primary="Wpisy" />
+                        </ListItem>
+                    </List>
+                </ListItemCollapse>
+                <ListItemCollapse label='Zarządzanie'>
+                    <List component="div" disablePadding>
+                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 7 ? true : false} onClick={() => setSelected(7)}>
+                            <ListItemText primary="Pracownicy" />
+                        </ListItem>
+                    </List>
+                    <List component="div" disablePadding>
+                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 8 ? true : false} onClick={() => setSelected(8)}>
+                            <ListItemText primary="Produkty" />
+                        </ListItem>
+                    </List>
+                </ListItemCollapse>
+                <ListItemCollapse label='Administracja'>
+                    <List component="div" disablePadding>
+                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 9 ? true : false} onClick={() => setSelected(9)}>
+                            <ListItemText primary="Użytkownik" />
+                        </ListItem>
+                    </List>
+                    <List component="div" disablePadding>
+                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 10 ? true : false} onClick={() => setSelected(10)}>
+                            <ListItemText primary="Ustawienia" />
+                        </ListItem>
+                    </List>
+                    <List component="div" disablePadding>
+                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 11 ? true : false} onClick={() => setSelected(11)}>
+                            <ListItemText primary="Swagger" />
                         </ListItem>
                     </List>
                 </ListItemCollapse>
