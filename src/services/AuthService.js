@@ -2,7 +2,7 @@ import { SERVER } from '../config.json';
 
 const LOGIN_URL = `${SERVER}/hextl/login`
 const AUTHENTICATION_URL = `${SERVER}/api/v1/user/authentication`;
-
+const LOGOUT_URL = `${SERVER}/logout`;
 export class AuthService {
     static authentication = (username, password) => {
 
@@ -39,6 +39,7 @@ export class AuthService {
                 return Promise.reject(res.status)
             });
     }
+    static logout = () => fetch(LOGOUT_URL)
 
     static createAuthToken = (username, password) => `Basic ${window.btoa(`${username}:${password}`)}`
 }

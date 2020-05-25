@@ -11,6 +11,8 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../App';
+import { AuthService } from '../../services/AuthService';
+
 //test loggedUser
 
 const useStyles = makeStyles((theme) => ({
@@ -49,7 +51,7 @@ export const NavBarTop = () => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
 
-    const { loggedUser, setActiveLeftMenu, activeLeftMenu } = useContext(UserContext);
+    const { loggedUser, setActiveLeftMenu, activeLeftMenu, setLoggedUser } = useContext(UserContext);
 
     const isMenuOpen = Boolean(anchorEl);
 
@@ -66,7 +68,16 @@ export const NavBarTop = () => {
         setAnchorEl(null);
     };
 
+    const handleLogout = () => {
+        handleMenuClose();
+        AuthService.logout()
+            .then(res => {
+                console.log('res logout', res);
+                setLoggedUser(null);
+            });
 
+
+    }
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
         <Menu
@@ -79,7 +90,7 @@ export const NavBarTop = () => {
             onClose={handleMenuClose}
         >
             <MenuItem component={Link} to='/settings' onClick={handleMenuClose}>Ustawienia</MenuItem>
-            <MenuItem component={Link} to='logout' onClick={handleMenuClose}>Wyloguj</MenuItem>
+            <MenuItem component={Link} to='logout' onClick={handleLogout}>Wyloguj</MenuItem>
         </Menu>
     );
 

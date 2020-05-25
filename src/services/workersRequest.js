@@ -6,7 +6,7 @@ const getAllEmployee = () => {
     return fetch(WORKERS_URL, {
         method: 'GET',
         mode: 'cors',
-        credentials: 'same-origin',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
 

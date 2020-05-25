@@ -37,8 +37,8 @@ const useStyles = makeStyles((theme) => ({
 function App() {
 
   let [activeLeftMenu, setActiveLeftMenu] = useState(false);
-  let [loggedUser, setLoggedUser] = useState(false);
-
+  let [loggedUser, setLoggedUser] = useState(null);
+  console.log(loggedUser)
   const classes = useStyles();
 
   useEffect(() => {
@@ -52,7 +52,7 @@ function App() {
 
 
   return (
-    <Router>
+    <Router basename='#'>
       <div className="App" >
         <UserContext.Provider value={{ loggedUser, setLoggedUser, activeLeftMenu, setActiveLeftMenu }}>
           <Grid container className={classes.root}>

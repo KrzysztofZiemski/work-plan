@@ -1,4 +1,4 @@
 {
     "PROXY": "https://cors-anywhere.herokuapp.com",
-    "SERVER": "http://193.59.72.159:8080"
+    "SERVER": "http://193.59.72.159:9090"
 }

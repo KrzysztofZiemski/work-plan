@@ -14,7 +14,7 @@ const createWorkPlan = (startDate, endDate, userId) => {
     console.log(JSON.stringify(data))
     return fetch(WORK_PLAN_URL, {
         method: 'POST',
-        credentials: 'same-origin',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
             "Accept": "*/*"
@@ -26,10 +26,10 @@ const createWorkPlan = (startDate, endDate, userId) => {
     })
 }
 const getWorkPlanByDate = (startDate, endDate) => {
-    return fetch(`${WORK_PLAN_URL}/param?end=${endDate}&start=${startDate}`, {
+    return fetch(`${WORK_PLAN_URL}/param?start=${startDate}&end=${endDate}`, {
         method: 'GET',
         mode: 'cors',
-        credentials: 'same-origin',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
             "Accept": "*/*"
