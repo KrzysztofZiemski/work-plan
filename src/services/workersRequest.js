@@ -1,6 +1,6 @@
 import { SERVER } from '../config.json';
 
-const WORKERS_URL = `${SERVER}/api/v1/employee`
+const WORKERS_URL = `${SERVER}/hextl/api/v1/employee`
 
 const getAllEmployee = () => {
     return fetch(WORKERS_URL, {

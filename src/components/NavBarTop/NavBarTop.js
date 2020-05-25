@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 export const NavBarTop = ({ onClick }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
-
+    const loggedUser = false;
     const isMenuOpen = Boolean(anchorEl);
 
     const handleProfileMenuOpen = (event) => {

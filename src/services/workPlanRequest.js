@@ -1,11 +1,11 @@
 import { SERVER } from '../config.json';
 
-const WORK_PLAN_URL = `${SERVER}/api/v1/work-plan`
-
+const WORK_PLAN_URL = `${SERVER}/hextl/api/v1/work-plan`
+// hextl / api / v1 / work - plan / param ? end = 2020.05.31 & start=2020.05.25
 
 
 const createWorkPlan = (startDate, endDate, userId) => {
-
+    console.log(startDate, endDate)
     const data = {
         createByIdUser: 1,
         endDay: endDate,
@@ -26,7 +26,7 @@ const createWorkPlan = (startDate, endDate, userId) => {
     })
 }
 const getWorkPlanByDate = (startDate, endDate) => {
-    return fetch(`${WORK_PLAN_URL}/param?start=${startDate}&end=${endDate}`, {
+    return fetch(`${WORK_PLAN_URL}/param?end=${endDate}&start=${startDate}`, {
         method: 'GET',
         mode: 'cors',
         credentials: 'same-origin',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, createContext, useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -8,15 +8,18 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
-import { DndProvider } from 'react-dnd';
-import Backend from 'react-dnd-html5-backend';
-
 import GraphicPage from './templates/GraphicPage/GraphicPage';
 import HomePage from './templates/HomePage/HomePage';
+import LoginPage from './templates/LoginPage';
 import NavBarTop from './components/NavBarTop';
 import NavBarLeft from './components/NavBarLeft';
 import { default as routes } from './routes';
 import './App.scss';
+
+export const UserContext = createContext({
+  loggedUser: null,
+  setLoggedUser: null
+})
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -31,6 +34,8 @@ const useStyles = makeStyles((theme) => ({
 function App() {
 
   let [activeLeftMenu, setActiveLeftMenu] = useState(true);
+  let [loggedUser, setLoggedUser] = useState(null);
+
   const classes = useStyles();
 
   const toggleLeftMenu = () => {
@@ -42,24 +47,27 @@ function App() {
 
     <Router>
       <div className="App" >
-        <Grid container className={classes.root}>
-          <Grid item>
-            <NavBarLeft isActive={activeLeftMenu} />
-          </Grid>
-          <Grid item className={classes.grow}>
-            <NavBarTop className={classes.grow} onClick={toggleLeftMenu} />
-            <Switch>
-              <Route path={routes.root} exact={true}>
-                <HomePage className='page' />
-              </Route>
-              <DndProvider backend={Backend}>
+        <UserContext.Provider value={{ loggedUser, setLoggedUser }}>
+          <Grid container className={classes.root}>
+            <Grid item>
+              <NavBarLeft isActive={activeLeftMenu} />
+            </Grid>
+            <Grid item className={classes.grow}>
+              <NavBarTop className={classes.grow} onClick={toggleLeftMenu} />
+              <Switch>
+                <Route path={routes.root} exact={true}>
+                  <HomePage className='page' />
+                </Route>
+                <Route path={routes.login} exact={true}>
+                  <LoginPage className='page' />
+                </Route>
                 <Route >
                   <Route path={routes.workPlan} render={(props) => <GraphicPage className='page' {...props} />} />
                 </Route>
-              </DndProvider>
-            </Switch>
+              </Switch>
+            </Grid>
           </Grid>
-        </Grid>
+        </UserContext.Provider>
       </div>
     </Router >
 
