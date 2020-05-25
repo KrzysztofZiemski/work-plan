@@ -39,9 +39,9 @@ export const LoginPage = () => {
     const { loggedUser, setLoggedUser } = useContext(UserContext);
     const usernameMsg = 'Musisz uzupełnić pole login';
     const passwordMsg = 'Musisz podać hasło';
+    
+    if (loggedUser) return <Redirect to='/' />
 
-    // if (loggedUser) return <Redirect to='/' />
-    console.log('loggedUser', loggedUser)
     return (
         <>
             <Formik
@@ -57,18 +57,16 @@ export const LoginPage = () => {
                     // setStatus();
                     try {
                         const response = await AuthService.authentication(username, password);
-                        console.log('poszło dalej')
                         const loggedUser = await AuthService.getAuthUser();
-                        console.log(loggedUser)
                         setLoggedUser(loggedUser)
                         setSubmitting(false);
                     }
                     catch (err) {
                         setSubmitting(false);
+                        if (loggedUser !== false) setLoggedUser(false)
                         if (err.msg) return setStatus(err.msg);
                         setStatus('Spróbuj ponownie. Jeżeli problem będzie nadal wystepować, skontaktuj się z administratorem');
                     };
-
                 }}
                 onChange={({ username, password }, { setStatus, setSubmitting }) => {
                     // console.log(username, password)

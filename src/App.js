@@ -13,6 +13,8 @@ import HomePage from './templates/HomePage/HomePage';
 import LoginPage from './templates/LoginPage';
 import NavBarTop from './components/NavBarTop';
 import NavBarLeft from './components/NavBarLeft';
+
+import { AuthService } from './services/AuthService';
 import { default as routes } from './routes';
 import './App.scss';
 
@@ -31,29 +33,34 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+
 function App() {
 
-  let [activeLeftMenu, setActiveLeftMenu] = useState(true);
-  let [loggedUser, setLoggedUser] = useState(null);
+  let [activeLeftMenu, setActiveLeftMenu] = useState(false);
+  let [loggedUser, setLoggedUser] = useState(false);
 
   const classes = useStyles();
 
-  const toggleLeftMenu = () => {
-    if (activeLeftMenu) return setActiveLeftMenu(false);
-    setActiveLeftMenu(true);
-  }
+  useEffect(() => {
+    if (!loggedUser) setActiveLeftMenu(false)
+    if (loggedUser === null) {
+      AuthService.getAuthUser()
+        .then(user => setLoggedUser(user))
+        .catch(err => setLoggedUser(false))
+    }
+  }, [loggedUser])
+
 
   return (
-
     <Router>
       <div className="App" >
-        <UserContext.Provider value={{ loggedUser, setLoggedUser }}>
+        <UserContext.Provider value={{ loggedUser, setLoggedUser, activeLeftMenu, setActiveLeftMenu }}>
           <Grid container className={classes.root}>
             <Grid item>
-              <NavBarLeft isActive={activeLeftMenu} />
+              <NavBarLeft />
             </Grid>
             <Grid item className={classes.grow}>
-              <NavBarTop className={classes.grow} onClick={toggleLeftMenu} />
+              <NavBarTop className={classes.grow} />
               <Switch>
                 <Route path={routes.root} exact={true}>
                   <HomePage className='page' />

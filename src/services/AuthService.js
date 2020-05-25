@@ -28,7 +28,6 @@ export class AuthService {
     }
 
     static getAuthUser = () => {
-        console.log('weszlo')
         const requestOptions = {
             method: 'GET',
             withCredentials: true,

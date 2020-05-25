@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
@@ -7,6 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemCollapse from '../../components/ListItemCollapse';
 import { Link } from 'react-router-dom';
 import { default as routes } from '../../routes';
+import { UserContext } from '../../App';
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -42,7 +43,7 @@ const useStyles = makeStyles(() => ({
 
 export const NavBarLeft = ({ isActive }) => {
     const classes = useStyles();
-
+    const { activeLeftMenu } = useContext(UserContext)
     let [selected, setSelected] = useState(null);
 
     return (
@@ -55,30 +56,30 @@ export const NavBarLeft = ({ isActive }) => {
                         Menu
                     </ListSubheader>
                 }
-                className={isActive ? classes.root : classes.rootHidden}
+                className={activeLeftMenu ? classes.root : classes.rootHidden}
             >
                 <ListItem button component={Link} to={routes.root} selected={selected === 0 ? true : false} onClick={() => setSelected(0)}>
                     <ListItemText primary="Start" />
                 </ListItem>
 
-                <ListItemCollapse label="Plan pracy">
+                <ListItemCollapse label="Plan pracy" in={true}>
                     <List component="div" disablePadding>
-                        <ListItem button component={Link} to={routes.workPlan} selected={selected === 1 ? true : false} onClick={() => setSelected(1)}>
+                        <ListItem button component={Link} to={routes.workPlan} selected={selected === 1 ? true : false} onClick={() => setSelected(1)} >
                             <ListItemText primary="Podgląd planu" />
                         </ListItem>
-                        <ListItem button component={Link} to={routes.workPlanEdit} selected={selected === 2 ? true : false} onClick={() => setSelected(2)}>
+                        <ListItem button component={Link} to={routes.workPlanEdit} selected={selected === 2 ? true : false} onClick={() => setSelected(2)} >
                             <ListItemText primary="Edycja planu" />
                         </ListItem>
                     </List>
                 </ListItemCollapse>
-                <ListItemCollapse label='Produktywność'>
+                <ListItemCollapse label='Produktywność' disableStrictModeCompat={true}>
                     <List component="div" disablePadding>
                         <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 3 ? true : false} onClick={() => setSelected(3)}>
                             <ListItemText primary="Dodaj" />
                         </ListItem>
                     </List>
                 </ListItemCollapse>
-                <ListItemCollapse label='Statystyki'>
+                <ListItemCollapse label='Statystyki' disableStrictModeCompat={true}>
                     <List component="div" disablePadding>
                         <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 4 ? true : false} onClick={() => setSelected(4)}>
                             <ListItemText primary="Pracownicy" />
@@ -95,7 +96,7 @@ export const NavBarLeft = ({ isActive }) => {
                         </ListItem>
                     </List>
                 </ListItemCollapse>
-                <ListItemCollapse label='Zarządzanie'>
+                <ListItemCollapse label='Zarządzanie' disableStrictModeCompat={true}>
                     <List component="div" disablePadding>
                         <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 7 ? true : false} onClick={() => setSelected(7)}>
                             <ListItemText primary="Pracownicy" />
@@ -107,7 +108,7 @@ export const NavBarLeft = ({ isActive }) => {
                         </ListItem>
                     </List>
                 </ListItemCollapse>
-                <ListItemCollapse label='Administracja'>
+                <ListItemCollapse label='Administracja' disableStrictModeCompat={true}>
                     <List component="div" disablePadding>
                         <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 9 ? true : false} onClick={() => setSelected(9)}>
                             <ListItemText primary="Użytkownik" />

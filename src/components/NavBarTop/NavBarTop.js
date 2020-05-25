@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -10,9 +10,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
-
+import { UserContext } from '../../App';
 //test loggedUser
-const loggedUser = true;
+
 const useStyles = makeStyles((theme) => ({
     root: {
         background: '#3c8dbc'
@@ -29,7 +29,10 @@ const useStyles = makeStyles((theme) => ({
             display: 'block',
         },
     },
-
+    nameAvatar: {
+        fontSize: 13,
+        paddingRight: 8
+    },
     sectionDesktop: {
         display: 'none',
         [theme.breakpoints.up('md')]: {
@@ -42,11 +45,18 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export const NavBarTop = ({ onClick }) => {
+export const NavBarTop = () => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const loggedUser = false;
+
+    const { loggedUser, setActiveLeftMenu, activeLeftMenu } = useContext(UserContext);
+
     const isMenuOpen = Boolean(anchorEl);
+
+    const toggleLeftMenu = () => {
+        if (activeLeftMenu) return setActiveLeftMenu(false);
+        setActiveLeftMenu(true);
+    }
 
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -79,15 +89,17 @@ export const NavBarTop = ({ onClick }) => {
         <div className={classes.grow}>
             <AppBar position="static" className={classes.root}>
                 <Toolbar>
-                    <IconButton
-                        onClick={onClick}
-                        edge="start"
-                        className={classes.menuButton}
-                        color="inherit"
-                        aria-label="open drawer"
-                    >
-                        <MenuIcon />
-                    </IconButton>
+                    {loggedUser ?
+                        <IconButton
+                            onClick={toggleLeftMenu}
+                            edge="start"
+                            className={classes.menuButton}
+                            color="inherit"
+                            aria-label="open drawer"
+                        >
+                            <MenuIcon />
+                        </IconButton> :
+                        null}
                     <Typography className={classes.title} variant="h6" noWrap>
                         Nazwa firmy
                     </Typography>
@@ -112,7 +124,9 @@ export const NavBarTop = ({ onClick }) => {
                                 aria-haspopup="true"
                                 onClick={handleProfileMenuOpen}
                                 color="inherit"
+
                             >
+                                <span className={classes.nameAvatar}> {`${loggedUser.name} ${loggedUser.surname}`}</span>
                                 <AccountCircle />
                             </IconButton> : <Button component={Link} to='/login' className={classes.button} variant="contained" >
                                 Zaloguj
