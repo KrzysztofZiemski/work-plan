@@ -1,6 +1,6 @@
-import { SERVER } from '../config.json';
+import { SERVER } from '../config';
 
-const WORK_PLAN_URL = `${SERVER}/hextl/api/v1/work-plan`
+const WORK_PLAN_URL = `${SERVER}/api/v1/work-plan`
 // hextl / api / v1 / work - plan / param ? end = 2020.05.31 & start=2020.05.25
 
 
@@ -11,7 +11,7 @@ const createWorkPlan = (startDate, endDate, userId) => {
         endDay: endDate,
         startDay: startDate
     }
-    console.log(JSON.stringify(data))
+
     return fetch(WORK_PLAN_URL, {
         method: 'POST',
         credentials: 'include',

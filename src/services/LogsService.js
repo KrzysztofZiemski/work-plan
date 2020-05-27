@@ -1,8 +1,12 @@
-import { SERVER } from '../config.json';
+import { SERVER } from '../config';
 const SERVER_LOGS = `${SERVER}/hextl/api/v1/log`;
 export class LogService {
+
     static getLogs = () => {
-        return fetch(SERVER_LOGS)
+        const requestOptions = {
+            method: 'GET',
+        }
+        return fetch(SERVER_LOGS, requestOptions)
             .then(res => {
                 console.log(res)
                 if (res.ok === true) return res.json();

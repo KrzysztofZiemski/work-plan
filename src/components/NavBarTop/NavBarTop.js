@@ -94,7 +94,26 @@ export const NavBarTop = () => {
         </Menu>
     );
 
+    const showOptionsPanel = () => {
+        if (loggedUser === null) return null;
+        if (loggedUser === false) {
+            return <Button component={Link} to='/login' className={classes.button} variant="contained" >
+                Zaloguj
+                    </Button>;
+        }
+        return <IconButton
+            edge="end"
+            aria-label="account of current user"
+            aria-controls={menuId}
+            aria-haspopup="true"
+            onClick={handleProfileMenuOpen}
+            color="inherit"
 
+        >
+            <span className={classes.nameAvatar}> {`${loggedUser.name} ${loggedUser.surname}`}</span>
+            <AccountCircle />
+        </IconButton>
+    }
 
     return (
         <div className={classes.grow}>
@@ -127,23 +146,8 @@ export const NavBarTop = () => {
                                 <NotificationsIcon />
                             </Badge>
                         </IconButton> */}
-                        {loggedUser ?
-                            <IconButton
-                                edge="end"
-                                aria-label="account of current user"
-                                aria-controls={menuId}
-                                aria-haspopup="true"
-                                onClick={handleProfileMenuOpen}
-                                color="inherit"
+                        {showOptionsPanel()}
 
-                            >
-                                <span className={classes.nameAvatar}> {`${loggedUser.name} ${loggedUser.surname}`}</span>
-                                <AccountCircle />
-                            </IconButton> : <Button component={Link} to='/login' className={classes.button} variant="contained" >
-                                Zaloguj
-                            </Button>
-
-                        }
                     </div>
                 </Toolbar>
             </AppBar>

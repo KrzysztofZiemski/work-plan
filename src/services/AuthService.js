@@ -1,6 +1,6 @@
-import { SERVER } from '../config.json';
+import { SERVER } from '../config';
 
-const LOGIN_URL = `${SERVER}/hextl/login`
+const LOGIN_URL = `${SERVER}/login`
 const AUTHENTICATION_URL = `${SERVER}/api/v1/user/authentication`;
 const LOGOUT_URL = `${SERVER}/logout`;
 export class AuthService {
@@ -8,7 +8,8 @@ export class AuthService {
 
         const requestOptions = {
             method: 'POST',
-            headers: { authorization: this.createAuthToken(username, password) }
+            headers: { authorization: this.createAuthToken(username, password) },
+            credentials: 'include',
         }
         // JSESSIONID
         return fetch(LOGIN_URL, requestOptions).then(res => {
@@ -30,7 +31,6 @@ export class AuthService {
     static getAuthUser = () => {
         const requestOptions = {
             method: 'GET',
-            withCredentials: true,
             credentials: 'include',
         };
         return fetch(AUTHENTICATION_URL, requestOptions)

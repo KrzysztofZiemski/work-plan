@@ -2,7 +2,8 @@ import React, { useState, createContext, useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  Redirect
 } from "react-router-dom";
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -68,9 +69,12 @@ function App() {
                 <Route path={routes.login} exact={true}>
                   <LoginPage className='page' />
                 </Route>
-                <Route >
-                  <Route path={routes.workPlan} render={(props) => <GraphicPage className='page' {...props} />} />
-                </Route>
+                {loggedUser ?
+                  <Route >
+                    <Route path={routes.workPlan} render={(props) => <GraphicPage className='page' {...props} />} />
+                  </Route> :
+                  <Redirect to={routes.login} />
+                }
               </Switch>
             </Grid>
           </Grid>

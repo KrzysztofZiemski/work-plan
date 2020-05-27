@@ -1,16 +1,14 @@
-import { SERVER } from '../config.json';
+import { SERVER } from '../config';
 
-const WORKERS_URL = `${SERVER}/hextl/api/v1/employee`
+const WORKERS_URL = `${SERVER}/api/v1/employee`
 
 const getAllEmployee = () => {
     return fetch(WORKERS_URL, {
         method: 'GET',
-        mode: 'cors',
-        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
-
-        }
+        },
+        credentials: 'include',
     })
         .then(res => {
             if (res.status === 200) return res.json();

@@ -1,4 +1,4 @@
-import { SERVER } from '../config.json';
+import { SERVER } from '../config';
 const USER_SERVER = `${SERVER}/api/v1/user`
 export class UserService {
     static getUser(id) {
