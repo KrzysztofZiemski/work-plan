@@ -1,5 +1,5 @@
 import { SERVER } from '../config';
-const SERVER_LOGS = `${SERVER}/hextl/api/v1/log`;
+const SERVER_LOGS = `${SERVER}/api/v1/log`;
 export class LogService {
 
     static getLogs = () => {
