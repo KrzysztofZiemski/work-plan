@@ -6,7 +6,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemCollapse from '../../components/ListItemCollapse';
 import { Link } from 'react-router-dom';
-import { default as routes } from '../../routes';
+import { default as routes } from '../../utils/routes';
 import { UserContext } from '../../App';
 
 const useStyles = makeStyles(() => ({
@@ -98,7 +98,7 @@ export const NavBarLeft = ({ isActive }) => {
                 </ListItemCollapse>
                 <ListItemCollapse label='Zarządzanie' disableStrictModeCompat={true}>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 7 ? true : false} onClick={() => setSelected(7)}>
+                        <ListItem button className={classes.subListItem} component={Link} to={routes.employeeManagement} selected={selected === 7 ? true : false} onClick={() => setSelected(7)}>
                             <ListItemText primary="Pracownicy" />
                         </ListItem>
                     </List>

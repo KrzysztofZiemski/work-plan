@@ -12,11 +12,12 @@ import Grid from '@material-ui/core/Grid';
 import GraphicPage from './templates/GraphicPage/GraphicPage';
 import HomePage from './templates/HomePage/HomePage';
 import LoginPage from './templates/LoginPage';
+import EmployeeManagement from './templates/EmployeeManagement';
 import NavBarTop from './components/NavBarTop';
 import NavBarLeft from './components/NavBarLeft';
 
 import { AuthService } from './services/AuthService';
-import { default as routes } from './routes';
+import { default as routes } from './utils/routes';
 import './App.scss';
 
 export const UserContext = createContext({
@@ -69,10 +70,10 @@ function App() {
                 <Route path={routes.login} exact={true}>
                   <LoginPage className='page' />
                 </Route>
-                {loggedUser ?
-                  <Route >
-                    <Route path={routes.workPlan} render={(props) => <GraphicPage className='page' {...props} />} />
-                  </Route> :
+                {loggedUser ? <>
+                  <Route path={routes.workPlan} render={(props) => <GraphicPage className='page' {...props} />} />
+                  <Route path={routes.employeeManagement} render={(props) => <EmployeeManagement className='page' {...props} />} />
+                </> :
                   <Redirect to={routes.login} />
                 }
               </Switch>

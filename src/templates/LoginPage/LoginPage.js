@@ -39,11 +39,11 @@ export const LoginPage = () => {
     const { loggedUser, setLoggedUser } = useContext(UserContext);
     const usernameMsg = 'Musisz uzupełnić pole login';
     const passwordMsg = 'Musisz podać hasło';
-    
+
     if (loggedUser) return <Redirect to='/' />
 
     return (
-        <>
+        <section>
             <Formik
                 initialValues={{
                     username: '',
@@ -141,7 +141,7 @@ export const LoginPage = () => {
                     </Container>
                 )}
             />
-        </>
+        </section>
 
     )
 }

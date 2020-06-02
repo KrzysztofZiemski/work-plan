@@ -228,7 +228,7 @@ const GraphicPage = (props) => {
     return (
         <>
             <DndProvider backend={Backend}>
-                <div className={`${props.className} graphicPage`}>
+                <section className={`${props.className} graphicPage`}>
                     <WorkPlanContext.Provider value={{ setWorkplaceEmployee, removeEmployee, workPlan, dragable, setDragable, submitWorkPlan }}>
                         <NavGraphic className='GraphicNav' dateStart={dateStart} setDateStart={setDateStart} dateEnd={dateEnd} setDateEnd={setDateEnd}></NavGraphic>
 
@@ -329,7 +329,7 @@ const GraphicPage = (props) => {
                         </Grid>
                     </WorkPlanContext.Provider>
 
-                </div >
+                </section >
             </DndProvider>
         </>
     )

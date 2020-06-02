@@ -19,14 +19,14 @@ const HomePage = () => {
             .catch(err => console.log('err', err))
     }
     return (
-        <>
+        <section>
             <div>Tu na razie jest ściernisko
                         Ale będzie</div>
             <button onClick={getLogs}>Get logs</button>
             <br />
             <button onClick={getUser}> get user by id</button>
             <input type="text" value={id} onChange={(e) => setId(e.target.value)} />
-        </>
+        </section>
     )
 }
 
