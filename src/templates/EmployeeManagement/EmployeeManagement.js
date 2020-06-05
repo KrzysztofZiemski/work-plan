@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
-import Sorter from '../../components/Sorter';
+import TableEmployees from './TableEmployees';
 import { getAllEmployee } from '../../services/workersRequest';
 
 const useStyles = makeStyles(theme => ({
@@ -17,12 +17,6 @@ export const EmployeeManagement = () => {
     const classes = useStyles();
     let [employees, setEmployees] = useState([]);
     let [isLoaded, setIsLoaded] = useState(false);
-    const sort = () => {
-        console.log('sort')
-    }
-    const search = () => {
-        console.log('search')
-    }
     useEffect(() => {
 
         getAllEmployee()
@@ -34,16 +28,19 @@ export const EmployeeManagement = () => {
                 setIsLoaded(false);
             });
         return setEmployees([]);
-    }, [])
+    }, []);
+
     return (
-        <section>
-            <Sorter list={employees} onSort={sort} sortBy={['lastName', 'name']} onSearch={search}></Sorter>
+        <Grid container component='section' direction='column'>
             <Grid item>
                 <Typography component='h2' align='center' variant='button' className={classes.header}>
                     Pracownicy
                 </Typography>
             </Grid>
-        </section>
+            <Grid item>
+                <TableEmployees list={employees} setList={setEmployees}></TableEmployees>
+            </Grid>
+        </Grid>
     )
 }
 

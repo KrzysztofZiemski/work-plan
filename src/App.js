@@ -40,7 +40,6 @@ function App() {
 
   let [activeLeftMenu, setActiveLeftMenu] = useState(false);
   let [loggedUser, setLoggedUser] = useState(null);
-  console.log(loggedUser)
   const classes = useStyles();
 
   useEffect(() => {
@@ -70,12 +69,9 @@ function App() {
                 <Route path={routes.login} exact={true}>
                   <LoginPage className='page' />
                 </Route>
-                {loggedUser ? <>
-                  <Route path={routes.workPlan} render={(props) => <GraphicPage className='page' {...props} />} />
-                  <Route path={routes.employeeManagement} render={(props) => <EmployeeManagement className='page' {...props} />} />
-                </> :
-                  <Redirect to={routes.login} />
-                }
+                {/* do zrobienia redirect po testach */}
+                {loggedUser ? <Route path={routes.workPlan} render={(props) => <GraphicPage className='page' {...props} />} /> : null}
+                {loggedUser ? <Route path={routes.employeeManagement} render={(props) => <EmployeeManagement className='page' {...props} />} /> : null}
               </Switch>
             </Grid>
           </Grid>
@@ -84,6 +80,7 @@ function App() {
     </Router >
 
   );
+
 }
 
 export default App;
