@@ -5,7 +5,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import { Link } from 'react-router-dom';
 
 import routes from '../../utils/routes';
-import DialogMessage from '../../components/DialogMessage';
+
 
 const columns = [
     {
@@ -51,13 +51,14 @@ const columns = [
         label: 'status',
 
         options: {
-            filter: true,
+            filter: false,
             sort: true,
             customBodyRender: (value, tableMeta, updateValue) => value ? 'aktywny' : 'nieaktywny'
         }
     },
     {
-        name: '',
+        name: 'settings',
+        label: 'ustawienia',
         options: {
             filter: false,
             sort: false,
@@ -70,26 +71,25 @@ const columns = [
 ]
 
 
-const TableEmployees = ({ list, setList }) => {
+const TableEmployees = ({ list, setList, remove }) => {
 
-    const handleDeleteEmployees = ({ data }) => {
+    let modalMessage = 'Czy na pewno chcesz usunąć pracowników?';
+
+    const handleRemoveEmployeesBtn = ({ data, deleteEmployees }) => {
         //is sure modal
-        const confirm = window.confirm("Czy na pewno chcesz usunąć pracowników?");
+        const confirm = window.confirm(modalMessage);
         if (confirm !== true) return false;
-        const listCopy = [...list];
-        data.forEach(indexData => listCopy.splice(indexData.index, 1));
-        setList(listCopy);
-        //komunikat usunieto
+        const idRemovedEmployees = data.map(indexData => list[indexData.index]);
+        remove(idRemovedEmployees);
     }
     const options = {
         filterType: 'textField',
         rowsPerPageOptions: [10, 20, 50],
-        onRowsDelete: handleDeleteEmployees
+        onRowsDelete: handleRemoveEmployeesBtn
     };
     //logika pokazywania modala do zrobienia
     return (
         <>
-            {/* <DialogMessage message='asdsfs' /> */}
             <MUIDataTable
                 title={"Lista pracowników"}
                 data={list}

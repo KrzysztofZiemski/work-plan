@@ -11,7 +11,7 @@ import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
 
 import queryString from 'query-string';
-import { getAllEmployee } from '../../services/workersRequest';
+import { getAllEmployee } from '../../services/employeesRequest';
 import NavGraphic from '../../components/NavGraphic/NavGraphic';
 import WorkPlace from '../../components/WorkPlace/WorkPlace';
 import Employee from '../../components/Employee/Employee';

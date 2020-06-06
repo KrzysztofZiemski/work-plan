@@ -30,8 +30,20 @@ const addWEmployee = (name, lastName) => {
         body: JSON.stringify(data)
     })
 };
-
+const deleteEmployee = (id) => {
+    return fetch(`${WORKERS_URL}/${id}`, {
+        method: 'DELETE',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }).then(res => {
+        if (res.status === 200) return res.json();
+        console.log('res', res)
+        Promise.resolve()
+    })
+}
 
 export {
-    getAllEmployee, addWEmployee
+    getAllEmployee, addWEmployee, deleteEmployee
 }
