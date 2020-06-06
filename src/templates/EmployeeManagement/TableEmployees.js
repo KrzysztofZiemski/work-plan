@@ -71,15 +71,16 @@ const columns = [
 ]
 
 
-const TableEmployees = ({ list, setList, remove }) => {
+const TableEmployees = ({ list, remove }) => {
 
     let modalMessage = 'Czy na pewno chcesz usunąć pracowników?';
 
     const handleRemoveEmployeesBtn = ({ data, deleteEmployees }) => {
-        //is sure modal
+
         const confirm = window.confirm(modalMessage);
         if (confirm !== true) return false;
-        const idRemovedEmployees = data.map(indexData => list[indexData.index]);
+
+        const idRemovedEmployees = data.map(record => list[record.dataIndex]);
         remove(idRemovedEmployees);
     }
     const options = {
@@ -87,7 +88,7 @@ const TableEmployees = ({ list, setList, remove }) => {
         rowsPerPageOptions: [10, 20, 50],
         onRowsDelete: handleRemoveEmployeesBtn
     };
-    //logika pokazywania modala do zrobienia
+
     return (
         <>
             <MUIDataTable

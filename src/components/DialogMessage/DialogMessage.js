@@ -18,8 +18,8 @@ export const DialogMessage = ({ open, close, messages }) => {
             >
                 {
                     messages ? messages.map((text, index) => {
-                        if (index === 0) return <DialogTitle id="alert-dialog-title">{text}</DialogTitle>
-                        return (<DialogContent>
+                        if (index === 0) return <DialogTitle key={`dialog${index}`} id="alert-dialog-title">{text}</DialogTitle>
+                        return (<DialogContent key={`dialogContent${index}`}>
                             <DialogContentText id="alert-dialog-description">
                                 {text}
                             </DialogContentText>

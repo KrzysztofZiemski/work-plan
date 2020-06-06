@@ -39,8 +39,6 @@ export const EmployeeManagement = () => {
         return () => {
             setEmployees([]);
             setAlert(false);
-            isLoaded(false);
-            alertMessage(null);
         };
     }, []);
 
@@ -82,7 +80,7 @@ export const EmployeeManagement = () => {
                 </Typography>
             </Grid>
             <Grid item>
-                <TableEmployees list={employees} setList={setEmployees} remove={removeEmployees}></TableEmployees>
+                <TableEmployees list={employees} remove={removeEmployees}></TableEmployees>
             </Grid>
             <Loader open={isLoaded} />
         </Grid>
