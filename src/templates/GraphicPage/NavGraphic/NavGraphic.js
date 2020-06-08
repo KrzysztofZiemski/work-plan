@@ -8,7 +8,7 @@ import {
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/core/styles';
-import { WorkPlanContext } from '../../templates/GraphicPage/GraphicPage';
+import { WorkPlanContext } from '../GraphicPage';
 
 const useStyles = makeStyles(() => ({
     root: {

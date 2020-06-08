@@ -1,7 +1,3 @@
-//for tests
-// import testWorkPlan from './testWorkPlan.json';
-// import testEmployee from './testEmployees.json';
-//
 import React, { useState, useEffect, createContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -12,12 +8,11 @@ import Backend from 'react-dnd-html5-backend';
 
 import queryString from 'query-string';
 import { getAllEmployee } from '../../services/employeesRequest';
-import NavGraphic from '../../components/NavGraphic/NavGraphic';
+import NavGraphic from './NavGraphic/NavGraphic';
 import WorkPlace from '../../components/WorkPlace/WorkPlace';
 import Employee from '../../components/Employee/Employee';
 import { createWorkPlan, getWorkPlanByDate, updateWorkPlane } from '../../services/workPlanRequest';
 import { workPlaceNames, initFreeEmployee, getWorkplanToSend } from './handlers';
-import './GraphicPage.scss';
 
 export const WorkPlanContext = createContext({
     setWorkplaceEmployee: null,
@@ -95,10 +90,6 @@ const GraphicPage = (props) => {
 
     //todo po wysyłce na serwer updatu zmienia nie tylko kopie obiektu na same id, ale i obiekt
     useEffect(() => {
-        //fake data for tests
-        // setWorkPlan(testWorkPlan)
-        // initFreeEmployee(testEmployee, testWorkPlan, setFreeEmployees)
-        //Pobranie planu, jeścli plan nie istnieje stworzenie nowego
 
         const editQuery = queryString.parse(props.location.search).edit;
         if (editQuery !== dragable) {
