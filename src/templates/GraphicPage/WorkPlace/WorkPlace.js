@@ -3,9 +3,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import List from '@material-ui/core/List';
 import Paper from '@material-ui/core/Paper';
 import { useDrop } from 'react-dnd';
-import { ItemTypes } from '../../utils/ItemTypes';
-import { WorkPlanContext } from '../../templates/GraphicPage/GraphicPage';
-import './WorkPlace.scss';
+import { ItemTypes } from '../../../utils/ItemTypes';
+import { WorkPlanContext } from '../GraphicPage';
+
 
 const useStyles = makeStyles(theme => ({
     card: {

@@ -11,21 +11,10 @@ export class AuthService {
             headers: { authorization: this.createAuthToken(username, password) },
             credentials: 'include',
         }
-        // JSESSIONID
         return fetch(LOGIN_URL, requestOptions).then(res => {
             if (res.status === 404 || res.status === 200) return Promise.resolve();
-            return Promise.reject();
+            return Promise.reject(res.status);
         })
-        // .then(async res => {
-        //     switch (res.status) {
-        //         case 200:
-        //             return Promise.resolve({ msg: 'ok', res });
-        //         case 401:
-        //             return Promise.reject({ msg: 'niepoprawny login lub hasło', res });
-        //         default:
-        //             return Promise.reject({ msg: `wystąpił błąd skontaktuj się z administratorem ${res.status}`, res })
-        //     }
-        // })
     }
 
     static getAuthUser = () => {

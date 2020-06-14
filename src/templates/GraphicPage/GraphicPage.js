@@ -9,8 +9,8 @@ import Backend from 'react-dnd-html5-backend';
 import queryString from 'query-string';
 import { getAllEmployee } from '../../services/employeesRequest';
 import NavGraphic from './NavGraphic/NavGraphic';
-import WorkPlace from '../../components/WorkPlace/WorkPlace';
-import Employee from '../../components/Employee/Employee';
+import WorkPlace from './WorkPlace/WorkPlace';
+import Employee from './Employee/Employee';
 import { createWorkPlan, getWorkPlanByDate, updateWorkPlane } from '../../services/workPlanRequest';
 import { workPlaceNames, initFreeEmployee, getWorkplanToSend } from './handlers';
 
@@ -21,7 +21,7 @@ export const WorkPlanContext = createContext({
     dragable: null,
     setDragable: null,
     submitWorkPlan: null
-})
+});
 
 const useStyles = makeStyles(theme => ({
     root: {

@@ -49,14 +49,10 @@ export const LoginPage = () => {
                     username: '',
                     password: ''
                 }}
-                // validationSchema={Yup.object().shape({
-                //     username: Yup.string().required('Username is required'),
-                //     password: Yup.string().required('Password is required')
-                // })}
                 onSubmit={async ({ username, password }, { setStatus, setSubmitting }) => {
                     // setStatus();
                     try {
-                        const response = await AuthService.authentication(username, password);
+                        await AuthService.authentication(username, password);
                         const loggedUser = await AuthService.getAuthUser();
                         setLoggedUser(loggedUser)
                         setSubmitting(false);
@@ -145,24 +141,3 @@ export const LoginPage = () => {
 
     )
 }
-
-{/* <Form>
-<div className="form-group">
-    <Field as={TextField} name="username" type="text" value={values.username} label="login" />
-    <ErrorMessage name="username" component="div" />
-</div>
-<div className="form-group">
-    <Field as={TextField} name="password" type="password" value={values.password} label="hasło" />
-    <ErrorMessage name="password" component="div" />
-</div>
-<div className="form-group">
-    <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>Login</Button>
-    {isSubmitting &&
-        <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" alt='loader' />
-    }
-</div>
-{/* {status &&
-<div>{status}</div>
-} */}
-// { <div>{status}</div> }
-// </Form > * /}

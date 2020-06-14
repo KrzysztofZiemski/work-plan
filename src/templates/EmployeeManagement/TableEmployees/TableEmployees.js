@@ -4,7 +4,7 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { Link } from 'react-router-dom';
 
-import routes from '../../utils/routes';
+import routes from '../../../utils/routes';
 
 
 const columns = [
@@ -25,7 +25,7 @@ const columns = [
             filter: false,
             sort: false,
             customBodyRender: () => <AccountBoxIcon />
-        }
+        },
     },
     {
         name: 'name',
@@ -36,7 +36,7 @@ const columns = [
             customFilterListOptions: {
                 render: v => v.map(l => l.toUpperCase())
             },
-        }
+        },
     },
     {
         name: 'lastName',
@@ -51,8 +51,10 @@ const columns = [
         label: 'status',
 
         options: {
-            filter: false,
+            filter: true,
             sort: true,
+            print: false,
+            download: false,
             customBodyRender: (value, tableMeta, updateValue) => value ? 'aktywny' : 'nieaktywny'
         }
     },
@@ -62,12 +64,14 @@ const columns = [
         options: {
             filter: false,
             sort: false,
+            print: false,
+            download: false,
             customBodyRender: (value, tableMeta, updateValue) => {
                 const id = tableMeta.rowData[0];
                 return <Link to={`${routes.employeeDetails}/${id}`}><SettingsIcon color="primary" /></Link>
             }
         }
-    }
+    },
 ]
 
 
@@ -84,8 +88,9 @@ const TableEmployees = ({ list, remove }) => {
         remove(idRemovedEmployees);
     }
     const options = {
-        filterType: 'textField',
         rowsPerPageOptions: [10, 20, 50],
+        filter: true,
+        fixedSelectColumn: true,
         onRowsDelete: handleRemoveEmployeesBtn
     };
 

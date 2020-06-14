@@ -3,8 +3,7 @@ import ListItemText from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import FaceIcon from '@material-ui/icons/Face';
 import { useDrag } from 'react-dnd';
-import { ItemTypes } from '../../utils/ItemTypes';
-import './Employee.scss';
+import { ItemTypes } from '../../../utils/ItemTypes';
 
 const useStyles = makeStyles(() => ({
     root: {

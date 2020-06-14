@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
-import TableEmployees from './TableEmployees';
+import TableEmployees from './TableEmployees/TableEmployees';
 import Loader from '../../components/Loader';
 import DialogMessage from '../../components/DialogMessage';
-import { getAllEmployee, deleteEmployee } from '../../services/employeesRequest';
+import AddFormDialog from './AddFormDialog';
+import { getAllEmployee, deleteEmployee, employeeStatus, addWEmployee } from '../../services/employeesRequest';
 
 const useStyles = makeStyles(theme => ({
     header: {
@@ -14,34 +19,41 @@ const useStyles = makeStyles(theme => ({
         color: '#fff',
         padding: 10
     },
-}))
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 180,
+    },
+}));
+
 export const EmployeeManagement = () => {
     const classes = useStyles();
     let [employees, setEmployees] = useState([]);
+    let [filterEmployees, setFiletrEmployees] = useState(employeeStatus.active)
     let [isLoaded, setIsLoaded] = useState(true);
     let [alert, setAlert] = useState(false);
     let [alertMessage, setAlertMessage] = useState(null)
 
-
     const getEmployees = () => {
-        getAllEmployee()
+        getAllEmployee(filterEmployees)
             .then(employeesList => {
+                setEmployees(employeesList)
                 setIsLoaded(false);
-                setEmployees(employeesList);
-            }
-            ).then(err => {
+                //zapisanie odpowiednich wartości, nie kasując innych
+            }).then(err => {
                 setIsLoaded(false);
             });
     }
 
     useEffect(() => {
-        getEmployees();
+        getEmployees()
         return () => {
-            setEmployees([]);
             setAlert(false);
         };
-    }, []);
+    }, [filterEmployees]);
 
+    const handleFiltrEmployees = (e) => {
+        setFiletrEmployees(e.target.value);
+    }
     const closeAlert = () => {
         setAlert(false);
         setAlertMessage(null);
@@ -70,7 +82,21 @@ export const EmployeeManagement = () => {
                 getEmployees();
             });
     }
-
+    //todo 
+    //reużywalność addformdialog
+    //zrobic optymalizacje pobierania pracownikow - nie nadpisywac co chwila nowym requestem
+    //reuzywalnosc management?
+    //reużywalność table
+    //zablokować usunięcie nieaktywnego
+    const handleAddWEmployee = (data) => {
+        setIsLoaded(true);
+        addWEmployee(data).then(data => {
+            setIsLoaded(false);
+            setAlertMessage(['Dodano pracownika']);
+            setAlert(true)
+            getEmployees();
+        })
+    }
     return (
         <Grid container component='section' direction='column'>
             <DialogMessage open={alert} close={closeAlert} messages={alertMessage} />
@@ -78,6 +104,26 @@ export const EmployeeManagement = () => {
                 <Typography component='h2' align='center' variant='button' className={classes.header}>
                     Pracownicy
                 </Typography>
+            </Grid>
+            <Grid container>
+                <Grid item>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel id="activeLabel">Pokaż</InputLabel>
+                        <Select
+                            labelId="employee-management-select-label"
+                            id="employee-management-select"
+                            value={filterEmployees}
+                            onChange={handleFiltrEmployees}
+                        >
+                            <MenuItem value={employeeStatus.active}>tylko aktywni</MenuItem>
+                            <MenuItem value={employeeStatus.inActive}>tylko nieaktywni</MenuItem>
+                            <MenuItem value={employeeStatus.all}>wszyscy</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item>
+                    <AddFormDialog onSubmit={handleAddWEmployee} />
+                </Grid>
             </Grid>
             <Grid item>
                 <TableEmployees list={employees} remove={removeEmployees}></TableEmployees>

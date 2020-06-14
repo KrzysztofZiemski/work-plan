@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 function App() {
 
   let [activeLeftMenu, setActiveLeftMenu] = useState(false);
+  //true for test, shuld be null
   let [loggedUser, setLoggedUser] = useState(null);
   const classes = useStyles();
 
