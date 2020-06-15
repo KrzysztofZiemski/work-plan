@@ -62,7 +62,7 @@ export const addWEmployee = (data) => {
     })
 };
 export const deleteEmployee = (id) => {
-    return fetch(`${WORKERS_URL} /${id}`, {
+    return fetch(`${WORKERS_URL}/${id}`, {
         method: 'DELETE',
         mode: 'cors',
         headers: {
