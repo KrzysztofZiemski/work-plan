@@ -72,11 +72,8 @@ export const NavBarTop = () => {
         handleMenuClose();
         AuthService.logout()
             .then(res => {
-                console.log('res logout', res);
                 setLoggedUser(null);
             });
-
-
     }
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -90,7 +87,7 @@ export const NavBarTop = () => {
             onClose={handleMenuClose}
         >
             <MenuItem component={Link} to='/settings' onClick={handleMenuClose}>Ustawienia</MenuItem>
-            <MenuItem component={Link} to='logout' onClick={handleLogout}>Wyloguj</MenuItem>
+            <MenuItem component={Link} to='/' onClick={handleLogout}>Wyloguj</MenuItem>
         </Menu>
     );
 
@@ -136,18 +133,7 @@ export const NavBarTop = () => {
 
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
-                        {/* <IconButton aria-label="show 4 new mails" color="inherit">
-                            <Badge badgeContent={4} color="secondary">
-                                <MailIcon />
-                            </Badge>
-                        </IconButton> */}
-                        {/* <IconButton aria-label="show 17 new notifications" color="inherit">
-                            <Badge badgeContent={17} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton> */}
                         {showOptionsPanel()}
-
                     </div>
                 </Toolbar>
             </AppBar>

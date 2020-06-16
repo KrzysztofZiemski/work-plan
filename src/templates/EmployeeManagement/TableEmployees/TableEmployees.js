@@ -91,7 +91,7 @@ const TableEmployees = ({ list, remove }) => {
         rowsPerPageOptions: [10, 20, 50],
         filter: true,
         fixedSelectColumn: true,
-        onRowsDelete: handleRemoveEmployeesBtn
+        onRowsDelete: handleRemoveEmployeesBtn,
     };
 
     return (

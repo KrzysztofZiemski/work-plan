@@ -1,17 +1,22 @@
 import { SERVER } from '../config';
 
 const LOGIN_URL = `${SERVER}/login`
-const AUTHENTICATION_URL = `${SERVER}/api/v1/user/authentication`;
+const AUTHENTICATION_URL = `${SERVER}/authentication`;
 const LOGOUT_URL = `${SERVER}/logout`;
 export class AuthService {
     static authentication = (username, password) => {
-
+        const data = { username, password }
         const requestOptions = {
             method: 'POST',
-            headers: { authorization: this.createAuthToken(username, password) },
             credentials: 'include',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
         }
         return fetch(LOGIN_URL, requestOptions).then(res => {
+            console.log(res)
             if (res.status === 404 || res.status === 200) return Promise.resolve();
             return Promise.reject(res.status);
         })
@@ -28,7 +33,11 @@ export class AuthService {
                 return Promise.reject(res.status)
             });
     }
-    static logout = () => fetch(LOGOUT_URL)
+
+    static logout = () => fetch(LOGOUT_URL, {
+        method: 'POST',
+        credentials: 'include',
+    })
 
     static createAuthToken = (username, password) => `Basic ${window.btoa(`${username}:${password}`)}`
 }
