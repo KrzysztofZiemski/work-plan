@@ -76,7 +76,7 @@ const columns = [
 
 
 const TableEmployees = ({ list, remove }) => {
-
+    console.log(list)
     let modalMessage = 'Czy na pewno chcesz usunąć pracowników?';
 
     const handleRemoveEmployeesBtn = ({ data, deleteEmployees }) => {
@@ -92,6 +92,10 @@ const TableEmployees = ({ list, remove }) => {
         filter: true,
         fixedSelectColumn: true,
         onRowsDelete: handleRemoveEmployeesBtn,
+        isRowSelectable: (index) => list[index].isActive,
+        rowsSelected: [],
+        downloadOptions: { filename: 'tableDownload.csv', separator: ',' },
+        // onDownload: TODO
     };
 
     return (

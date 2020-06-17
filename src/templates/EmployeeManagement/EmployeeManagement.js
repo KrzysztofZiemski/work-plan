@@ -32,7 +32,7 @@ export const EmployeeManagement = () => {
     let [isLoaded, setIsLoaded] = useState(true);
     let [alert, setAlert] = useState(false);
     let [alertMessage, setAlertMessage] = useState(null)
-
+    //TO DELETE AFTER IMPLEMENT LOGIC ADD/DELETE EMPLOYEE
     const getEmployees = () => {
         getAllEmployee(filterEmployees)
             .then(employeesList => {
@@ -45,7 +45,13 @@ export const EmployeeManagement = () => {
     }
 
     useEffect(() => {
-        getEmployees()
+        getAllEmployee(filterEmployees)
+            .then(employeesList => {
+                setEmployees(employeesList)
+                setIsLoaded(false);
+            }).then(err => {
+                setIsLoaded(false);
+            });
         return () => {
             setAlert(false);
         };
