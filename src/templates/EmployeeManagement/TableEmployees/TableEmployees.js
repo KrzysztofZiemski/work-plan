@@ -5,6 +5,31 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import { Link } from 'react-router-dom';
 
 import routes from '../../../utils/routes';
+const headerNames = [
+    {
+        name: 'id',
+        download: false,
+    },
+    {
+        name: 'name',
+        download: true,
+        label: 'imię'
+    },
+    {
+        name: 'lastName',
+        download: true,
+        label: 'nazwisko'
+    },
+    {
+        name: 'isActive',
+        download: true,
+        label: 'status'
+    },
+    {
+        name: 'settings',
+        download: false,
+    },
+];
 
 
 const columns = [
@@ -18,15 +43,7 @@ const columns = [
             customBodyRender: () => <AccountBoxIcon />
         }
     },
-    {
-        name: ' ',
-        label: ' ',
-        options: {
-            filter: false,
-            sort: false,
-            customBodyRender: () => <AccountBoxIcon />
-        },
-    },
+
     {
         name: 'name',
         label: 'imię',
@@ -49,12 +66,11 @@ const columns = [
     {
         name: 'isActive',
         label: 'status',
-
         options: {
             filter: true,
             sort: true,
             print: false,
-            download: false,
+            download: true,
             customBodyRender: (value, tableMeta, updateValue) => value ? 'aktywny' : 'nieaktywny'
         }
     },
@@ -66,6 +82,7 @@ const columns = [
             sort: false,
             print: false,
             download: false,
+            expandableRowsHeader: true,
             customBodyRender: (value, tableMeta, updateValue) => {
                 const id = tableMeta.rowData[0];
                 return <Link to={`${routes.employeeDetails}/${id}`}><SettingsIcon color="primary" /></Link>
@@ -76,7 +93,7 @@ const columns = [
 
 
 const TableEmployees = ({ list, remove }) => {
-    console.log(list)
+
     let modalMessage = 'Czy na pewno chcesz usunąć pracowników?';
 
     const handleRemoveEmployeesBtn = ({ data, deleteEmployees }) => {
@@ -90,12 +107,23 @@ const TableEmployees = ({ list, remove }) => {
     const options = {
         rowsPerPageOptions: [10, 20, 50],
         filter: true,
+        filterType: "dropdown",
         fixedSelectColumn: true,
         onRowsDelete: handleRemoveEmployeesBtn,
         isRowSelectable: (index) => list[index].isActive,
         rowsSelected: [],
-        downloadOptions: { filename: 'tableDownload.csv', separator: ',' },
-        // onDownload: TODO
+        onDownload: (buildHead, buildBody, columns, data) => {
+            return "\uFEFF" + buildHead(headerNames) + buildBody(data);
+        },
+        downloadOptions: {
+            filename: 'excel-format.csv',
+            separator: ';',
+            filterOptions: {
+                useDisplayedColumnsOnly: true,
+                useDisplayedRowsOnly: true,
+            },
+        }
+        //TODO - print
     };
 
     return (

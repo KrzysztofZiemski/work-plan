@@ -13,6 +13,7 @@ import DialogMessage from '../../components/DialogMessage';
 import AddFormDialog from './AddFormDialog';
 import { getAllEmployee, deleteEmployee, employeeStatus, addWEmployee } from '../../services/employeesRequest';
 
+
 const useStyles = makeStyles(theme => ({
     header: {
         backgroundColor: '#222d32',
@@ -33,6 +34,7 @@ export const EmployeeManagement = () => {
     let [alert, setAlert] = useState(false);
     let [alertMessage, setAlertMessage] = useState(null)
     //TO DELETE AFTER IMPLEMENT LOGIC ADD/DELETE EMPLOYEE
+    console.log(employees)
     const getEmployees = () => {
         getAllEmployee(filterEmployees)
             .then(employeesList => {
