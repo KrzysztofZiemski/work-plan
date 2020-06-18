@@ -68,7 +68,6 @@ export const EmployeeManagement = () => {
     }
     //do zmiany pobieranie wszystkich pracownikow od nowa
     const removeEmployees = (idArr) => {
-        console.log(idArr)
         setIsLoaded(true);
         const promiesList = idArr.map(employee => deleteEmployee(employee.id))
         Promise.all(promiesList)
@@ -84,7 +83,7 @@ export const EmployeeManagement = () => {
             .catch(err => {
                 const messages = [
                     'Wystąpił błąd podczas usuwania pracowników'
-                ]
+                ];
                 setIsLoaded(false);
                 setAlertMessage(messages);
                 setAlert(true);

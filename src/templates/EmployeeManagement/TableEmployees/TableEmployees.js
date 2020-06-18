@@ -69,7 +69,6 @@ const columns = [
         options: {
             filter: true,
             sort: true,
-            print: false,
             download: true,
             customBodyRender: (value, tableMeta, updateValue) => value ? 'aktywny' : 'nieaktywny'
         }
@@ -107,6 +106,7 @@ const TableEmployees = ({ list, remove }) => {
     const options = {
         rowsPerPageOptions: [10, 20, 50],
         filter: true,
+        responsive: 'standard',
         filterType: "dropdown",
         fixedSelectColumn: true,
         onRowsDelete: handleRemoveEmployeesBtn,
@@ -123,7 +123,6 @@ const TableEmployees = ({ list, remove }) => {
                 useDisplayedRowsOnly: true,
             },
         }
-        //TODO - print
     };
 
     return (
