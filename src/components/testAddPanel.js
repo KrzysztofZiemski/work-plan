@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import FormGroup from '@material-ui/core/FormGroup';
+// import Dialog from '@material-ui/core/Dialog';
+// import DialogActions from '@material-ui/core/DialogActions';
+// import DialogContent from '@material-ui/core/DialogContent';
+// import DialogTitle from '@material-ui/core/DialogTitle';
+// import FormGroup from '@material-ui/core/FormGroup';
 import { makeStyles } from '@material-ui/core/styles';
-import PrimaryButton from '../../../components/PrimaryButton';
+// import PrimaryButton from '../../../components/PrimaryButton';
 
 const useStyles = makeStyles(() => ({
     inputs: {
@@ -15,40 +15,56 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-export const AddFormDialog = ({ onSubmit }) => {
+
+export const AddFormDialogTest = ({ onSubmit, fields, button }) => {
+
+    let [fieldsValue, setFieldsValue] = useState(null);
     let [open, setOpen] = useState(false);
-    let [name, setName] = useState('');
-    let [lastName, setLastName] = useState('');
-    let [errors, setErrors] = useState({
-        name: false,
-        lastName: false
-    });
+    let [errors, setErrors] = useState();
     let [description, setDescription] = useState('');
     const classes = useStyles();
+
+    useEffect(() => {
+        const fieldsState = {};
+        fields.forEach(field => {
+            fieldsState[field.name] = ''
+        })
+        setFieldsValue(fieldsState);
+    }, [])
+
     const handleClickOpen = () => {
         setOpen(true);
     };
 
+    const handleChange = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+        e.preventDefault();
+        setFieldsValue(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
+    }
     const handleClose = () => {
         setOpen(false);
     };
     const handleSubmit = () => {
-        if (name.length < 3 || lastName.length < 3) {
-            let errors = {}
-            name.length < 3 ? errors = { ...errors, name: true } : errors = { ...errors, name: false };
-            lastName.length < 3 ? errors = { ...errors, lastName: true } : errors = { ...errors, lastName: false };
-            setErrors(errors)
-            return;
-        }
-        const data = { name, lastName, description };
-        setLastName('');
-        setName('');
-        onSubmit(data);
-        handleClose();
+
+    }
+    const renderFields = () => {
+        if (!fields) return;
+        return fields.map(field => {
+            //TODO handle errors
+            return (
+                // <TextField label={field.name} value={fields[field.name] ? fields[field.name] : ''} error={false} />
+                <TextField label={field.name} name={field.name} value={fieldsValue ? fieldsValue[field.name] : ''} onChange={handleChange} />
+            )
+        })
     }
     return (
         <>
-            <PrimaryButton value='Dodaj Pracownika' variant="outlined" color="primary" onClick={handleClickOpen} />
+            <div>{renderFields()}</div>
+            {/* <PrimaryButton value='Dodaj Pracownika' variant="outlined" color="primary" onClick={handleClickOpen} />
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" disableBackdropClick >
                 <DialogTitle id="form-dialog-title">Dodaj Pracownika</DialogTitle>
                 <DialogContent>
@@ -62,7 +78,7 @@ export const AddFormDialog = ({ onSubmit }) => {
                     <PrimaryButton value='Anuluj' onClick={handleClose} color="primary" />
                     <PrimaryButton value='Dodaj' onClick={handleSubmit} color="primary" />
                 </DialogActions>
-            </Dialog>
+            </Dialog> */}
         </>
     );
 }

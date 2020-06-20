@@ -2,23 +2,18 @@ import React, { useState, createContext, useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Redirect
+  Route
 } from "react-router-dom";
-
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-
 import GraphicPage from './templates/GraphicPage/GraphicPage';
 import HomePage from './templates/HomePage/HomePage';
 import LoginPage from './templates/LoginPage';
 import EmployeeManagement from './templates/EmployeeManagement';
 import NavBarTop from './components/NavBarTop';
 import NavBarLeft from './components/NavBarLeft';
-
 import { AuthService } from './services/AuthService';
 import { default as routes } from './utils/routes';
-import './App.scss';
 
 export const UserContext = createContext({
   loggedUser: null,
@@ -36,8 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function App() {
-
+const App = () => {
   let [activeLeftMenu, setActiveLeftMenu] = useState(false);
   //true for test, shuld be null
   let [loggedUser, setLoggedUser] = useState(null);
