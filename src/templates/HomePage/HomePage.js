@@ -18,31 +18,7 @@ const HomePage = () => {
             .then(user => console.log('user', user))
             .catch(err => console.log('err', err))
     }
-    const options = {
-        buttonText: 'Dodaj pracownika',
-        fields: [
-            {
-                name: 'name',
-                type: 'text',
-                label: 'imie',
-                pattern: '.{3,10}',
-                errorMessage: 'Imię musi zawierać od 3 do 10 znaków'
-            },
-            {
-                name: 'lastName',
-                label: 'nazwisko',
-                type: 'text',
-                pattern: '.{3,10}',
-                errorMessage: 'Nazwisko musi zawierać od 3 do 10 znaków'
-            },
-            {
-                name: 'desc',
-                label: 'opis',
-                type: 'date',
-                errorMessage: ''
-            },
-        ]
-    }
+
 
     return (
         <section>
@@ -52,7 +28,6 @@ const HomePage = () => {
             <br />
             <button onClick={getUser}> get user by id</button>
             <input type="text" value={id} onChange={(e) => setId(e.target.value)} />
-            <AddFormDialog fields={options.fields} button={<PrimaryButton value='tesy' />} />
         </section>
 
     )

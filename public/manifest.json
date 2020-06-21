@@ -1,8 +1,21 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
-  "icons": [
-
+  "short_name": "H E X T L",
+  "name": "H E X T L",
+  "icons": [{
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "favicon.ico",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "favicon.ico",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
   ],
   "start_url": ".",
   "display": "standalone",
