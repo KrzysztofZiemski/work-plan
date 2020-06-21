@@ -5,10 +5,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import TableEmployees from './TableEmployees/TableEmployees';
 import Loader from '../../components/Loader';
 import DialogMessage from '../../components/DialogMessage';
-import AddFormDialog from './AddFormDialog';
 import { getEmployeesByActive, deleteEmployee, addWEmployee } from '../../services/employeesRequest';
 import PanelEmployeesList from './PanelEmployeesList';
-
+import AddFormDialog from '../../components/AddFormDialog';
 const useStyles = makeStyles(theme => ({
     header: {
         backgroundColor: '#222d32',
@@ -34,7 +33,28 @@ const options = {
         name: 'wszyscy'
     }
 }
-
+const fieldsAddEmployee = [
+    {
+        name: 'name',
+        type: 'text',
+        label: 'imie',
+        pattern: '.{3,20}',
+        errorMessage: 'Imię musi zawierać od 3 do 10 znaków'
+    },
+    {
+        name: 'lastName',
+        label: 'nazwisko',
+        type: 'text',
+        pattern: '.{3,20}',
+        errorMessage: 'Nazwisko musi zawierać od 3 do 10 znaków'
+    },
+    {
+        name: 'desc',
+        label: 'opis',
+        type: 'text',
+        errorMessage: ''
+    },
+];
 
 export const EmployeeManagement = () => {
     const classes = useStyles();
@@ -197,7 +217,7 @@ export const EmployeeManagement = () => {
                     <PanelEmployeesList setFilter={setFiletrEmployees} value={filterEmployees} options={options} />
                 </Grid>
                 <Grid item>
-                    <AddFormDialog onSubmit={handleAddWEmployee} />
+                    <AddFormDialog onSubmit={handleAddWEmployee} fields={fieldsAddEmployee} button='Dodaj pracownika' />
                 </Grid>
             </Grid>
             <Grid item>
