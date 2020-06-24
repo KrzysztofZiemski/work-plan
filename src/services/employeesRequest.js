@@ -1,11 +1,10 @@
-import { SERVER } from '../config';
 import axios from '../utils/axios';
 
 const WORKERS_URL = '/api/v1/employee';
 const FILTER_FALSE = '?filterIsActive=false';
 
 export const getEmployeesByActive = (active = true) => {
-    const URL = active ? WORKERS_URL : `${WORKERS_URL + FILTER_FALSE}`;
+    const URL = active ? WORKERS_URL : WORKERS_URL + FILTER_FALSE;
     return axios.get(URL)
         .then(res => res.data)
         .catch(err => Promise.reject(err));
@@ -17,7 +16,7 @@ export const getAllEmployee = async () => {
             .then(res => res.data)
             .catch(err => Promise.reject(err));
 
-        const inActiveEmployees = await axios.get(`${WORKERS_URL + FILTER_FALSE}`)
+        const inActiveEmployees = await axios.get(WORKERS_URL + FILTER_FALSE)
             .then(res => res.data)
             .catch(err => Promise.reject(err));
 
