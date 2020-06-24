@@ -5,18 +5,14 @@ export class AuthService {
         const data = { username, password };
         const decodedData = JSON.stringify(data);
         return axios.post('login', decodedData)
-            .then(res => {
-                console.log(res);
-                if (res.status === 404 || res.status === 200) return Promise.resolve();
-                throw new Error('Error');
-            })
-            .catch(err => Promise.reject(err.status));
+            .then(() => Promise.resolve())
+            .catch(err => Promise.reject(err));
     };
 
     static getAuthUser = () => {
         return axios.get('authentication')
             .then(res => res.data)
-            .catch(err => Promise.reject(err.status));
+            .catch(err => Promise.reject(err));
     };
 
     static logout = () => axios.post('logout');
