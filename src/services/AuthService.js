@@ -15,7 +15,7 @@ export class AuthService {
 
     static getAuthUser = () => {
         return axios.get('authentication')
-            .then(res => res.json())
+            .then(res => res.data)
             .catch(err => Promise.reject(err.status));
     };
 
