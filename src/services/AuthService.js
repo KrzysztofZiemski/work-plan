@@ -16,7 +16,6 @@ export class AuthService {
             body: JSON.stringify(data)
         }
         return fetch(LOGIN_URL, requestOptions).then(res => {
-            console.log(res)
             if (res.status === 404 || res.status === 200) return Promise.resolve();
             return Promise.reject(res.status);
         })
