@@ -103,8 +103,9 @@ export const EmployeeManagement = () => {
                     }
                 });
             }).catch(err => {
-                setAlertMessage('wystapił błąd podczas pobierania pracowników');
-                setIsLoaded(true);
+                setAlertMessage(['wystapił błąd podczas pobierania pracowników']);
+                setAlert(true);
+                setIsLoaded(false);
             })
         } else {
             if (!employees.hasOwnProperty(filterEmployees) || employees[filterEmployees].fetched) return;
@@ -120,8 +121,9 @@ export const EmployeeManagement = () => {
                     }
                 }))
             }).catch(err => {
-                setAlertMessage('wystapił błąd podczas pobierania pracowników');
-                setIsLoaded(true);
+                setAlertMessage(['wystapił błąd podczas pobierania pracowników']);
+                setAlert(true);
+                setIsLoaded(false);
             })
         }
         return () => {
@@ -141,8 +143,9 @@ export const EmployeeManagement = () => {
                     }
                 }))
             }).catch(err => {
-                setAlertMessage('wystapił błąd podczas pobierania pracowników');
-                setIsLoaded(true);
+                setAlertMessage(['wystapił błąd podczas pobierania pracowników']);
+                setAlert(true);
+                setIsLoaded(false);
             })
         } else if (employees.active.fetched) {
             getEmployeesByActive(false).then(data => {
@@ -155,8 +158,9 @@ export const EmployeeManagement = () => {
                     }
                 }))
             }).catch(err => {
-                setAlertMessage('wystapił błąd podczas pobierania pracowników');
-                setIsLoaded(true);
+                setAlertMessage(['wystapił błąd podczas pobierania pracowników']);
+                setAlert(true);
+                setIsLoaded(false);
             })
         }
     }

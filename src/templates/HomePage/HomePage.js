@@ -19,7 +19,6 @@ const HomePage = () => {
             .catch(err => console.log('err', err))
     }
 
-
     return (
         <section>
             <div>Tu na razie jest ściernisko
