@@ -72,7 +72,7 @@ export const EmployeeManagement = () => {
     let [filterEmployees, setFiletrEmployees] = useState(options.active.value);
     let [isLoaded, setIsLoaded] = useState(false);
     let [alert, setAlert] = useState(false);
-    let [alertMessage, setAlertMessage] = useState(null);
+    let [alertMessage, setAlertMessage] = useState([]);
 
     useEffect(() => {
         if (employees.active.fetched && employees.inActive.fetched) return;
@@ -127,7 +127,7 @@ export const EmployeeManagement = () => {
             })
         }
         return () => {
-            setIsLoaded();
+            setIsLoaded(false);
         };
     }, [filterEmployees, employees]);
 
@@ -209,26 +209,28 @@ export const EmployeeManagement = () => {
         return employees[filterEmployees].list;
     }
     return (
-        <Grid container component='section' direction='column'>
-            <DialogMessage open={alert} close={closeAlert} messages={alertMessage} />
-            <Grid item>
-                <Typography component='h2' align='center' variant='button' className={classes.header}>
-                    Pracownicy
+        <>
+            <Grid container component='section' direction='column'>
+                <DialogMessage open={alert} close={closeAlert} messages={alertMessage} />
+                <Grid item>
+                    <Typography component='h2' align='center' variant='button' className={classes.header}>
+                        Pracownicy
                 </Typography>
-            </Grid>
-            <Grid container>
-                <Grid item>
-                    <PanelEmployeesList setFilter={setFiletrEmployees} value={filterEmployees} options={options} />
+                </Grid>
+                <Grid container>
+                    <Grid item>
+                        <PanelEmployeesList setFilter={setFiletrEmployees} value={filterEmployees} options={options} />
+                    </Grid>
+                    <Grid item>
+                        <AddFormDialog onSubmit={handleAddWEmployee} fields={fieldsAddEmployee} button='Dodaj pracownika' />
+                    </Grid>
                 </Grid>
                 <Grid item>
-                    <AddFormDialog onSubmit={handleAddWEmployee} fields={fieldsAddEmployee} button='Dodaj pracownika' />
+                    <TableEmployees list={renderList()} remove={removeEmployees}></TableEmployees>
                 </Grid>
+                <Loader open={isLoaded} />
             </Grid>
-            <Grid item>
-                <TableEmployees list={renderList()} remove={removeEmployees}></TableEmployees>
-            </Grid>
-            <Loader open={isLoaded} />
-        </Grid>
+        </>
     );
 };
 

@@ -4,8 +4,8 @@ import { UserService } from '../../services/UserService';
 import { AddFormDialog } from '../../components/AddFormDialog/AddFormDialog';
 import PrimaryButton from '../../components/PrimaryButton'
 const HomePage = () => {
-    let [logs, setLogs] = useState(null);
-    let [id, setId] = useState(null);
+    let [logs, setLogs] = useState('');
+    let [id, setId] = useState('');
     console.log('logs', logs)
 
     const getLogs = () => {

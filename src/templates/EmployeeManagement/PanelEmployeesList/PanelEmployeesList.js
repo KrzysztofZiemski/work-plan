@@ -35,16 +35,18 @@ export const PanelEmployeesList = ({ value, options, setFilter }) => {
     };
 
     return (
-        <FormControl className={classes.formControl}>
-            <InputLabel id="activeLabel">Pokaż</InputLabel>
-            <Select
-                labelId="employee-management-select-label"
-                id="employee-management-select"
-                value={value}
-                onChange={handleFiltrEmployees}
-            >
-                {renderOptions()}
-            </Select>
-        </FormControl>
+        <>
+            <FormControl className={classes.formControl}>
+                <InputLabel id="activeLabel">Pokaż</InputLabel>
+                <Select
+                    labelId="employee-management-select-label"
+                    id="employee-management-select"
+                    value={value}
+                    onChange={handleFiltrEmployees}
+                >
+                    {renderOptions()}
+                </Select>
+            </FormControl>
+        </>
     );
 };

@@ -73,32 +73,33 @@ const NavGraphic = ({ className, setDateEnd, dateEnd, dateStart, setDateStart })
     }
 
     return (
+        <>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <Grid container justify="center" className={classes.root}>
+                    <KeyboardDatePicker
+                        disableToolbar
+                        variant="inline"
+                        format="dd/MM/yyyy"
+                        margin="normal"
+                        id="date-picker-inline"
+                        label="początek tygodnia"
+                        value={dateStart}
+                        onChange={handleChangeDate}
 
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Grid container justify="center" className={classes.root}>
-                <KeyboardDatePicker
-                    disableToolbar
-                    variant="inline"
-                    format="dd/MM/yyyy"
-                    margin="normal"
-                    id="date-picker-inline"
-                    label="początek tygodnia"
-                    value={dateStart}
-                    onChange={handleChangeDate}
+                    />
+                    <KeyboardDatePicker
+                        margin="normal"
+                        id="date-picker-dialog"
+                        label="koniec tygodnia"
+                        format="dd/MM/yyyy"
+                        value={dateEnd}
+                        onChange={handleChangeDate}
+                    />
+                    {dragable ? <Button variant="contained" color="primary" className={classes.btn} onClick={submitWorkPlan}>Zapisz</Button> : null}
+                </Grid>
 
-                />
-                <KeyboardDatePicker
-                    margin="normal"
-                    id="date-picker-dialog"
-                    label="koniec tygodnia"
-                    format="dd/MM/yyyy"
-                    value={dateEnd}
-                    onChange={handleChangeDate}
-                />
-                {dragable ? <Button variant="contained" color="primary" className={classes.btn} onClick={submitWorkPlan}>Zapisz</Button> : null}
-            </Grid>
-
-        </MuiPickersUtilsProvider>
+            </MuiPickersUtilsProvider>
+        </>
     );
 };
 

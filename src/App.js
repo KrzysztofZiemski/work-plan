@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import GraphicPage from './templates/GraphicPage/GraphicPage';
 import HomePage from './templates/HomePage/HomePage';
 import LoginPage from './templates/LoginPage';
+import ProductionReportPage from './templates/ProductionReportPage';
 import EmployeeManagement from './templates/EmployeeManagement';
 import NavBarTop from './components/NavBarTop';
 import NavBarLeft from './components/NavBarLeft';
@@ -67,6 +68,7 @@ const App = () => {
                 {/* do zrobienia redirect po testach */}
                 {loggedUser ? <Route path={routes.workPlan} render={(props) => <GraphicPage className='page' {...props} />} /> : null}
                 {loggedUser ? <Route path={routes.employeeManagement} render={(props) => <EmployeeManagement className='page' {...props} />} /> : null}
+                {loggedUser ? <Route path={routes.productionReport} render={(props) => <ProductionReportPage className='page' {...props} />} /> : null}
               </Switch>
             </Grid>
           </Grid>

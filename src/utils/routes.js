@@ -4,5 +4,6 @@ export default {
     workPlanEdit: '/workplan?edit=1',
     login: '/login',
     employeeManagement: '/management-employee',
-    employeeDetails: '/employee'
+    employeeDetails: '/employee',
+    productionReport: '/report/production'
 }

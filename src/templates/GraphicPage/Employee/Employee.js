@@ -35,13 +35,15 @@ const Employee = ({ id, line, shift, workPlace, children, label }) => {
     })
 
     return (
-        <ListItemText
-            ref={drag}
-            className={isDragging ? `${classes.dragging} ${classes.root}` : classes.root}
-            icon={<FaceIcon />}
-        >
-            {label}
-        </ListItemText >
+        <>
+            <ListItemText
+                ref={drag}
+                className={isDragging ? `${classes.dragging} ${classes.root}` : classes.root}
+                icon={<FaceIcon />}
+            >
+                {label}
+            </ListItemText >
+        </>
     )
 }
 

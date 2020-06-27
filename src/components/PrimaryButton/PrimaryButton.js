@@ -18,8 +18,10 @@ export function PrimaryButton({ value, onClick }) {
     const classes = useStyles();
 
     return (
-        <Button variant="contained" size="large" color="primary" className={classes.margin} onClick={onClick}>
-            {value}
-        </Button>
+        <>
+            <Button variant="contained" size="large" color="primary" className={classes.margin} onClick={onClick}>
+                {value}
+            </Button>
+        </>
     );
 }
