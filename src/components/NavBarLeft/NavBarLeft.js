@@ -103,7 +103,7 @@ export const NavBarLeft = ({ isActive }) => {
                         </ListItem>
                     </List>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 8 ? true : false} onClick={() => setSelected(8)}>
+                        <ListItem button className={classes.subListItem} component={Link} to={routes.productManagement} selected={selected === 8 ? true : false} onClick={() => setSelected(8)}>
                             <ListItemText primary="Produkty" />
                         </ListItem>
                     </List>

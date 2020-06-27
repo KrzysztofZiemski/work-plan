@@ -10,6 +10,7 @@ import GraphicPage from './templates/GraphicPage/GraphicPage';
 import HomePage from './templates/HomePage/HomePage';
 import LoginPage from './templates/LoginPage';
 import EmployeeManagement from './templates/EmployeeManagement';
+import ProductManagement from './templates/ProductManagement';
 import NavBarTop from './components/NavBarTop';
 import NavBarLeft from './components/NavBarLeft';
 import { AuthService } from './services/AuthService';
@@ -67,6 +68,7 @@ const App = () => {
                 {/* do zrobienia redirect po testach */}
                 {loggedUser ? <Route path={routes.workPlan} render={(props) => <GraphicPage className='page' {...props} />} /> : null}
                 {loggedUser ? <Route path={routes.employeeManagement} render={(props) => <EmployeeManagement className='page' {...props} />} /> : null}
+                {loggedUser ? <Route path={routes.productManagement} render={(props) => <ProductManagement className='page' {...props} />} /> : null}
               </Switch>
             </Grid>
           </Grid>
