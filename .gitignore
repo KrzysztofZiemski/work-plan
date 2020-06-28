@@ -24,3 +24,9 @@ yarn-error.log*
 
 # Local Netlify folder
 .netlify
+
+# idea
+misc.xml
+modules.xml
+react-hextl.iml
+vcs.xml

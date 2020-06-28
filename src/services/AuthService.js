@@ -1,42 +1,21 @@
-import { SERVER } from '../config';
+import axios from '../utils/axios';
 
-const LOGIN_URL = `${SERVER}/login`
-const AUTHENTICATION_URL = `${SERVER}/authentication`;
-const LOGOUT_URL = `${SERVER}/logout`;
 export class AuthService {
     static authentication = (username, password) => {
-        const data = { username, password }
-        const requestOptions = {
-            method: 'POST',
-            credentials: 'include',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        }
-        return fetch(LOGIN_URL, requestOptions).then(res => {
-            if (res.status === 404 || res.status === 200) return Promise.resolve();
-            return Promise.reject(res.status);
-        })
-    }
+        const data = { username, password };
+        const decodedData = JSON.stringify(data);
+        return axios.post('login', decodedData)
+            .then(() => Promise.resolve())
+            .catch(err => Promise.reject(err));
+    };
 
     static getAuthUser = () => {
-        const requestOptions = {
-            method: 'GET',
-            credentials: 'include',
-        };
-        return fetch(AUTHENTICATION_URL, requestOptions)
-            .then(res => {
-                if (res.ok) return res.json();
-                return Promise.reject(res.status)
-            });
-    }
+        return axios.get('authentication')
+            .then(res => res.data)
+            .catch(err => Promise.reject(err));
+    };
 
-    static logout = () => fetch(LOGOUT_URL, {
-        method: 'POST',
-        credentials: 'include',
-    })
+    static logout = () => axios.post('logout');
 
-    static createAuthToken = (username, password) => `Basic ${window.btoa(`${username}:${password}`)}`
+    static createAuthToken = (username, password) => `Basic ${window.btoa(`${username}:${password}`)}`;
 }
