@@ -14,10 +14,10 @@ export const Loader = ({ open }) => {
     const classes = useStyles();
 
     return (
-        <div>
+        <>
             <Backdrop className={classes.backdrop} open={open}>
                 <CircularProgress color="inherit" />
             </Backdrop>
-        </div>
+        </>
     );
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -11,7 +11,7 @@ import LineService from '../../services/LineService';
 import ProductService from '../../services/ProductService';
 import { getAllEmployee } from '../../services/employeesRequest';
 import ProductionReportService from '../../services/ProductionReportService';
-
+import { UserContext } from '../../App'
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -20,8 +20,6 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         width: 'auto',
         padding: 20,
-        borderBottom: '4px solid #222d32',
-        maxHeight: '70vh',
         overflow: 'auto'
     },
     textField: {
@@ -51,7 +49,9 @@ const today = () => {
 
 }
 
-export const AddReportForm = ({ setOpenMessage, setMessages }) => {
+export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
+
+    const { loggedUser } = useContext(UserContext)
 
     let [formData, setFormData] = useState({
         productionStart: today(),
@@ -72,8 +72,8 @@ export const AddReportForm = ({ setOpenMessage, setMessages }) => {
         productionStart: false,
         productionEnd: false,
         lineId: false,
-        productionHours: true,
-        productionMinutes: true,
+        productionHours: false,
+        productionMinutes: false,
         productId: false,
         series: false,
         speedMachinePerCycle: false,
@@ -117,19 +117,23 @@ export const AddReportForm = ({ setOpenMessage, setMessages }) => {
         e.preventDefault();
         const isOk = validation();
         if (!isOk) {
+
             setMessages(['musisz uzupełnić wszystkie wymagane pola']);
             setOpenMessage(true);
             return;
         }
         const data = { ...formData };
-        data.productionStart = `${data.productionStart}:00.791Z`;
-        data.productionEnd = `${data.productionEnd}:00.791Z`;
-        ProductionReportService.save(data)
+        data.productionStart = `${data.productionStart}:00.162Z`;
+        data.productionEnd = `${data.productionEnd}:00.162Z`;
+        setLoader(true);
+        ProductionReportService.save(data, loggedUser.id)
             .then(data => {
+                setLoader(false);
                 setMessages(['Dodano raport']);
                 setOpenMessage(true);
             })
             .catch(err => {
+                setLoader(false);
                 setMessages(['Nie udało się zapisać raportu', 'wystąpił błąd łączności', `status ${err}`]);
                 setOpenMessage(true);
             })

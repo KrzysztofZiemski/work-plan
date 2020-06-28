@@ -1,8 +1,8 @@
 import { SERVER } from '../config';
 const SERVER_REPORT = `${SERVER}/api/v1/production-report`;
 class ProductionReportService {
-
-    static save = (data) => {
+    static save = (data, loggedUserId) => {
+        const URL = `${SERVER_REPORT}?idUser=${loggedUserId}`;
         const requestOptions = {
             method: 'POST',
             credentials: 'include',
@@ -13,9 +13,8 @@ class ProductionReportService {
             body: JSON.stringify(data)
         }
 
-        return fetch(SERVER_REPORT, requestOptions)
+        return fetch(URL, requestOptions)
             .then(res => {
-                console.log(res)
                 if (res.status === 200) return Promise.resolve();
                 return Promise.reject(res.status);
             })
