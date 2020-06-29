@@ -7,6 +7,7 @@ class LineService {
             if (res.ok === true) return res.json();
             return Promise.reject(res.status);
         })
+
 }
 
 export default LineService;

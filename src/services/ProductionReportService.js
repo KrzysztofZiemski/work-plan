@@ -19,6 +19,22 @@ class ProductionReportService {
                 return Promise.reject(res.status);
             })
     }
+    static getBetween = (start, end) => {
+        //format date yyyy-MM-dd-HH:mm
+        const URL = `${SERVER_REPORT}/start/${start}/end/${end}`;
+        return fetch(URL)
+            .then(res => {
+                if (res.status === 200) return res.json();
+                return Promise.reject(res.status);
+            })
+    }
+    static getAll = () => {
+        return fetch(SERVER_REPORT)
+            .then(res => {
+                if (res.status === 200) return res.json();
+                return Promise.reject(res.status);
+            })
+    }
 }
 
 export default ProductionReportService;

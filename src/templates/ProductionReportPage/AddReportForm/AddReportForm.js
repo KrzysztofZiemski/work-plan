@@ -6,12 +6,12 @@ import Select from '@material-ui/core/Select';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import PrimaryButton from '../../components/PrimaryButton';
-import LineService from '../../services/LineService';
-import ProductService from '../../services/ProductService';
-import { getAllEmployee } from '../../services/employeesRequest';
-import ProductionReportService from '../../services/ProductionReportService';
-import { UserContext } from '../../App'
+import PrimaryButton from '../../../components/PrimaryButton';
+import LineService from '../../../services/LineService';
+import ProductService from '../../../services/ProductService';
+import { getAllEmployee } from '../../../services/employeesRequest';
+import ProductionReportService from '../../../services/ProductionReportService';
+import { UserContext } from '../../../App'
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -123,8 +123,9 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
             return;
         }
         const data = { ...formData };
-        data.productionStart = `${data.productionStart}:00.162Z`;
-        data.productionEnd = `${data.productionEnd}:00.162Z`;
+
+        data.productionStart = data.productionStart.replace('T', '-');
+        data.productionEnd = data.productionEnd.replace('T', '-');
         setLoader(true);
         ProductionReportService.save(data, loggedUser.id)
             .then(data => {
