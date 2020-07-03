@@ -24,7 +24,7 @@ export const ProductionReportPage = () => {
     let [openMessage, setOpenMessage] = useState(false);
     let [wait, setWait] = useState(false);
 
-    const classes = styles()
+    const classes = styles();
 
     const handleClose = () => {
         setOpenMessage(false)

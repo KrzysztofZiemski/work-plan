@@ -11,6 +11,7 @@ import HomePage from './templates/HomePage/HomePage';
 import LoginPage from './templates/LoginPage';
 import ProductionReportPage from './templates/ProductionReportPage';
 import EmployeeManagement from './templates/EmployeeManagement';
+import ReportsList from './templates/ProductionReportPage/ReportsList';
 import NavBarTop from './components/NavBarTop';
 import NavBarLeft from './components/NavBarLeft';
 import { AuthService } from './services/AuthService';
@@ -20,7 +21,10 @@ export const UserContext = createContext({
   loggedUser: null,
   setLoggedUser: null
 })
-
+export const EmployeesContext = createContext({
+  employeesList: [],
+  setEmployeesList: ''
+})
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1
@@ -36,6 +40,8 @@ const App = () => {
   let [activeLeftMenu, setActiveLeftMenu] = useState(false);
   //true for test, shuld be null
   let [loggedUser, setLoggedUser] = useState(null);
+  let [employeesList, setEmployeesList] = useState([]);
+
   const classes = useStyles();
 
   useEffect(() => {
@@ -52,28 +58,31 @@ const App = () => {
     <Router basename='#'>
       <div className="App" >
         <UserContext.Provider value={{ loggedUser, setLoggedUser, activeLeftMenu, setActiveLeftMenu }}>
-          <Grid container className={classes.root}>
-            <Grid item>
-              <NavBarLeft />
+          <EmployeesContext.Provider value={{ employeesList, setEmployeesList }}>
+            <Grid container className={classes.root}>
+              <Grid item>
+                <NavBarLeft />
+              </Grid>
+              <Grid item className={classes.grow}>
+                <NavBarTop className={classes.grow} />
+                <Switch>
+                  <Route path={routes.root} exact={true}>
+                    <HomePage className='page' />
+                  </Route>
+                  <Route path={routes.login} exact={true}>
+                    <LoginPage className='page' />
+                  </Route>
+                  {/* todo redirect after tests*/}
+                  {loggedUser ? <Route path={routes.workPlan} render={(props) => <GraphicPage className='page' {...props} />} /> : null}
+                  {loggedUser ? <Route path={routes.employeeManagement} render={(props) => <EmployeeManagement className='page' {...props} />} /> : null}
+                  {loggedUser ? <Route path={routes.productionReportList} render={(props) => <ReportsList className='page' {...props} />} /> : null}
+                  {loggedUser ? <Route path={routes.productionReport} exacle render={(props) => <ProductionReportPage className='page' {...props} />} /> : null}
+                </Switch>
+              </Grid>
             </Grid>
-            <Grid item className={classes.grow}>
-              <NavBarTop className={classes.grow} />
-              <Switch>
-                <Route path={routes.root} exact={true}>
-                  <HomePage className='page' />
-                </Route>
-                <Route path={routes.login} exact={true}>
-                  <LoginPage className='page' />
-                </Route>
-                {/* do zrobienia redirect po testach */}
-                {loggedUser ? <Route path={routes.workPlan} render={(props) => <GraphicPage className='page' {...props} />} /> : null}
-                {loggedUser ? <Route path={routes.employeeManagement} render={(props) => <EmployeeManagement className='page' {...props} />} /> : null}
-                {loggedUser ? <Route path={routes.productionReport} render={(props) => <ProductionReportPage className='page' {...props} />} /> : null}
-              </Switch>
-            </Grid>
-          </Grid>
+          </EmployeesContext.Provider>
         </UserContext.Provider>
-      </div>
+      </div >
     </Router >
 
   );

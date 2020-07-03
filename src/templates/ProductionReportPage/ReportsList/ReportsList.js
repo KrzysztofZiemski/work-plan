@@ -1,209 +1,47 @@
 import React, { useEffect, useState } from 'react';
 import MUIDataTable from "mui-datatables";
+import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Loader from '../../../components/Loader';
 import DialogMessage from '../../../components/DialogMessage';
 import ProductionReportService from '../../../services/ProductionReportService';
-// name: 'description',
-// label: 'opis',
-// options: {
-//     filter: true,
-//     sort: false,
-//     customBodyRender: () => <AccountBoxIcon />
-// }
-// reateAt: "2020-06-28T20:16:15+02:00"
-// createdByUser: {id: 1, name: "Michał", surname: "Pol"}
-// description: "string"
-// firstWorkplace: {id: 32, name: "Lara", lastName: "Wiśniewska"}
-// id: 589
-// lineId: 587
-// maxPossibleItems: 9180
-// percentagePerformance: 12.1
-// performancePerHour: 1088.24
-// product: {id: 588, name: "Product Test 1", isSerialized: true, isActive: true, itemsPerCycle: 6, …}
-// productionEnd: "2020-06-28T20:14:24+02:00"
-// productionStart: "2020-06-28T20:14:24+02:00"
-// productionTimeToHour: 1.02
-// secondWorkplace: {id: 34, name: "Oksana", lastName: "Woźniak"}
-// series: "TS42552"
-// speedMachinePerCycle: 25
-// thirdWorkplace: {id: 35, name: "Bogumiła", lastName: "Chmielewska"}
-// totalQuantityProduced: 1110
-// updateAt: "2020-06-28T20:16:15+02:00"
-// updatedByUser: {id: 1, name: "Michał", surname: "Pol"}
+import LineService from '../../../services/LineService';
+import EditIcon from '@material-ui/icons/Edit';
+import { default as routes } from '../../../utils/routes';
 
-const columns = [
-    {
-        name: 'description',
-        label: 'opis',
-        options: {
-            filter: true,
-            sort: false,
-        }
-    },
-    {
-        name: 'firstWorkplace: ',
-        label: 'pierwsze stanowisko',
-        options: {
-            filter: true,
-            sort: false,
-        }
-    },
-    {
-        name: 'secondWorkplace: : ',
-        label: 'drugie stanowisko',
-        options: {
-            filter: true,
-            sort: false,
-        }
-    },
-    {
-        name: 'thirdWorkplace: : : ',
-        label: 'trzecie stanowisko',
-        options: {
-            filter: true,
-            sort: false,
-        }
-    },
-    {
-        name: 'series',
-        label: 'seria',
-        options: {
-            filter: true,
-            sort: false,
-        }
-    },
-    {
-        name: 'speedMachinePerCycle',
-        label: 'szybkość',
-        options: {
-            filter: true,
-            sort: false,
-        }
-    },
-    {
-        name: 'totalQuantityProduced',
-        label: 'ilość wyprodukowana',
-        options: {
-            filter: true,
-            sort: false,
-        }
-    },
-    {
-        name: 'productionTimeToHour',
-        label: 'czas w godzinach',
-        options: {
-            filter: true,
-            sort: false,
-        }
-    },
-    {
-        name: 'productionStart',
-        label: 'start produkcji',
-        options: {
-            filter: true,
-            sort: false,
-        }
-    },
-    // {
-    //     name: 'product',
-    //     label: 'produkt',
-    //     options: {
-    //         filter: true,
-    //         sort: false,
-    //     }
-    // },
-    {
-        name: 'productionEnd',
-        label: 'koniec produkcji',
-        options: {
-            filter: true,
-            sort: false,
-        }
-    },
-    {
-        name: 'productionEnd',
-        label: 'koniec produkcji',
-        options: {
-            filter: true,
-            sort: false,
-        }
-    },
-
-]
-// ]
-// const headerNames = [
-// {
-//     name: 'id',
-//     download: false,
-// },
-// {
-//     name: 'name',
-//     download: true,
-//     label: 'imię'
-// },
-// {
-//     name: 'lastName',
-//     download: true,
-//     label: 'nazwisko'
-// },
-// {
-//     name: 'isActive',
-//     download: true,
-//     label: 'status'
-// },
-// {
-//     name: 'settings',
-//     download: false,
-// },
-// ];
-// const handleRemoveEmployeesBtn = ({ data, deleteEmployees }) => {
-
-// const confirm = window.confirm(modalMessage);
-// if (confirm !== true) return false;
-
-// const idRemovedEmployees = data.map(record => list[record.dataIndex]);
-// remove(idRemovedEmployees);
-// }
-// const options = {
-//     rowsPerPageOptions: [10, 20],
-//     filter: true,
-//     responsive: 'standard',
-//     filterType: "dropdown",
-//     fixedSelectColumn: true,
-//     onRowsDelete: handleRemoveEmployeesBtn,
-//     isRowSelectable: (index) => list[index].isActive,
-//     rowsSelected: [],
-//     onDownload: (buildHead, buildBody, columns, data) => {
-//         return "\uFEFF" + buildHead(headerNames) + buildBody(data);
-//     },
-//     downloadOptions: {
-//         filename: 'excel-report-list.csv',
-//         separator: ';',
-//         filterOptions: {
-//             useDisplayedColumnsOnly: true,
-//             useDisplayedRowsOnly: true,
-//         },
-//     }
-// };
+const options = {
+    rowsPerPageOptions: [10, 20],
+    filter: true,
+    responsive: 'standard',
+    filterType: "dropdown",
+    selectableRows: false,
+    print: false,
+    download: false,
+    search: false
+};
 
 export const ReportsList = ({ startDate, endDate }) => {
     let [reportsList, setReportsList] = useState([]);
     let [fetching, setFetching] = useState(false);
     let [message, setMessage] = useState([]);
     let [messageIsOpen, setMessageIsOpen] = useState(false);
+    let [lines, setLines] = useState([]);
     //add loader//message?
+
     const handleCloseMessage = () => {
         setMessageIsOpen(false);
-        setMessage([])
+        setMessage([]);
+
     }
-    console.log('reportsList', reportsList)
+
     useEffect(() => {
         setFetching(true);
+        LineService.getAllLines()
+            .then(data => setLines(data));
+
         if (startDate && endDate) {
             ProductionReportService.getBetween(startDate, endDate)
                 .then(data => {
-                    console.log(data)
                     setReportsList(data);
                     setFetching(false);
                 })
@@ -224,7 +62,205 @@ export const ReportsList = ({ startDate, endDate }) => {
                     setMessageIsOpen(true)
                 });
         }
-    }, [startDate, endDate])
+    }, [startDate, endDate]);
+
+
+    const columns = [
+        {
+            name: 'lineId',
+            label: 'linia',
+            options: {
+                filter: true,
+                sort: true,
+                print: true,
+                download: true,
+                expandableRowsHeader: true,
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    const lineName = lines.filter(line => line.id === value);
+                    return lineName.length === 1 ? <span>{lineName[0].name}</span> : <span>{`id ${value}`}</span>
+                }
+            }
+        },
+        {
+            name: 'totalQuantityProduced',
+            label: 'wyprodukowano',
+            options: {
+                filter: true,
+                sort: true,
+                print: true,
+                download: true,
+            }
+        },
+        {
+            name: 'maxPossibleItems',
+            label: 'maksymalna ilość',
+            options: {
+                filter: true,
+                sort: true,
+                print: true,
+                download: true,
+            }
+        },
+        {
+            name: 'performancePerHour',
+            label: 'sztuk na godzinę',
+            options: {
+                filter: true,
+                sort: true,
+                print: true,
+                download: true,
+            }
+        },
+        {
+            name: 'percentagePerformance',
+            label: 'procent',
+            options: {
+                filter: true,
+                sort: true,
+                print: true,
+                download: true,
+            }
+        },
+        {
+            name: 'product',
+            label: 'produkt',
+            options: {
+                filter: true,
+                sort: true,
+                print: true,
+                download: true,
+                expandableRowsHeader: true,
+                customBodyRender: (value, tableMeta, updateValue) => <span>{value.name}</span>
+            }
+        },
+        {
+            name: 'series',
+            label: 'seria',
+            options: {
+                filter: true,
+                sort: false,
+            }
+        },
+        {
+            name: 'speedMachinePerCycle',
+            label: 'szybkość',
+            options: {
+                filter: true,
+                sort: false,
+            }
+        },
+        {
+            name: 'totalQuantityProduced',
+            label: 'ilość wyprodukowana',
+            options: {
+                filter: true,
+                sort: false,
+            }
+        },
+        {
+            name: 'productionTimeToHour',
+            label: 'czas w godzinach',
+            options: {
+                filter: true,
+                sort: false,
+            }
+        },
+        {
+            name: 'firstWorkplace',
+            label: 'pierwsze stanowisko',
+            options: {
+                filter: true,
+                sort: true,
+                print: true,
+                download: true,
+                expandableRowsHeader: true,
+                customBodyRender: (value, tableMeta, updateValue) => <span>{`${value.name} ${value.lastName}`}</span>
+            }
+        },
+        {
+            name: 'secondWorkplace',
+            label: 'drugie stanowisko',
+            options: {
+                filter: true,
+                sort: true,
+                print: true,
+                download: true,
+                expandableRowsHeader: true,
+                customBodyRender: (value, tableMeta, updateValue) => <span>{`${value.name} ${value.lastName}`}</span>
+            }
+        },
+        {
+            name: 'thirdWorkplace',
+            label: 'trzecie stanowisko',
+            options: {
+                filter: true,
+                sort: true,
+                print: true,
+                download: true,
+                expandableRowsHeader: true,
+                customBodyRender: (value, tableMeta, updateValue) => <span>{`${value.name} ${value.lastName}`}</span>
+            }
+        },
+        {
+            name: 'productionStart',
+            label: 'początek produkcji',
+            options: {
+                filter: true,
+                sort: true,
+                print: true,
+                download: true,
+                expandableRowsHeader: true,
+                customBodyRender: (value, tableMeta, updateValue) => <span>{value.substring(0, 16).replace('T', ' ')}</span>
+            }
+        },
+        {
+            name: 'productionEnd',
+            label: 'koniec produkcji',
+            options: {
+                filter: true,
+                sort: true,
+                print: true,
+                download: true,
+                expandableRowsHeader: true,
+                customBodyRender: (value, tableMeta, updateValue) => <span>{value.substring(0, 16).replace('T', ' ')}</span>
+            }
+        },
+        {
+            name: 'description',
+            label: 'opis',
+            options: {
+                filter: true,
+                sort: false,
+            }
+        },
+        {
+            name: 'updatedByUser',
+            label: 'stworzony przez',
+            options: {
+                filter: true,
+                sort: true,
+                print: true,
+                download: true,
+                expandableRowsHeader: true,
+                customBodyRender: (value, tableMeta, updateValue) => <span>{`${value.name} ${value.surname}`}</span>
+            }
+        },
+        {
+            name: 'id',
+            label: ' ',
+            options: {
+                filter: true,
+                sort: true,
+                print: true,
+                download: true,
+                expandableRowsHeader: true,
+                customBodyRender: (value, tableMeta, updateValue) => <span> <Link to={`${routes.productionReportList}/report/${value}`}><EditIcon /></Link></span>
+            }
+        },
+
+
+    ]
+
     return (
         <Grid>
             <Loader open={fetching} />
@@ -233,7 +269,7 @@ export const ReportsList = ({ startDate, endDate }) => {
                 title={"Lista raportów"}
                 data={reportsList}
                 columns={columns}
-            // options={}
+                options={options}
             />
         </Grid>
     )
