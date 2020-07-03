@@ -45,7 +45,7 @@ export const NavBarLeft = ({ isActive }) => {
     const classes = useStyles();
     const { activeLeftMenu } = useContext(UserContext)
     let [selected, setSelected] = useState(null);
-
+    const test = React.createRef();
     return (
         <>
             <List
@@ -62,7 +62,7 @@ export const NavBarLeft = ({ isActive }) => {
                     <ListItemText primary="Start" />
                 </ListItem>
 
-                <ListItemCollapse label="Plan pracy" in={true}>
+                <ListItemCollapse label="Plan pracy" in={true} ref={test}>
                     <List component="div" disablePadding>
                         <ListItem button component={Link} to={routes.workPlan} selected={selected === 1 ? true : false} onClick={() => setSelected(1)} >
                             <ListItemText primary="Podgląd planu" />
@@ -72,10 +72,13 @@ export const NavBarLeft = ({ isActive }) => {
                         </ListItem>
                     </List>
                 </ListItemCollapse>
-                <ListItemCollapse label='Produktywność' disableStrictModeCompat={true}>
+                <ListItemCollapse label='Raporty' disableStrictModeCompat={true}>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 3 ? true : false} onClick={() => setSelected(3)}>
-                            <ListItemText primary="Dodaj" />
+                        <ListItem button className={classes.subListItem} component={Link} to={routes.productionReport} selected={selected === 3 ? true : false} onClick={() => setSelected(3)}>
+                            <ListItemText primary="Dodaj raport produkcji" />
+                        </ListItem>
+                        <ListItem button className={classes.subListItem} component={Link} to={routes.productionReportList} selected={selected === 3 ? true : false} onClick={() => setSelected(12)}>
+                            <ListItemText primary="Raporty" />
                         </ListItem>
                     </List>
                 </ListItemCollapse>

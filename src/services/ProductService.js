@@ -1,8 +1,9 @@
 import { SERVER } from '../config';
-const SERVER_LOGS = `${SERVER}/api/v1/log`;
-export class LogService {
+const SERVER_LOGS = `${SERVER}/api/v1/product`;
 
-    static getLogs = () => {
+class ProductService {
+
+    static getAllProducts = () => {
         return fetch(SERVER_LOGS)
             .then(res => {
                 if (res.ok === true) return res.json();
@@ -10,3 +11,4 @@ export class LogService {
             })
     }
 }
+export default ProductService

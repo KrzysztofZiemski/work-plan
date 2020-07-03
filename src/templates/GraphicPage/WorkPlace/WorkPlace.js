@@ -47,16 +47,18 @@ const WorkPlace = ({ line, shift, workPlace, children, title }) => {
     })
 
     return (
-        <List
-            className={classes.card}
-            ref={dragable ? drop : null}
-            content
-        >
-            <Paper elevation={3} className={classes.title}>
-                {title}
-            </Paper >
-            {children}
-        </List  >
+        <>
+            <List
+                className={classes.card}
+                ref={dragable ? drop : null}
+                content
+            >
+                <Paper elevation={3} className={classes.title}>
+                    {title}
+                </Paper >
+                {children}
+            </List  >
+        </>
     )
 }
 

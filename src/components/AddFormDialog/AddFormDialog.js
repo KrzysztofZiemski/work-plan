@@ -8,42 +8,6 @@ import FormGroup from '@material-ui/core/FormGroup';
 import { makeStyles } from '@material-ui/core/styles';
 import PrimaryButton from '../PrimaryButton';
 
-//simple text form as a popup.
-//the component always return button to open dialog form
-//default value text button is 'DODAJ', to set other value set props butto='string'
-//require OnSubmit - function
-//require props fields as array with property name.
-// other fields property:
-//type - actually works for string, textarea,date
-//label - string
-//errorMessage - string, shows after validation(to validadion require pattern)
-//pattern - string regexp to validate field
-//example:
-// fields: [
-//     {
-//         name: 'name',
-//         type: 'text',
-//         label: 'imie',
-//         pattern: '.{3,10}',
-//         errorMessage: 'Imię musi zawierać od 3 do 10 znaków'
-//     },
-//     {
-//         name: 'lastName',
-//         label: 'nazwisko',
-//         type: 'text',
-//         pattern: '.{3,10}',
-//         errorMessage: 'Nazwisko musi zawierać od 3 do 10 znaków'
-//     },
-//     {
-//         name: 'desc',
-//         label: 'opis',
-//         type: 'text',
-//         errorMessage: ''
-//     },
-// ];
-//button='dodaj osobę'
-//onSubmit = ()=>console.log('wejszło)
-
 const useStyles = makeStyles(() => ({
     formGroup: {
         margin: '10px 50px 40px',

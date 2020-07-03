@@ -100,6 +100,7 @@ export const LoginPage = () => {
                                             name="username"
                                             type="text"
                                             value={values.username}
+                                            autoFocus
                                         />
                                         <ErrorMessage name="username" component="div" />
                                     </Grid>

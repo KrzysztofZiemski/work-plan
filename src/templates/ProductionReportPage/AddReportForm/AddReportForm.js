@@ -11,7 +11,7 @@ import LineService from '../../../services/LineService';
 import ProductService from '../../../services/ProductService';
 import { getAllEmployee } from '../../../services/employeesRequest';
 import ProductionReportService from '../../../services/ProductionReportService';
-import { UserContext } from '../../../App'
+import { UserContext, EmployeesContext } from '../../../App'
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -23,19 +23,24 @@ const useStyles = makeStyles((theme) => ({
         overflow: 'auto'
     },
     textField: {
-        marginLeft: 20,
-        marginRight: 20,
-        width: 200,
+        margin: 10,
+        width: 220,
     },
+
     formControl: {
-        margin: 20,
+        marginRight: 10,
+        marginLeft: 10,
         minWidth: 200,
     },
     textarea: {
-        margin: 20,
+        margin: '60px 10px 10px 10px',
     },
     quantityProducedField: {
-        margin: 20,
+        margin: 10,
+    },
+    subTitlesForm: {
+        margin: 15,
+        padding: 5
     }
 }));
 
@@ -43,17 +48,19 @@ const today = () => {
     const today = new Date();
     const month = today.getMonth() < 9 ? `0${today.getMonth() + 1}` : today.getMonth() + 1;
     const hours = today.getHours() < 10 ? `0${today.getHours()}` : today.getHours();
+    const day = today.getDate() < 10 ? `0${today.getDate()}` : today.getDate();
     const minutes = today.getMinutes() < 10 ? `0${today.getMinutes()}` : today.getMinutes();
-    return `${today.getFullYear()}-${month}-${today.getDate()}T${hours}:${minutes}`;
+    return `${today.getFullYear()}-${month}-${day}T${hours}:${minutes}`;
 
 
 }
 
 export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
 
-    const { loggedUser } = useContext(UserContext)
+    const { loggedUser } = useContext(UserContext);
+    const { employeesList, setEmployeesList } = useContext(EmployeesContext);
 
-    let [formData, setFormData] = useState({
+    const blankForm = {
         productionStart: today(),
         productionEnd: today(),
         lineId: '',
@@ -61,13 +68,15 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
         productionMinutes: 0,
         productId: '',
         series: '',
-        speedMachinePerCycle: '',
+        speedMachinePerMinute: '',
         firstWorkplaceIdEmployee: '',
         secondWorkplaceIdEmployee: '',
         thirdWorkplaceIdEmployee: '',
         description: '',
         totalQuantityProduced: ''
-    });
+    }
+
+    let [formData, setFormData] = useState(blankForm);
     let [errors, setErrors] = useState({
         productionStart: false,
         productionEnd: false,
@@ -76,7 +85,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
         productionMinutes: false,
         productId: false,
         series: false,
-        speedMachinePerCycle: false,
+        speedMachinePerMinute: false,
         firstWorkplaceIdEmployee: false,
         secondWorkplaceIdEmployee: false,
         thirdWorkplaceIdEmployee: false,
@@ -86,7 +95,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
         lineId: '.{1,20}',
         productId: '.{1,20}',
         series: '.{1,20}',
-        speedMachinePerCycle: `^[1-9][0-9]*$`,
+        speedMachinePerMinute: `^[1-9][0-9]*$`,
         firstWorkplaceIdEmployee: '.{1,20}',
         secondWorkplaceIdEmployee: '.{1,20}',
         thirdWorkplaceIdEmployee: '.{1,20}',
@@ -94,7 +103,6 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
     }
     let [lines, setLines] = useState([]);
     let [products, setProducts] = useState([]);
-    let [employees, setEmployees] = useState([]);
 
     const classes = useStyles();
 
@@ -105,32 +113,34 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
             const productsPromise = ProductService.getAllProducts()
                 .then(data => setProducts(data))
             const employeePromise = getAllEmployee()
-                .then(data => setEmployees(data))
+                .then(data => setEmployeesList(data))
             Promise.all([linesPromise, productsPromise, employeePromise])
                 .catch(err => {
                     setMessages(['Błąd łączności z serwerem', 'spróbuj odświerzyć stronę', `status ${err}`]);
                     setOpenMessage(true);
                 })
         })()
-    }, [setMessages, setOpenMessage])
+    }, [setMessages, setOpenMessage, setEmployeesList])
     const handleSubmit = (e) => {
         e.preventDefault();
         const isOk = validation();
         if (!isOk) {
-
             setMessages(['musisz uzupełnić wszystkie wymagane pola']);
             setOpenMessage(true);
             return;
         }
         const data = { ...formData };
-        data.productionStart = `${data.productionStart}:00.162Z`;
-        data.productionEnd = `${data.productionEnd}:00.162Z`;
+        console.log(data)
+        data.productionStart = data.productionStart.replace('T', '-');
+        data.productionEnd = data.productionEnd.replace('T', '-');
+
         setLoader(true);
         ProductionReportService.save(data, loggedUser.id)
             .then(data => {
                 setLoader(false);
                 setMessages(['Dodano raport']);
                 setOpenMessage(true);
+                setFormData(blankForm);
             })
             .catch(err => {
                 setLoader(false);
@@ -175,7 +185,6 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                 productionMinutes: false
             }))
         }
-
         for (let pattern in patterns) {
             const regExp = new RegExp(patterns[pattern]);
             if (regExp.test(formData[pattern])) {
@@ -191,6 +200,16 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                 if (isOk) isOk = false;
             }
         }
+
+        if (formData.firstWorkplaceIdEmployee === formData.secondWorkplaceIdEmployee || formData.firstWorkplaceIdEmployee === formData.thirdWorkplaceIdEmployee || formData.secondWorkplaceIdEmployee === formData.thirdWorkplaceIdEmployee) {
+            if (isOk) isOk = false;
+            setErrors(prevProps => ({
+                ...prevProps,
+                firstWorkplaceIdEmployee: false,
+                secondWorkplaceIdEmployee: false,
+                thirdWorkplaceIdEmployee: false,
+            }))
+        }
         return isOk;
     }
     const speedOptions = () => {
@@ -203,12 +222,14 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
     return (
         <Grid className={classes.container} container>
             <Grid component='form' onSubmit={handleSubmit} item>
+                <h2 className={classes.subTitlesForm}>Czas pracy</h2>
                 <Grid>
                     <TextField
                         name='productionStart'
                         id="productionStart"
                         label="Początek pracy"
                         type="datetime-local"
+                        variant='outlined'
                         value={formData.productionStart}
                         className={classes.textField}
                         InputLabelProps={{
@@ -223,6 +244,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                         id="productionEnd"
                         label="Koniec pracy"
                         type="datetime-local"
+                        variant='outlined'
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
@@ -238,6 +260,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                         value={formData.productionHours}
                         onChange={handleChange}
                         label='Czas w godzinach'
+                        variant='outlined'
                         className={classes.textField}
                         error={errors.productionHours}
                     />
@@ -247,17 +270,20 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                         value={formData.productionMinutes}
                         onChange={handleChange}
                         label='Czas w minutach'
+                        variant='outlined'
                         className={classes.textField}
                         error={errors.productionMinutes}
                     />
                 </Grid>
+                <h2 className={classes.subTitlesForm}>Parametry</h2>
                 <Grid>
+
                     <FormControl variant="outlined" className={classes.formControl}>
                         <InputLabel id="lineId">Linia</InputLabel>
                         <Select
                             labelId="lineId"
                             id="lineSelect"
-                            value={formData.line}
+                            value={formData.lineId}
                             onChange={handleChange}
                             name='lineId'
                             label="Linia"
@@ -270,15 +296,15 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                         </Select>
                     </FormControl>
                     <FormControl variant="outlined" className={classes.formControl}>
-                        <InputLabel id="speedMachinePerCycle">Szybkość</InputLabel>
+                        <InputLabel id="speedMachinePerMinute">Szybkość</InputLabel>
                         <Select
-                            labelId="speedMachinePerCycle"
-                            id="speedMachinePerCycleSelect"
-                            value={formData.speedMachinePerCycle}
+                            labelId="speedMachinePerMinute"
+                            id="speedMachinePerMinuteSelect"
+                            value={formData.speedMachinePerMinute}
                             onChange={handleChange}
-                            name='speedMachinePerCycle'
+                            name='speedMachinePerMinute'
                             label="Szybkość"
-                            error={errors.speedMachinePerCycle}
+                            error={errors.speedMachinePerMinute}
                         >
                             {speedOptions()}
 
@@ -309,12 +335,24 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                             value={formData.series}
                             onChange={handleChange}
                             label='Seria'
-                            className={classes.textField}
                             error={errors.series}
                         />
                     </FormControl>
                 </Grid>
+                <Grid>
+                    <TextField
+                        variant='outlined'
+                        type='number'
+                        name='totalQuantityProduced'
+                        value={formData.totalQuantityProduced}
+                        onChange={handleChange}
+                        label='Ilość wyprodukowana'
+                        className={classes.quantityProducedField}
+                        error={errors.totalQuantityProduced}
+                    />
 
+                </Grid>
+                <h2 className={classes.subTitlesForm}>Pracownicy</h2>
                 <Grid>
                     <FormControl variant="outlined" className={classes.formControl}>
                         <InputLabel id="firstWorkplaceIdEmployee">Pierwsze stanowisko</InputLabel>
@@ -327,7 +365,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                             label="Pierwsze stanowisko"
                             error={errors.firstWorkplaceIdEmployee}
                         >
-                            {employees.map(employee => (
+                            {employeesList.map(employee => (
                                 <MenuItem key={`firstemployee${employee.id}`} value={employee.id}>{`${employee.name} ${employee.lastName}`}</MenuItem>
                             ))}
 
@@ -344,7 +382,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                             label="Drugie stanowisko"
                             error={errors.secondWorkplaceIdEmployee}
                         >
-                            {employees.map(employee => (
+                            {employeesList.map(employee => (
                                 <MenuItem key={`secondemployee${employee.id}`} value={employee.id}>{`${employee.name} ${employee.lastName}`}</MenuItem>
                             ))}
 
@@ -361,26 +399,12 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                             name='thirdWorkplaceIdEmployee'
                             label="Trzecie stanowisko"
                         >
-                            {employees.map(employee => (
+                            {employeesList.map(employee => (
                                 <MenuItem key={`thirdemployee${employee.id}`} value={employee.id}>{`${employee.name} ${employee.lastName}`}</MenuItem>
                             ))}
 
                         </Select>
                     </FormControl>
-                </Grid>
-                <Grid>
-
-                    <TextField
-                        variant='outlined'
-                        type='number'
-                        name='totalQuantityProduced'
-                        value={formData.totalQuantityProduced}
-                        onChange={handleChange}
-                        label='Ilość wyprodukowana'
-                        className={classes.quantityProducedField}
-                        error={errors.totalQuantityProduced}
-                    />
-
                 </Grid>
                 <Grid>
                     <TextField

@@ -223,7 +223,7 @@ const GraphicPage = (props) => {
                     <WorkPlanContext.Provider value={{ setWorkplaceEmployee, removeEmployee, workPlan, dragable, setDragable, submitWorkPlan }}>
                         <NavGraphic className='GraphicNav' dateStart={dateStart} setDateStart={setDateStart} dateEnd={dateEnd} setDateEnd={setDateEnd}></NavGraphic>
 
-                        <Grid container className={classes.root}>
+                        <Grid container className={classes.root} >
                             <Grid item className={classes.shiftsContainer} >
                                 {workPlan ? workPlan.workShifts.map((shift, indexShift) => (
                                     <Grid item key={`shift${indexShift}`} >
@@ -269,22 +269,24 @@ const GraphicPage = (props) => {
                                         </Grid>
                                         <Grid className={classes.lines}>
                                             {workPlan.workShifts[indexShift].lines.map((line, indexLine) => (
-                                                <Grid constainer key={`line${indexLine}`} className={classes.line}>
-                                                    <Grid item component='h3' className={classes.lineTitle}>{`Linia ${line.lineNumber}`}</Grid>
+                                                <>
+                                                    <Grid constainer={true} key={`line${indexLine}`} className={classes.line}>
+                                                        <Grid item component='h3' className={classes.lineTitle}>{`Linia ${line.lineNumber}`}</Grid>
 
-                                                    {workPlan.workShifts[indexShift].lines[indexLine].workplaces.map((workplace, indexWorkplace, workplacesArr) => {
-                                                        return <Grid className={classes.workPlaceShift} key={`workplace${indexWorkplace}`}>
-                                                            <WorkPlace className={classes.workPlace} shift={indexShift} line={indexLine} workPlace={indexWorkplace} title={workplace.nameWorkplace}>
-                                                                {workPlan.workShifts[indexShift].lines[indexLine].workplaces[indexWorkplace].employeeListWorkplaces.map(employee => (
-                                                                    <Employee key={`employee${employee.id}`} id={employee.id} line={indexLine} shift={indexShift} workPlace={indexWorkplace} label={`${employee.name} ${employee.lastName}`}>
-                                                                    </Employee>
-                                                                ))}
+                                                        {workPlan.workShifts[indexShift].lines[indexLine].workplaces.map((workplace, indexWorkplace, workplacesArr) => {
+                                                            return <Grid className={classes.workPlaceShift} key={`workplace${indexWorkplace}`}>
+                                                                <WorkPlace className={classes.workPlace} shift={indexShift} line={indexLine} workPlace={indexWorkplace} title={workplace.nameWorkplace}>
+                                                                    {workPlan.workShifts[indexShift].lines[indexLine].workplaces[indexWorkplace].employeeListWorkplaces.map(employee => (
+                                                                        <Employee key={`employee${employee.id}`} id={employee.id} line={indexLine} shift={indexShift} workPlace={indexWorkplace} label={`${employee.name} ${employee.lastName}`}>
+                                                                        </Employee>
+                                                                    ))}
 
-                                                            </WorkPlace>
-                                                        </Grid>
-                                                    })}
+                                                                </WorkPlace>
+                                                            </Grid>
+                                                        })}
 
-                                                </Grid>
+                                                    </Grid>
+                                                </>
                                             )
                                             )}
                                         </Grid>
