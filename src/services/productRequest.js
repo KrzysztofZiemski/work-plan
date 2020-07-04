@@ -22,22 +22,20 @@ export const getAllProducts = async () => {
 
         return Promise.resolve([...activeProduct, ...inActiveProducts]);
 
-    }   catch (err){
+    } catch (err){
         return Promise.reject(err);
     }
 };
-
 
 export const addProduct = (data) => {
     return axios.post(PRODUCTS_URL, JSON.stringify(data))
         .then(res =>res.data)
         .catch(err => Promise.reject(err));
+        console.log(JSON.stringify(data))
 };
 
 export const deleteProduct = (id) => {
     return axios.delete(`${PRODUCTS_URL}/${id}`)
-    .then(res => res.data) 
-    .catch(err => Promise.reject(err));
-        Promise.resolve()
-    
+        .then(res => res.data) 
+        .catch(err => Promise.reject(err));           
 };
