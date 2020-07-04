@@ -214,7 +214,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
     }
     const speedOptions = () => {
         let output = [];
-        for (let i = 5; i < 70; i = i + 5) {
+        for (let i = 5; i <= 50; i = i + 5) {
             output.push(<MenuItem key={`speed${i}`} value={i}>{i}</MenuItem>)
         }
         return output;

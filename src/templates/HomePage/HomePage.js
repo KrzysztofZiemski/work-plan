@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { LogService } from '../../services/LogsService';
 import { UserService } from '../../services/UserService';
-import { AddFormDialog } from '../../components/AddFormDialog/AddFormDialog';
-import PrimaryButton from '../../components/PrimaryButton'
+
 const HomePage = () => {
     let [logs, setLogs] = useState('');
     let [id, setId] = useState('');
-    console.log('logs', logs)
+
 
     const getLogs = () => {
         LogService.getLogs()
@@ -28,7 +27,6 @@ const HomePage = () => {
             <button onClick={getUser}> get user by id</button>
             <input type="text" value={id} onChange={(e) => setId(e.target.value)} />
         </section>
-
     )
 }
 

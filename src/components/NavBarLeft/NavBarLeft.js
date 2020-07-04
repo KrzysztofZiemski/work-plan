@@ -45,8 +45,6 @@ export const NavBarLeft = ({ isActive }) => {
     const classes = useStyles();
     const { activeLeftMenu } = useContext(UserContext)
     let [selected, setSelected] = useState(null);
-    let [countLinkNumber, setCountLinkNumber] = useState(1);
-
 
     return (
         <>

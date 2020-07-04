@@ -74,11 +74,11 @@ const App = () => {
                     <LoginPage className='page' />
                   </Route>
                   {/* todo redirect after tests*/}
-                  {loggedUser ? <Route path={routes.workPlan} render={(props) => <GraphicPage className='page' {...props} />} /> : null}
-                  {loggedUser ? <Route path={routes.employeeManagement} render={(props) => <EmployeeManagement className='page' {...props} />} /> : null}
-                  {loggedUser ? <Route path={routes.productionReportList} render={(props) => <ReportsList className='page' {...props} />} /> : null}
-                  {loggedUser ? <Route path={routes.productionReport} render={(props) => <ProductionReportPage className='page' {...props} />} /> : null}
-                  {loggedUser ? <Route path={routes.productManagement} render={(props) => <ProductManagement className='page' {...props} />} /> : null}
+                  {loggedUser ? <Route path={routes.workPlan} exact render={(props) => <GraphicPage className='page' {...props} />} /> : null}
+                  {loggedUser ? <Route path={routes.employeeManagement} exact render={(props) => <EmployeeManagement className='page' {...props} />} /> : null}
+                  {loggedUser ? <Route path={routes.productionReportList} exact render={(props) => <ReportsList className='page' {...props} />} /> : null}
+                  {loggedUser ? <Route path={routes.productionReport} exact render={(props) => <ProductionReportPage className='page' {...props} />} /> : null}
+                  {loggedUser ? <Route path={routes.productManagement} exact render={(props) => <ProductManagement className='page' {...props} />} /> : null}
                 </Switch>
               </Grid>
             </Grid>

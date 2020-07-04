@@ -1,26 +1,111 @@
 import React, { useEffect, useState } from 'react';
 import MUIDataTable from "mui-datatables";
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Loader from '../../../components/Loader';
 import DialogMessage from '../../../components/DialogMessage';
 import ProductionReportService from '../../../services/ProductionReportService';
 import LineService from '../../../services/LineService';
-import EditIcon from '@material-ui/icons/Edit';
+import SettingsMenu from '../../../components/SettingsMenu';
+import Poper from '../../../components/Poper';
 import { default as routes } from '../../../utils/routes';
 
-const options = {
-    rowsPerPageOptions: [10, 20],
-    filter: true,
-    responsive: 'standard',
-    filterType: "dropdown",
-    selectableRows: false,
-    print: false,
-    download: false,
-    search: false
-};
+const headerNames = [
+    {
+        name: 'lineId',
+        label: 'linia',
+        download: true,
+    },
+    {
+        name: 'totalQuantityProduced',
+        label: 'wyprodukowano',
+        download: true,
+    },
+    {
+        name: 'maxPossibleItems',
+        label: 'maksymalna ilość',
+        download: false,
+    },
+    {
+        name: 'percentagePerformance',
+        download: true,
+        label: 'procent'
+    },
+    {
+        name: 'performancePerHour',
+        download: true,
+        label: 'wydajność'
+    },
+    {
+        name: 'product',
+        download: true,
+        label: 'produkt'
+    },
+    {
+        name: 'series',
+        download: true,
+        label: 'seria'
+    },
+    {
+        name: 'speedMachinePerCycle',
+        download: true,
+        label: 'szybkość'
+    },
+    {
+        name: 'productionTimeToHour',
+        download: true,
+        label: 'czas pracy'
+    },
+    {
+        name: 'firstWorkplace',
+        download: true,
+        label: 'stanowisko 1'
+    },
+    {
+        name: 'secondWorkplace',
+        download: true,
+        label: 'stanowisko 2'
+    },
+    {
+        name: 'thirdWorkplace',
+        download: true,
+        label: 'stanowisko 3'
+    },
 
-export const ReportsList = ({ startDate, endDate }) => {
+    {
+        name: 'productionStart',
+        download: true,
+        label: 'początek produkcji'
+    },
+    {
+        name: 'productionEnd',
+        download: true,
+        label: 'koniec produkcji'
+    },
+    {
+        name: 'id',
+        download: false,
+        label: ' '
+    },
+    {
+        name: 'description',
+        download: false,
+    }
+];
+const styles = makeStyles({
+    optionLink: {
+        color: 'black',
+        fontFamily: 'Roboto, Helvetica, Arial, sans- serif',
+        lineHeight: '1.5',
+        textDecoration: 'none',
+        letterSpacing: '0.00938em',
+        fontSize: '1rem'
+    }
+})
+export const ReportsList = ({ startDate, endDate, fullHeight }) => {
+    const classes = styles();
     let [reportsList, setReportsList] = useState([]);
     let [fetching, setFetching] = useState(false);
     let [message, setMessage] = useState([]);
@@ -35,7 +120,6 @@ export const ReportsList = ({ startDate, endDate }) => {
     }
 
     useEffect(() => {
-        setFetching(true);
         LineService.getAllLines()
             .then(data => setLines(data));
 
@@ -43,10 +127,8 @@ export const ReportsList = ({ startDate, endDate }) => {
             ProductionReportService.getBetween(startDate, endDate)
                 .then(data => {
                     setReportsList(data);
-                    setFetching(false);
                 })
                 .catch(err => {
-                    setFetching(false);
                     setMessage(['błąd połączenia']);
                     setMessageIsOpen(true);
                 });
@@ -54,16 +136,37 @@ export const ReportsList = ({ startDate, endDate }) => {
             ProductionReportService.getAll()
                 .then(data => {
                     setReportsList(data);
-                    setFetching(false)
                 })
                 .catch(err => {
-                    setFetching(false);
                     setMessage(['błąd połączenia']);
                     setMessageIsOpen(true)
                 });
         }
     }, [startDate, endDate]);
 
+    const options = {
+        rowsPerPageOptions: [10, 20],
+        filter: true,
+        responsive: 'standard',
+        filterType: "dropdown",
+        selectableRows: false,
+        pagination: false,
+        print: true,
+        download: true,
+        search: true,
+        sort: false,
+        downloadOptions: {
+            filename: 'raporty.csv',
+            separator: ';',
+            filterOptions: {
+                useDisplayedColumnsOnly: true,
+                useDisplayedRowsOnly: true,
+            },
+        },
+        onDownload: (buildHead, buildBody, columns, data) => {
+            return "\uFEFF" + buildHead(headerNames) + buildBody(data);
+        },
+    };
 
     const columns = [
         {
@@ -77,8 +180,22 @@ export const ReportsList = ({ startDate, endDate }) => {
                 expandableRowsHeader: true,
                 customBodyRender: (value, tableMeta, updateValue) => {
                     const lineName = lines.filter(line => line.id === value);
-                    return lineName.length === 1 ? <span>{lineName[0].name}</span> : <span>{`id ${value}`}</span>
-                }
+                    return lineName.length === 1 ? lineName[0].name : `id ${value}`
+                },
+                // setCellProps: () => {
+                //     return {
+                //         style: {
+
+                //         }
+                //     }
+                // },
+                // setCellHeaderProps: (value) => {
+                //     return {
+                //         style: {
+
+                //         }
+                //     }
+                // }
             }
         },
         {
@@ -89,6 +206,8 @@ export const ReportsList = ({ startDate, endDate }) => {
                 sort: true,
                 print: true,
                 download: true,
+                expandableRowsHeader: true,
+                customBodyRender: (value, tableMeta, updateValue) => `${value} / ${tableMeta.rowData[2]}`
             }
         },
         {
@@ -99,16 +218,7 @@ export const ReportsList = ({ startDate, endDate }) => {
                 sort: true,
                 print: true,
                 download: true,
-            }
-        },
-        {
-            name: 'performancePerHour',
-            label: 'sztuk na godzinę',
-            options: {
-                filter: true,
-                sort: true,
-                print: true,
-                download: true,
+                display: false
             }
         },
         {
@@ -119,6 +229,20 @@ export const ReportsList = ({ startDate, endDate }) => {
                 sort: true,
                 print: true,
                 download: true,
+                expandableRowsHeader: true,
+                customBodyRender: (value, tableMeta, updateValue) => `${value}%`
+            }
+        },
+        {
+            name: 'performancePerHour',
+            label: 'wydajność',
+            options: {
+                filter: true,
+                sort: true,
+                print: true,
+                download: true,
+                expandableRowsHeader: true,
+                customBodyRender: (value, tableMeta, updateValue) => `${value} / h`
             }
         },
         {
@@ -130,7 +254,7 @@ export const ReportsList = ({ startDate, endDate }) => {
                 print: true,
                 download: true,
                 expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => <span>{value.name}</span>
+                customBodyRender: (value, tableMeta, updateValue) => value.name
             }
         },
         {
@@ -150,55 +274,53 @@ export const ReportsList = ({ startDate, endDate }) => {
             }
         },
         {
-            name: 'totalQuantityProduced',
-            label: 'ilość wyprodukowana',
-            options: {
-                filter: true,
-                sort: false,
-            }
-        },
-        {
             name: 'productionTimeToHour',
-            label: 'czas w godzinach',
+            label: 'czas pracy',
             options: {
                 filter: true,
                 sort: false,
+                expandableRowsHeader: true,
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    const hours = Math.floor(value);
+                    const minutes = Math.floor(60 * (value - hours))
+                    return `${hours} h ${minutes} min`
+                }
             }
         },
         {
             name: 'firstWorkplace',
-            label: 'pierwsze stanowisko',
+            label: 'stanowisko 1',
             options: {
                 filter: true,
                 sort: true,
                 print: true,
                 download: true,
                 expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => <span>{`${value.name} ${value.lastName}`}</span>
+                customBodyRender: (value, tableMeta, updateValue) => `${value.name} ${value.lastName}`
             }
         },
         {
             name: 'secondWorkplace',
-            label: 'drugie stanowisko',
+            label: 'stanowisko 2',
             options: {
                 filter: true,
                 sort: true,
                 print: true,
                 download: true,
                 expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => <span>{`${value.name} ${value.lastName}`}</span>
+                customBodyRender: (value, tableMeta, updateValue) => `${value.name} ${value.lastName}`
             }
         },
         {
             name: 'thirdWorkplace',
-            label: 'trzecie stanowisko',
+            label: 'stanowisko 3',
             options: {
                 filter: true,
                 sort: true,
                 print: true,
                 download: true,
                 expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => <span>{`${value.name} ${value.lastName}`}</span>
+                customBodyRender: (value, tableMeta, updateValue) => `${value.name} ${value.lastName}`
             }
         },
         {
@@ -210,7 +332,7 @@ export const ReportsList = ({ startDate, endDate }) => {
                 print: true,
                 download: true,
                 expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => <span>{value.substring(0, 16).replace('T', ' ')}</span>
+                customBodyRender: (value, tableMeta, updateValue) => value.substring(0, 16).replace('T', ' ')
             }
         },
         {
@@ -222,43 +344,53 @@ export const ReportsList = ({ startDate, endDate }) => {
                 print: true,
                 download: true,
                 expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => <span>{value.substring(0, 16).replace('T', ' ')}</span>
+                customBodyRender: (value, tableMeta, updateValue) => value.substring(0, 16).replace('T', ' ')
             }
         },
+        // {
+        //     name: 'id',
+        //     label: ' ',
+        //     options: {
+        //         filter: false,
+        //         sort: false,
+        //         print: false,
+        //         download: false,
+        //         expandableRowsHeader: true,
+        //         customBodyRender: (value, tableMeta, updateValue) => <span> <Link to={`${routes.productionReportList}/report/${value}`}><EditIcon /></Link></span>
+        //     }
+        // },
         {
             name: 'description',
-            label: 'opis',
+            download: false,
             options: {
-                filter: true,
+                filter: false,
                 sort: false,
-            }
-        },
-        {
-            name: 'updatedByUser',
-            label: 'stworzony przez',
-            options: {
-                filter: true,
-                sort: true,
-                print: true,
-                download: true,
+                print: false,
+                download: false,
                 expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => <span>{`${value.name} ${value.surname}`}</span>
+                display: false
             }
         },
         {
             name: 'id',
             label: ' ',
             options: {
-                filter: true,
-                sort: true,
-                print: true,
-                download: true,
+                filter: false,
+                sort: false,
+                print: false,
+                download: false,
                 expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => <span> <Link to={`${routes.productionReportList}/report/${value}`}><EditIcon /></Link></span>
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    console.log(tableMeta)
+                    return (
+                        <SettingsMenu>
+                            <Poper content={tableMeta.rowData[14]}>Pokarz opis</Poper>
+                            <Poper content='przeloguj'><Typography className={classes.optionLink} component={Link} to={`${routes.productionReportDetail}/${value}`}>Szczegóły</Typography></Poper>
+                        </SettingsMenu>
+                    )
+                }
             }
         },
-
-
     ]
 
     return (

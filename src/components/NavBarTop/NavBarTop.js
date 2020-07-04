@@ -12,8 +12,7 @@ import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../App';
 import { AuthService } from '../../services/AuthService';
-
-//test loggedUser
+import routes from '../../utils/routes';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -76,6 +75,7 @@ export const NavBarTop = () => {
             });
     }
     const menuId = 'primary-search-account-menu';
+
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
@@ -86,15 +86,15 @@ export const NavBarTop = () => {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem component={Link} to='/settings' onClick={handleMenuClose}>Ustawienia</MenuItem>
-            <MenuItem component={Link} to='/' onClick={handleLogout}>Wyloguj</MenuItem>
+            <MenuItem component={Link} to={routes.settings} onClick={handleMenuClose}>Ustawienia</MenuItem>
+            <MenuItem component={Link} to={routes.root} onClick={handleLogout}>Wyloguj</MenuItem>
         </Menu>
     );
 
     const showOptionsPanel = () => {
         if (loggedUser === null) return null;
         if (loggedUser === false) {
-            return <Button component={Link} to='/login' className={classes.button} variant="contained" >
+            return <Button component={Link} to={routes.login} className={classes.button} variant="contained" >
                 Zaloguj
                     </Button>;
         }
@@ -128,7 +128,7 @@ export const NavBarTop = () => {
                         </IconButton> :
                         null}
                     <Typography className={classes.title} variant="h6" noWrap>
-                        Nazwa firmy
+                        H E X T L
                     </Typography>
 
                     <div className={classes.grow} />

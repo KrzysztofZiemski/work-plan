@@ -8,10 +8,12 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import Alert from '@material-ui/lab/Alert';
 import Container from '@material-ui/core/Container';
 import { UserContext } from '../../App';
 import { AuthService } from '../../services/AuthService';
 import { Redirect } from "react-router-dom";
+import routes from '../../utils/routes';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -40,7 +42,7 @@ export const LoginPage = () => {
     const usernameMsg = 'Musisz uzupełnić pole login';
     const passwordMsg = 'Musisz podać hasło';
 
-    if (loggedUser) return <Redirect to='/' />
+    if (loggedUser) return <Redirect to={routes.root} />
 
     return (
         <section>
@@ -50,18 +52,21 @@ export const LoginPage = () => {
                     password: ''
                 }}
                 onSubmit={async ({ username, password }, { setStatus, setSubmitting }) => {
-                    // setStatus();
+
                     try {
                         await AuthService.authentication(username, password);
                         const loggedUser = await AuthService.getAuthUser();
                         setLoggedUser(loggedUser)
                         setSubmitting(false);
+                        setStatus(false);
                     }
                     catch (err) {
                         setSubmitting(false);
                         if (loggedUser !== false) setLoggedUser(false)
-                        if (err.msg) return setStatus(err.msg);
-                        setStatus('Spróbuj ponownie. Jeżeli problem będzie nadal wystepować, skontaktuj się z administratorem');
+                        const status = err.response.status;
+
+                        const msg = status === 401 ? 'Niepoprawny login lub hasło' : 'Spróbuj ponownie. Jeżeli problem będzie nadal wystepować, skontaktuj się z administratorem';
+                        setStatus(msg);
                     };
                 }}
                 onChange={({ username, password }, { setStatus, setSubmitting }) => {
@@ -134,6 +139,7 @@ export const LoginPage = () => {
                                 </Button>
 
                             </Form>
+                            {status ? <Alert severity="error">{status}</Alert> : null}
                         </div>
                     </Container>
                 )}
