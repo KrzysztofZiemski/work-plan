@@ -6,7 +6,7 @@ const FILTER_FALSE = '?filterIsActive=false';
 export const getProductsByActive = (active = true) => {
     const URL = active ? PRODUCTS_URL : PRODUCTS_URL + FILTER_FALSE;
     return axios.get(URL)
-        .then(res => res.datta)
+        .then(res => res.data)
         .catch(err => Promise.reject(err));
 }
 
