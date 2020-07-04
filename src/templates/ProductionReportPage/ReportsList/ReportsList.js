@@ -120,23 +120,20 @@ export const ReportsList = ({ startDate, endDate, fullHeight }) => {
     }
 
     useEffect(() => {
+        const sorterByNewest = (a, b) => new Date(b.productionEnd).getTime() - new Date(a.productionEnd).getTime();
         LineService.getAllLines()
             .then(data => setLines(data));
 
         if (startDate && endDate) {
             ProductionReportService.getBetween(startDate, endDate)
-                .then(data => {
-                    setReportsList(data);
-                })
+                .then(data => setReportsList(data.sort(sorterByNewest)))
                 .catch(err => {
                     setMessage(['błąd połączenia']);
                     setMessageIsOpen(true);
                 });
         } else {
             ProductionReportService.getAll()
-                .then(data => {
-                    setReportsList(data);
-                })
+                .then(data => setReportsList(data.sort(sorterByNewest)))
                 .catch(err => {
                     setMessage(['błąd połączenia']);
                     setMessageIsOpen(true)
@@ -381,7 +378,6 @@ export const ReportsList = ({ startDate, endDate, fullHeight }) => {
                 download: false,
                 expandableRowsHeader: true,
                 customBodyRender: (value, tableMeta, updateValue) => {
-                    console.log(tableMeta)
                     return (
                         <SettingsMenu>
                             <Poper content={tableMeta.rowData[14]}>Pokarz opis</Poper>
