@@ -45,7 +45,9 @@ export const NavBarLeft = ({ isActive }) => {
     const classes = useStyles();
     const { activeLeftMenu } = useContext(UserContext)
     let [selected, setSelected] = useState(null);
-    const test = React.createRef();
+    let [countLinkNumber, setCountLinkNumber] = useState(1);
+
+
     return (
         <>
             <List
@@ -62,7 +64,7 @@ export const NavBarLeft = ({ isActive }) => {
                     <ListItemText primary="Start" />
                 </ListItem>
 
-                <ListItemCollapse label="Plan pracy" in={true} ref={test}>
+                <ListItemCollapse label="Plan pracy" in={true}>
                     <List component="div" disablePadding>
                         <ListItem button component={Link} to={routes.workPlan} selected={selected === 1 ? true : false} onClick={() => setSelected(1)} >
                             <ListItemText primary="Podgląd planu" />
@@ -77,53 +79,53 @@ export const NavBarLeft = ({ isActive }) => {
                         <ListItem button className={classes.subListItem} component={Link} to={routes.productionReport} selected={selected === 3 ? true : false} onClick={() => setSelected(3)}>
                             <ListItemText primary="Dodaj raport produkcji" />
                         </ListItem>
-                        <ListItem button className={classes.subListItem} component={Link} to={routes.productionReportList} selected={selected === 3 ? true : false} onClick={() => setSelected(12)}>
+                        <ListItem button className={classes.subListItem} component={Link} to={routes.productionReportList} selected={selected === 4 ? true : false} onClick={() => setSelected(4)}>
                             <ListItemText primary="Raporty" />
                         </ListItem>
                     </List>
                 </ListItemCollapse>
                 <ListItemCollapse label='Statystyki' disableStrictModeCompat={true}>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 4 ? true : false} onClick={() => setSelected(4)}>
+                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 5 ? true : false} onClick={() => setSelected(5)}>
                             <ListItemText primary="Pracownicy" />
                         </ListItem>
                     </List>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 5 ? true : false} onClick={() => setSelected(5)}>
+                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 6 ? true : false} onClick={() => setSelected(6)}>
                             <ListItemText primary="Linie" />
                         </ListItem>
                     </List>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 6 ? true : false} onClick={() => setSelected(6)}>
+                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 7 ? true : false} onClick={() => setSelected(7)}>
                             <ListItemText primary="Wpisy" />
                         </ListItem>
                     </List>
                 </ListItemCollapse>
                 <ListItemCollapse label='Zarządzanie' disableStrictModeCompat={true}>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={routes.employeeManagement} selected={selected === 7 ? true : false} onClick={() => setSelected(7)}>
+                        <ListItem button className={classes.subListItem} component={Link} to={routes.employeeManagement} selected={selected === 8 ? true : false} onClick={() => setSelected(8)}>
                             <ListItemText primary="Pracownicy" />
                         </ListItem>
                     </List>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={routes.productManagement} selected={selected === 8 ? true : false} onClick={() => setSelected(8)}>
+                        <ListItem button className={classes.subListItem} component={Link} to={routes.productManagement} selected={selected === 9 ? true : false} onClick={() => setSelected(9)}>
                             <ListItemText primary="Produkty" />
                         </ListItem>
                     </List>
                 </ListItemCollapse>
                 <ListItemCollapse label='Administracja' disableStrictModeCompat={true}>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 9 ? true : false} onClick={() => setSelected(9)}>
+                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 10 ? true : false} onClick={() => setSelected(10)}>
                             <ListItemText primary="Użytkownik" />
                         </ListItem>
                     </List>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 10 ? true : false} onClick={() => setSelected(10)}>
+                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 11 ? true : false} onClick={() => setSelected(11)}>
                             <ListItemText primary="Ustawienia" />
                         </ListItem>
                     </List>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 11 ? true : false} onClick={() => setSelected(11)}>
+                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 12 ? true : false} onClick={() => setSelected(12)}>
                             <ListItemText primary="Swagger" />
                         </ListItem>
                     </List>

@@ -12,6 +12,7 @@ import LoginPage from './templates/LoginPage';
 import ProductionReportPage from './templates/ProductionReportPage';
 import EmployeeManagement from './templates/EmployeeManagement';
 import ReportsList from './templates/ProductionReportPage/ReportsList';
+import ProductManagement from './templates/ProductManagement'
 import NavBarTop from './components/NavBarTop';
 import NavBarLeft from './components/NavBarLeft';
 import { AuthService } from './services/AuthService';
@@ -76,7 +77,8 @@ const App = () => {
                   {loggedUser ? <Route path={routes.workPlan} render={(props) => <GraphicPage className='page' {...props} />} /> : null}
                   {loggedUser ? <Route path={routes.employeeManagement} render={(props) => <EmployeeManagement className='page' {...props} />} /> : null}
                   {loggedUser ? <Route path={routes.productionReportList} render={(props) => <ReportsList className='page' {...props} />} /> : null}
-                  {loggedUser ? <Route path={routes.productionReport} exacle render={(props) => <ProductionReportPage className='page' {...props} />} /> : null}
+                  {loggedUser ? <Route path={routes.productionReport} render={(props) => <ProductionReportPage className='page' {...props} />} /> : null}
+                  {loggedUser ? <Route path={routes.productManagement} render={(props) => <ProductManagement className='page' {...props} />} /> : null}
                 </Switch>
               </Grid>
             </Grid>

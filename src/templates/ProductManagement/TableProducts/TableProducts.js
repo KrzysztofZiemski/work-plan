@@ -55,14 +55,6 @@ const columns = [
             },
         },
     },
-    // {
-    //     name: 'description',
-    //     label: 'opis',
-    //     options: {
-    //         filter: true,
-    //         sort: true
-    //     }
-    // },
     {
         name: 'isActive',
         label: 'status',
