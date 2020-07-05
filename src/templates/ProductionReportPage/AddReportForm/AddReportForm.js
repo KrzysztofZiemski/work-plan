@@ -6,10 +6,12 @@ import Select from '@material-ui/core/Select';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import PrimaryButton from '../../../components/PrimaryButton';
 import LineService from '../../../services/LineService';
 import ProductService from '../../../services/ProductService';
-import { getAllEmployee } from '../../../services/employeesRequest';
+import { getEmployeesByActive } from '../../../services/employeesRequest';
 import ProductionReportService from '../../../services/ProductionReportService';
 import { UserContext, EmployeesContext } from '../../../App'
 
@@ -26,7 +28,9 @@ const useStyles = makeStyles((theme) => ({
         margin: 10,
         width: 220,
     },
-
+    autoComplete: {
+        margin: 20
+    },
     formControl: {
         marginRight: 10,
         marginLeft: 10,
@@ -54,12 +58,13 @@ const today = () => {
 
 
 }
-
+const errorsMessage = {
+    employeesSame: 'wybrałeś tych samych pracowników',
+    empty: 'wartość nie może być pusta',
+    workTime: 'wskaż czas pracy',
+    wrongDates: 'czas końca pracy musi być późniejszy niż początku',
+}
 export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
-
-    const { loggedUser } = useContext(UserContext);
-    const { employeesList, setEmployeesList } = useContext(EmployeesContext);
-
     const blankForm = {
         productionStart: today(),
         productionEnd: today(),
@@ -75,9 +80,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
         description: '',
         totalQuantityProduced: ''
     }
-
-    let [formData, setFormData] = useState(blankForm);
-    let [errors, setErrors] = useState({
+    const blankErrors = {
         productionStart: false,
         productionEnd: false,
         lineId: false,
@@ -90,51 +93,67 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
         secondWorkplaceIdEmployee: false,
         thirdWorkplaceIdEmployee: false,
         totalQuantityProduced: false
-    });
+    }
     let patterns = {
         lineId: '.{1,20}',
         productId: '.{1,20}',
         series: '.{1,20}',
         speedMachinePerMinute: `^[1-9][0-9]*$`,
-        firstWorkplaceIdEmployee: '.{1,20}',
-        secondWorkplaceIdEmployee: '.{1,20}',
-        thirdWorkplaceIdEmployee: '.{1,20}',
         totalQuantityProduced: '.{1,20}'
     }
+    const blankErrorLabels = {
+        productionStart: '',
+        productionEnd: '',
+        lineId: '',
+        productionHours: '',
+        productionMinutes: '',
+        productId: '',
+        series: '',
+        speedMachinePerMinute: '',
+        firstWorkplaceIdEmployee: '',
+        secondWorkplaceIdEmployee: '',
+        thirdWorkplaceIdEmployee: '',
+        totalQuantityProduced: ''
+    }
+    const classes = useStyles();
+
+    const { loggedUser } = useContext(UserContext);
+    const { employeesList, setEmployeesList } = useContext(EmployeesContext);
+    let [formData, setFormData] = useState(blankForm);
+    let [errors, setErrors] = useState(blankErrors);
+    let [errorLabels, setErrorLabels] = useState(blankErrorLabels);
     let [lines, setLines] = useState([]);
     let [products, setProducts] = useState([]);
-
-    const classes = useStyles();
 
     useEffect(() => {
         (async () => {
             const linesPromise = LineService.getAllLines()
-                .then(data => setLines(data))
+                .then(data => setLines(data));
             const productsPromise = ProductService.getAllProducts()
-                .then(data => setProducts(data))
-            const employeePromise = getAllEmployee()
-                .then(data => setEmployeesList(data))
+                .then(data => setProducts(data));
+            const employeePromise = getEmployeesByActive()
+                .then(data => setEmployeesList(data.sort((a, b) => (a.lastName < b.lastName) ? -1 : (a.lastName > b.lastName) ? 1 : 0)));
             Promise.all([linesPromise, productsPromise, employeePromise])
                 .catch(err => {
                     setMessages(['Błąd łączności z serwerem', 'spróbuj odświerzyć stronę', `status ${err}`]);
                     setOpenMessage(true);
                 })
-        })()
+        })();
     }, [setMessages, setOpenMessage, setEmployeesList])
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const isOk = validation();
-        if (!isOk) {
-            setMessages(['musisz uzupełnić wszystkie wymagane pola']);
-            setOpenMessage(true);
-            return;
-        }
+        if (!isOk) return;
         const data = { ...formData };
-        console.log(data)
         data.productionStart = data.productionStart.replace('T', '-');
         data.productionEnd = data.productionEnd.replace('T', '-');
 
+        data.firstWorkplaceIdEmployee = data.firstWorkplaceIdEmployee.id;
+        data.secondWorkplaceIdEmployee = data.secondWorkplaceIdEmployee.id;
+        data.thirdWorkplaceIdEmployee = data.thirdWorkplaceIdEmployee.id;
         setLoader(true);
+        console.log('data', data)
         ProductionReportService.save(data, loggedUser.id)
             .then(data => {
                 setLoader(false);
@@ -153,7 +172,10 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
         const value = e.target.value;
         setFormData(prevState => ({ ...prevState, [name]: value }))
     };
+    const handleChangeAutoCompleteFields = (name, newValue) => {
 
+        setFormData(prevState => ({ ...prevState, [name]: newValue }))
+    };
     const validation = () => {
         let isOk = true;
 
@@ -163,13 +185,23 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                 ...prevProps,
                 productionStart: true,
                 productionEnd: true
-            }))
+            }));
+            setErrorLabels(prevProps => ({
+                ...prevProps,
+                productionStart: errorsMessage.wrongDates,
+                productionEnd: errorsMessage.wrongDates
+            }));
         } else {
             setErrors(prevProps => ({
                 ...prevProps,
                 productionStart: false,
                 productionEnd: false
-            }))
+            }));
+            setErrorLabels(prevProps => ({
+                ...prevProps,
+                productionStart: '',
+                productionEnd: ''
+            }));
         }
         if (formData.productionHours < 1 && formData.productionMinutes < 1) {
             if (isOk) isOk = false;
@@ -177,13 +209,23 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                 ...prevProps,
                 productionHours: true,
                 productionMinutes: true
-            }))
+            }));
+            setErrorLabels(prevProps => ({
+                ...prevProps,
+                productionHours: errorsMessage.workTime,
+                productionMinutes: errorsMessage.workTime
+            }));
         } else {
             setErrors(prevProps => ({
                 ...prevProps,
                 productionHours: false,
                 productionMinutes: false
-            }))
+            }));
+            setErrorLabels(prevProps => ({
+                ...prevProps,
+                productionHours: '',
+                productionMinutes: ''
+            }));
         }
         for (let pattern in patterns) {
             const regExp = new RegExp(patterns[pattern]);
@@ -191,24 +233,67 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                 setErrors(prevProps => ({
                     ...prevProps,
                     [pattern]: false
-                }))
+                }));
+                setErrorLabels(prevProps => ({
+                    ...prevProps,
+                    [pattern]: ''
+                }));
             } else {
                 setErrors(prevProps => ({
                     ...prevProps,
                     [pattern]: true
-                }))
+                }));
+                setErrorLabels(prevProps => ({
+                    ...prevProps,
+                    [pattern]: errorsMessage.empty
+                }));
                 if (isOk) isOk = false;
             }
         }
+        const workplacesObj = {
+            firstWorkplaceIdEmployee: formData.firstWorkplaceIdEmployee,
+            secondWorkplaceIdEmployee: formData.secondWorkplaceIdEmployee,
+            thirdWorkplaceIdEmployee: formData.thirdWorkplaceIdEmployee
+        }
 
-        if (formData.firstWorkplaceIdEmployee === formData.secondWorkplaceIdEmployee || formData.firstWorkplaceIdEmployee === formData.thirdWorkplaceIdEmployee || formData.secondWorkplaceIdEmployee === formData.thirdWorkplaceIdEmployee) {
-            if (isOk) isOk = false;
-            setErrors(prevProps => ({
-                ...prevProps,
-                firstWorkplaceIdEmployee: false,
-                secondWorkplaceIdEmployee: false,
-                thirdWorkplaceIdEmployee: false,
-            }))
+        for (let workplace in workplacesObj) {
+            if (workplacesObj[workplace] === '') {
+                setErrors(prevProps => ({
+                    ...prevProps,
+                    [workplace]: true,
+                }));
+                setErrorLabels(prevProps => ({
+                    ...prevProps,
+                    [workplace]: errorsMessage.empty,
+                }))
+                if (isOk) isOk = false;
+            } else {
+                setErrors(prevProps => ({
+                    ...prevProps,
+                    [workplace]: false,
+                }));
+                setErrorLabels(prevProps => ({
+                    ...prevProps,
+                    [workplace]: '',
+                }));
+
+                for (let workplaceSame in workplacesObj) {
+                    if (workplaceSame !== workplace) {
+                        if (workplacesObj[workplace] === workplacesObj[workplaceSame]) {
+                            setErrors(prevProps => ({
+                                ...prevProps,
+                                [workplace]: true,
+                            }));
+                            setErrorLabels(prevProps => ({
+                                ...prevProps,
+                                [workplace]: errorsMessage.employeesSame,
+                            }))
+                            if (isOk) isOk = false;
+                        }
+                    };
+
+                }
+            }
         }
         return isOk;
     }
@@ -237,6 +322,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                         }}
                         onChange={handleChange}
                         error={errors.productionStart}
+                        helperText={errorLabels.productionStart}
                     />
                     <TextField
                         value={formData.productionEnd}
@@ -251,6 +337,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                         }}
                         onChange={handleChange}
                         error={errors.productionEnd}
+                        helperText={errorLabels.productionEnd}
                     />
                 </Grid>
                 <Grid>
@@ -263,7 +350,9 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                         variant='outlined'
                         className={classes.textField}
                         error={errors.productionHours}
+                        helperText={errorLabels.productionHours}
                     />
+
                     <TextField
                         type='number'
                         name='productionMinutes'
@@ -273,6 +362,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                         variant='outlined'
                         className={classes.textField}
                         error={errors.productionMinutes}
+                        helperText={errorLabels.productionMinutes}
                     />
                 </Grid>
                 <h2 className={classes.subTitlesForm}>Parametry</h2>
@@ -292,8 +382,8 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                             {lines.map(line => (
                                 <MenuItem key={`line${line.id}`} value={line.id}>{line.name}</MenuItem>
                             ))}
-
                         </Select>
+                        {errors.lineId ? <FormHelperText error>{errorLabels.lineId}</FormHelperText> : null}
                     </FormControl>
                     <FormControl variant="outlined" className={classes.formControl}>
                         <InputLabel id="speedMachinePerMinute">Szybkość</InputLabel>
@@ -309,6 +399,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                             {speedOptions()}
 
                         </Select>
+                        {errors.speedMachinePerMinute ? <FormHelperText error>{errorLabels.speedMachinePerMinute}</FormHelperText> : null}
                     </FormControl>
                     <FormControl variant="outlined" className={classes.formControl}>
                         <InputLabel id="productId">Produkt</InputLabel>
@@ -326,8 +417,11 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                             ))}
 
                         </Select>
+                        {errors.productId ? <FormHelperText error>{errorLabels.productId}</FormHelperText> : null}
                     </FormControl>
-                    <FormControl variant="outlined" className={classes.formControl}>
+                    <FormControl variant="outlined"
+                        className={classes.formControl}
+                    >
                         <TextField
                             variant='outlined'
                             type='text'
@@ -336,6 +430,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                             onChange={handleChange}
                             label='Seria'
                             error={errors.series}
+                            helperText={errorLabels.series}
                         />
                     </FormControl>
                 </Grid>
@@ -349,62 +444,74 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                         label='Ilość wyprodukowana'
                         className={classes.quantityProducedField}
                         error={errors.totalQuantityProduced}
+                        helperText={errorLabels.totalQuantityProduced}
                     />
 
                 </Grid>
                 <h2 className={classes.subTitlesForm}>Pracownicy</h2>
-                <Grid>
-                    <FormControl variant="outlined" className={classes.formControl}>
-                        <InputLabel id="firstWorkplaceIdEmployee">Pierwsze stanowisko</InputLabel>
-                        <Select
-                            labelId="firstWorkplaceIdEmployee"
-                            id="firstWorkplaceIdEmployeeSelect"
+                <Grid container>
+                    <Grid className={classes.autoComplete}>
+                        <Autocomplete
                             value={formData.firstWorkplaceIdEmployee}
-                            onChange={handleChange}
+                            onChange={(e, newValue) => handleChangeAutoCompleteFields('firstWorkplaceIdEmployee', newValue)}
                             name='firstWorkplaceIdEmployee'
-                            label="Pierwsze stanowisko"
-                            error={errors.firstWorkplaceIdEmployee}
-                        >
-                            {employeesList.map(employee => (
-                                <MenuItem key={`firstemployee${employee.id}`} value={employee.id}>{`${employee.name} ${employee.lastName}`}</MenuItem>
-                            ))}
-
-                        </Select>
-                    </FormControl>
-                    <FormControl variant="outlined" className={classes.formControl}>
-                        <InputLabel id="secondWorkplaceIdEmployee">Pierwsze stanowisko</InputLabel>
-                        <Select
-                            labelId="secondWorkplaceIdEmployee"
-                            id="secondWorkplaceIdEmployeeSelect"
-                            value={formData.secondWorkplaceIdEmployee}
-                            onChange={handleChange}
-                            name='secondWorkplaceIdEmployee'
-                            label="Drugie stanowisko"
+                            options={employeesList}
+                            getOptionLabel={(option) => option ? `${option.lastName} ${option.name}` : ''}
+                            style={{ width: 250 }}
+                            renderInput={(params) => {
+                                return <TextField
+                                    error={errors.firstWorkplaceIdEmployee}
+                                    {...params}
+                                    name='firstWorkplaceIdEmployee'
+                                    label="Pierwsze stanowisko"
+                                    variant="outlined"
+                                />
+                            }}
+                        />
+                        {errors.firstWorkplaceIdEmployee ? <FormHelperText error>{errorLabels.firstWorkplaceIdEmployee}</FormHelperText> : null}
+                    </Grid >
+                    <Grid className={classes.autoComplete}>
+                        <Autocomplete
                             error={errors.secondWorkplaceIdEmployee}
-                        >
-                            {employeesList.map(employee => (
-                                <MenuItem key={`secondemployee${employee.id}`} value={employee.id}>{`${employee.name} ${employee.lastName}`}</MenuItem>
-                            ))}
+                            value={formData.secondWorkplaceIdEmployee}
+                            onChange={(e, newValue) => handleChangeAutoCompleteFields('secondWorkplaceIdEmployee', newValue)}
+                            name='secondWorkplaceIdEmployee'
+                            options={employeesList}
+                            getOptionLabel={(option) => option ? `${option.lastName} ${option.name}` : ''}
+                            style={{ width: 250 }}
+                            renderInput={(params) => {
+                                return <TextField
+                                    error={errors.secondWorkplaceIdEmployee}
+                                    {...params}
+                                    name='secondWorkplaceIdEmployee'
+                                    label="Drugie stanowisko"
+                                    variant="outlined"
+                                />
+                            }}
+                        />
+                        {errors.secondWorkplaceIdEmployee ? <FormHelperText error>{errorLabels.secondWorkplaceIdEmployee}</FormHelperText> : null}
+                    </Grid>
+                    <Grid className={classes.autoComplete}>
+                        <Autocomplete
 
-                        </Select>
-                    </FormControl>
-                    <FormControl variant="outlined" className={classes.formControl}>
-                        <InputLabel id="thirdWorkplaceIdEmployee">Trzecie stanowisko</InputLabel>
-                        <Select
-                            error={errors.thirdWorkplaceIdEmployee}
-                            labelId="thirdWorkplaceIdEmployee"
-                            id="thirdWorkplaceIdEmployeeSelect"
                             value={formData.thirdWorkplaceIdEmployee}
-                            onChange={handleChange}
+                            onChange={(e, newValue) => handleChangeAutoCompleteFields('thirdWorkplaceIdEmployee', newValue)}
                             name='thirdWorkplaceIdEmployee'
-                            label="Trzecie stanowisko"
-                        >
-                            {employeesList.map(employee => (
-                                <MenuItem key={`thirdemployee${employee.id}`} value={employee.id}>{`${employee.name} ${employee.lastName}`}</MenuItem>
-                            ))}
-
-                        </Select>
-                    </FormControl>
+                            options={employeesList}
+                            getOptionLabel={(option) => option ? `${option.lastName} ${option.name}` : ''}
+                            style={{ width: 250 }}
+                            renderInput={(params) => {
+                                return <TextField
+                                    error={errors.thirdWorkplaceIdEmployee}
+                                    {...params}
+                                    name='thirdWorkplaceIdEmployee'
+                                    label="Trzecie stanowisko"
+                                    variant="outlined"
+                                />
+                            }}
+                        />
+                        {errors.thirdWorkplaceIdEmployee ? <FormHelperText error>{errorLabels.thirdWorkplaceIdEmployee}</FormHelperText> : null}
+                    </Grid>
                 </Grid>
                 <Grid>
                     <TextField
@@ -426,6 +533,6 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                     <PrimaryButton value='ZAPISZ' onClick={handleSubmit} />
                 </Grid>
             </Grid>
-        </Grid>
+        </Grid >
     );
 };

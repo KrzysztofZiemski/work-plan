@@ -104,7 +104,7 @@ const styles = makeStyles({
         fontSize: '1rem'
     }
 })
-export const ReportsList = ({ startDate, endDate, fullHeight }) => {
+export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20 }) => {
     const classes = styles();
     let [reportsList, setReportsList] = useState([]);
     let [fetching, setFetching] = useState(false);
@@ -142,12 +142,13 @@ export const ReportsList = ({ startDate, endDate, fullHeight }) => {
     }, [startDate, endDate]);
 
     const options = {
-        rowsPerPageOptions: [10, 20],
+        rowsPerPageOptions: [5, 20, 50],
+        rowsPerPage: pagination,
         filter: true,
         responsive: 'standard',
         filterType: "dropdown",
         selectableRows: false,
-        pagination: false,
+        pagination: true,
         print: true,
         download: true,
         search: true,

@@ -37,7 +37,7 @@ export const ProductionReportPage = () => {
                 <CardHeader component='h1' title=' Wprowadź raport' className={classes.cardHeader} />
                 <AddReportForm setOpenMessage={setOpenMessage} setMessages={setMessages} setLoader={setWait} />
             </Card>
-            <ReportsList />
+            <ReportsList pagination={5} />
         </section>
     )
 };
