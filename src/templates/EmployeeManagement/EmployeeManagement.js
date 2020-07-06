@@ -8,6 +8,7 @@ import DialogMessage from '../../components/DialogMessage';
 import { getEmployeesByActive, deleteEmployee, addWEmployee } from '../../services/employeesRequest';
 import PanelEmployeesList from './PanelEmployeesList';
 import AddFormDialog from '../../components/AddFormDialog';
+
 const useStyles = makeStyles(theme => ({
     header: {
         backgroundColor: '#222d32',
@@ -69,6 +70,7 @@ export const EmployeeManagement = () => {
             fetched: false
         },
     });
+
     let [filterEmployees, setFiletrEmployees] = useState(options.active.value);
     let [isLoaded, setIsLoaded] = useState(false);
     let [alert, setAlert] = useState(false);
@@ -194,10 +196,11 @@ export const EmployeeManagement = () => {
 
     const handleAddWEmployee = (data) => {
         setIsLoaded(true);
-        addWEmployee(data).then(data => {
+        const dataLowerCase = { ...data, name: data.name.toLowerCase(), lastName: data.lastName.toLowerCase() };
+        addWEmployee(dataLowerCase).then(data => {
             setIsLoaded(false);
             updateEmployees();
-            setAlertMessage(['Dodano pracownika', `${data.name} ${data.lastName}`]);
+            setAlertMessage(['Dodano pracownika', `${dataLowerCase.name} ${dataLowerCase.lastName}`]);
             setAlert(true);
         })
     };

@@ -153,7 +153,6 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
         data.secondWorkplaceIdEmployee = data.secondWorkplaceIdEmployee.id;
         data.thirdWorkplaceIdEmployee = data.thirdWorkplaceIdEmployee.id;
         setLoader(true);
-        console.log('data', data)
         ProductionReportService.save(data, loggedUser.id)
             .then(data => {
                 setLoader(false);
@@ -167,6 +166,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                 setOpenMessage(true);
             })
     }
+
     const handleChange = (e) => {
         const name = e.target.name;
         const value = e.target.value;
@@ -176,9 +176,9 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
 
         setFormData(prevState => ({ ...prevState, [name]: newValue }))
     };
+
     const validation = () => {
         let isOk = true;
-
         if (new Date(formData.productionStart).getTime() >= new Date(formData.productionEnd).getTime()) {
             if (isOk) isOk = false;
             setErrors(prevProps => ({
@@ -472,8 +472,8 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                     </Grid >
                     <Grid className={classes.autoComplete}>
                         <Autocomplete
-                            error={errors.secondWorkplaceIdEmployee}
                             value={formData.secondWorkplaceIdEmployee}
+                            error={errors.secondWorkplaceIdEmployee}
                             onChange={(e, newValue) => handleChangeAutoCompleteFields('secondWorkplaceIdEmployee', newValue)}
                             name='secondWorkplaceIdEmployee'
                             options={employeesList}
@@ -493,7 +493,6 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                     </Grid>
                     <Grid className={classes.autoComplete}>
                         <Autocomplete
-
                             value={formData.thirdWorkplaceIdEmployee}
                             onChange={(e, newValue) => handleChangeAutoCompleteFields('thirdWorkplaceIdEmployee', newValue)}
                             name='thirdWorkplaceIdEmployee'
