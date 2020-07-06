@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { LogService } from '../../services/LogsService';
 import { UserService } from '../../services/UserService';
+import CircleProgress from '../../components/CircleProgress';
 
 const HomePage = () => {
     let [logs, setLogs] = useState('');
@@ -19,14 +20,17 @@ const HomePage = () => {
     }
 
     return (
-        <section>
-            <div>Tu na razie jest ściernisko
+        <>
+            <section>
+                <div>Tu na razie jest ściernisko
                         Ale będzie</div>
-            <button onClick={getLogs}>Get logs</button>
-            <br />
-            <button onClick={getUser}> get user by id</button>
-            <input type="text" value={id} onChange={(e) => setId(e.target.value)} />
-        </section>
+                <button onClick={getLogs}>Get logs</button>
+                <br />
+                <button onClick={getUser}> get user by id</button>
+                <input type="text" value={id} onChange={(e) => setId(e.target.value)} />
+            </section>
+            <CircleProgress></CircleProgress>
+        </>
     )
 }
 
