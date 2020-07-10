@@ -1,11 +1,11 @@
-import React, { useState, useEffect, createContext } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
-
+import { EmployeesContext } from '../../App';
 import queryString from 'query-string';
 import { getAllEmployee } from '../../services/employeesRequest';
 import NavGraphic from './NavGraphic/NavGraphic';
@@ -80,6 +80,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const GraphicPage = (props) => {
+    const { employeesList, setEmployeesList } = useContext(EmployeesContext)
     let [dateStart, setDateStart] = useState('');
     let [dateEnd, setDateEnd] = useState('');
     let [dragable, setDragable] = useState(0);
@@ -87,10 +88,52 @@ const GraphicPage = (props) => {
     let [workPlan, setWorkPlan] = useState(null);
 
     const classes = useStyles();
+    const initEmployees = async () => {
+        if (employeesList.length === 0) {
+            const employeesRequest = await getAllEmployee()
+            if (employeesRequest === 200) return
+        }
+    }
+    const init = async () => {
+        try {
+            if (employeesList.length === 0) {
+                await getAllEmployee().then(data => setEmployeesList(data));
+            }
+            let workplan;
+            const workPlanRequest = await getWorkPlanByDate(dateStart, dateEnd);
+            if (workPlanRequest.status === 200) {
+                workplan = await workPlanRequest.json();
+            } else if (workPlanRequest.status === 404) {
+                const confirmMessage = 'Plan pracy w podanym terminie, nie został jeszcze stworzony. Czy chcesz go utworzyć?'
+                const confirm = window.confirm(confirmMessage);
+                if (confirm !== true) return;
+                workplan = await createWorkPlan(dateStart, dateEnd, 1);
+            }
+            setWorkPlan(workplan);
+            initFreeEmployee(workplan, employeesList, setFreeEmployees)
+        } catch{
+            //set message
+        }
+        // .then(res => {
+        //     if (res.status === 200) return res.json();
+        //     if (res.status === 404) {
+        //         const confirmMessage = 'Plan pracy w podanym terminie, nie został jeszcze stworzony. Czy chcesz go utworzyć?'
+        //         const confirm = window.confirm(confirmMessage);
+        //         if (confirm !== true) return false;
+        //         return createWorkPlan(dateStart, dateEnd, 1);
+        //     }
+        //     Promise.reject(res.status)
+        // })
+        // .catch(e => {
+        //     if (isSubscribed && e === 404) return createWorkPlan(dateStart, dateEnd, 1)
+        //         .then(resp => console.log(resp));
 
+        //     return Promise.reject('stopped fetch');
+        // });
+
+    }
     //todo po wysyłce na serwer updatu zmienia nie tylko kopie obiektu na same id, ale i obiekt
     useEffect(() => {
-
         const editQuery = queryString.parse(props.location.search).edit;
         if (editQuery !== dragable) {
             if (editQuery === undefined) {
@@ -98,36 +141,10 @@ const GraphicPage = (props) => {
             } else {
                 setDragable(editQuery)
             };
-
         }
         if (!dateStart || !dateEnd) return;
         let isSubscribed = true;
-
-        const workPlanPromise = getWorkPlanByDate(dateStart, dateEnd)
-            .then(res => {
-                if (res.status === 200) return res.json();
-                if (res.status === 404) return createWorkPlan(dateStart, dateEnd, 1);
-                Promise.reject(res.status)
-            })
-            .catch(e => {
-                if (isSubscribed && e === 404) return createWorkPlan(dateStart, dateEnd, 1)
-                    .then(resp => console.log(resp));
-
-                return Promise.reject('stopped fetch');
-            });
-
-        // pobranie pracowników
-        const employeesPromise = getAllEmployee()
-        // jak już i plan i pracownicy są pobrani, przefiltruj pracowników, po tych już występujących w grafiku
-
-        Promise.all([workPlanPromise, employeesPromise]).then(result => {
-            if (!isSubscribed) return;
-            setWorkPlan(result[0]);
-            initFreeEmployee(result[1], result[0], setFreeEmployees)
-        }).catch(e => {
-            if (e === 404) createWorkPlan(dateStart, dateEnd, 1);
-
-        })
+        init()
 
         // po odmontowaniu elementu zresetuj wartości startowe
 
@@ -136,7 +153,7 @@ const GraphicPage = (props) => {
             setFreeEmployees([]);
             isSubscribed = false;
         };
-    }, [dateStart, dateEnd, props.location.search, dragable]);
+    }, [dateStart, dateEnd, props.location.search, dragable, employeesList, setEmployeesList]);
 
 
 
