@@ -5,9 +5,10 @@ import Typography from '@material-ui/core/Typography';
 
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
-import { EmployeesContext } from '../../App';
+import { EmployeesContext, UserContext } from '../../App';
+
 import queryString from 'query-string';
-import { getAllEmployee } from '../../services/employeesRequest';
+import { getEmployeesByActive } from '../../services/employeesRequest';
 import NavGraphic from './NavGraphic/NavGraphic';
 import WorkPlace from './WorkPlace/WorkPlace';
 import Employee from './Employee/Employee';
@@ -80,60 +81,36 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const GraphicPage = (props) => {
-    const { employeesList, setEmployeesList } = useContext(EmployeesContext)
+    const { employeesList, setEmployeesList } = useContext(EmployeesContext);
+    const { loggedUser } = useContext(UserContext);
     let [dateStart, setDateStart] = useState('');
     let [dateEnd, setDateEnd] = useState('');
     let [dragable, setDragable] = useState(0);
     let [freeEmployees, setFreeEmployees] = useState([]);
-    let [workPlan, setWorkPlan] = useState(null);
+    let [workPlan, setWorkPlan] = useState(false);
 
     const classes = useStyles();
-    const initEmployees = async () => {
-        if (employeesList.length === 0) {
-            const employeesRequest = await getAllEmployee()
-            if (employeesRequest === 200) return
-        }
-    }
-    const init = async () => {
-        try {
-            if (employeesList.length === 0) {
-                await getAllEmployee().then(data => setEmployeesList(data));
-            }
-            let workplan;
-            const workPlanRequest = await getWorkPlanByDate(dateStart, dateEnd);
-            if (workPlanRequest.status === 200) {
-                workplan = await workPlanRequest.json();
-            } else if (workPlanRequest.status === 404) {
+    console.log('freeEmployees', freeEmployees)
+    console.log('employeesList', employeesList)
+    useEffect(() => {
+        if (!loggedUser) return;
+        if (!dateStart || !dateEnd) return;
+        let isSubscribed = true;
+
+        const fetchWorkPlan = async () => {
+            if (workPlan) return;
+            console.log(workPlan)
+            let workPlanRequest = await getWorkPlanByDate(dateStart, dateEnd);
+            if (workPlanRequest.status === 404 && isSubscribed) {
                 const confirmMessage = 'Plan pracy w podanym terminie, nie został jeszcze stworzony. Czy chcesz go utworzyć?'
                 const confirm = window.confirm(confirmMessage);
-                if (confirm !== true) return;
-                workplan = await createWorkPlan(dateStart, dateEnd, 1);
+                if (confirm === true) workPlanRequest = await createWorkPlan(dateStart, dateEnd, loggedUser.id);
             }
-            setWorkPlan(workplan);
-            initFreeEmployee(workplan, employeesList, setFreeEmployees)
-        } catch{
-            //set message
+            if (workPlanRequest.status !== 200 && !isSubscribed) return;
+            const data = await workPlanRequest.json();
+            setWorkPlan(data);
         }
-        // .then(res => {
-        //     if (res.status === 200) return res.json();
-        //     if (res.status === 404) {
-        //         const confirmMessage = 'Plan pracy w podanym terminie, nie został jeszcze stworzony. Czy chcesz go utworzyć?'
-        //         const confirm = window.confirm(confirmMessage);
-        //         if (confirm !== true) return false;
-        //         return createWorkPlan(dateStart, dateEnd, 1);
-        //     }
-        //     Promise.reject(res.status)
-        // })
-        // .catch(e => {
-        //     if (isSubscribed && e === 404) return createWorkPlan(dateStart, dateEnd, 1)
-        //         .then(resp => console.log(resp));
-
-        //     return Promise.reject('stopped fetch');
-        // });
-
-    }
-    //todo po wysyłce na serwer updatu zmienia nie tylko kopie obiektu na same id, ale i obiekt
-    useEffect(() => {
+        if (!workPlan) fetchWorkPlan();
         const editQuery = queryString.parse(props.location.search).edit;
         if (editQuery !== dragable) {
             if (editQuery === undefined) {
@@ -142,18 +119,19 @@ const GraphicPage = (props) => {
                 setDragable(editQuery)
             };
         }
-        if (!dateStart || !dateEnd) return;
-        let isSubscribed = true;
-        init()
-
+        if (employeesList.length === 0) {
+            getEmployeesByActive().then(data => {
+                if (data.length > 0 && isSubscribed) setEmployeesList(data);
+            })
+        }
+        if (workPlan) initFreeEmployee(employeesList, workPlan, setFreeEmployees)
         // po odmontowaniu elementu zresetuj wartości startowe
 
         return () => {
-            setWorkPlan(null);
-            setFreeEmployees([]);
             isSubscribed = false;
         };
-    }, [dateStart, dateEnd, props.location.search, dragable, employeesList, setEmployeesList]);
+
+    }, [dateStart, dateEnd, props.location.search, dragable, employeesList, setEmployeesList, loggedUser, workPlan]);
 
 
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -8,7 +8,7 @@ import DialogMessage from '../../components/DialogMessage';
 import { getEmployeesByActive, deleteEmployee, addWEmployee } from '../../services/employeesRequest';
 import PanelEmployeesList from './PanelEmployeesList';
 import AddFormDialog from '../../components/AddFormDialog';
-
+import { EmployeesContext } from '../../App';
 const useStyles = makeStyles(theme => ({
     header: {
         backgroundColor: '#222d32',
@@ -60,16 +60,8 @@ const fieldsAddEmployee = [
 export const EmployeeManagement = () => {
     const classes = useStyles();
 
-    let [employees, setEmployees] = useState({
-        active: {
-            list: [],
-            fetched: false
-        },
-        inActive: {
-            list: [],
-            fetched: false
-        },
-    });
+    const { employeesList, setEmployeesList, inActiveEmployeesList, setInActiveEmployeesList } = useContext(EmployeesContext);
+
 
     let [filterEmployees, setFiletrEmployees] = useState(options.active.value);
     let [isLoaded, setIsLoaded] = useState(false);
@@ -77,95 +69,52 @@ export const EmployeeManagement = () => {
     let [alertMessage, setAlertMessage] = useState([]);
 
     useEffect(() => {
-        if (employees.active.fetched && employees.inActive.fetched) return;
-        if (filterEmployees === options.all.value) {
-            const PromisesEmployees = [];
-            employees.active.fetched ? PromisesEmployees.push(Promise.resolve(false)) : PromisesEmployees.push(getEmployeesByActive());
-            employees.inActive.fetched ? PromisesEmployees.push(Promise.resolve(false)) : PromisesEmployees.push(getEmployeesByActive(false));
-            setIsLoaded(true);
-            Promise.all(PromisesEmployees).then(responseList => {
-                setIsLoaded(false);
-                setEmployees(prevState => {
-                    const active = responseList[0] ? {
-                        active: {
-                            list: responseList[0],
-                            fetched: true
-                        },
-                    } : { ...prevState.active };
-                    const inActive = responseList[1] ? {
-                        inActive: {
-                            list: responseList[1],
-                            fetched: true
-                        },
-                    } : { ...prevState.inActive };
-                    return {
-                        ...prevState,
-                        ...active,
-                        ...inActive
-                    }
-                });
-            }).catch(err => {
-                setAlertMessage(['wystapił błąd podczas pobierania pracowników']);
-                setAlert(true);
-                setIsLoaded(false);
-            })
-        } else {
-            if (!employees.hasOwnProperty(filterEmployees) || employees[filterEmployees].fetched) return;
-            setIsLoaded(true);
-            const isGetActive = filterEmployees === options.active.value ? true : false;
-            getEmployeesByActive(isGetActive).then(data => {
-                setIsLoaded(false);
-                setEmployees(prevState => ({
-                    ...prevState,
-                    [filterEmployees]: {
-                        list: data,
-                        fetched: true
-                    }
-                }))
-            }).catch(err => {
-                setAlertMessage(['wystapił błąd podczas pobierania pracowników']);
-                setAlert(true);
-                setIsLoaded(false);
-            })
+        try {
+            if (filterEmployees === options.active.value) {
+                console.log('weszlo')
+                if (employeesList.length < 1) {
+                    getEmployeesByActive().then(data => {
+                        console.log('data', data)
+                        setEmployeesList(data)
+                    });
+                }
+
+            } else if (filterEmployees === options.inActive.value) {
+                if (inActiveEmployeesList.length < 1) {
+                    getEmployeesByActive(false).then(data => setInActiveEmployeesList(data));
+                }
+
+            } else {
+                const employeesListRequest = getEmployeesByActive();
+                const inActiveEmployeesListRequest = getEmployeesByActive(false);
+                Promise.all([employeesListRequest, inActiveEmployeesListRequest])
+                    .then(reqArr => {
+                        setEmployeesList(reqArr[0]);
+                        setInActiveEmployeesList(reqArr[1])
+                    })
+            }
+        } catch (err) {
+            const message = [`Błąd połączenia ${err.status}`, 'spróbuj ponownie'];
+            setAlertMessage(message);
+            setAlert(true);
+
         }
         return () => {
             setIsLoaded(false);
         };
-    }, [filterEmployees, employees]);
+    }, [employeesList, setEmployeesList, inActiveEmployeesList, setInActiveEmployeesList, filterEmployees]);
 
     const updateEmployees = () => {
-        if (employees.active.fetched) {
-            getEmployeesByActive().then(data => {
-                setIsLoaded(false);
-                setEmployees(prevState => ({
-                    ...prevState,
-                    active: {
-                        list: data,
-                        fetched: true
-                    }
-                }))
-            }).catch(err => {
-                setAlertMessage(['wystapił błąd podczas pobierania pracowników']);
-                setAlert(true);
-                setIsLoaded(false);
-            })
-        } else if (employees.active.fetched) {
-            getEmployeesByActive(false).then(data => {
-                setIsLoaded(false);
-                setEmployees(prevState => ({
-                    ...prevState,
-                    inActive: {
-                        list: data,
-                        fetched: true
-                    }
-                }))
-            }).catch(err => {
-                setAlertMessage(['wystapił błąd podczas pobierania pracowników']);
-                setAlert(true);
-                setIsLoaded(false);
-            })
+        try {
+            if (filterEmployees !== options.inActive.value) getEmployeesByActive().then(data => setEmployeesList(data));
+            if (filterEmployees !== options.active.value) getEmployeesByActive(false).then(data => setInActiveEmployeesList(data));
+
+        } catch (err) {
+            setAlertMessage([`wystapił błąd podczas pobierania pracowników ${err.status}`]);
+            setAlert(true);
         }
     }
+
 
     const closeAlert = () => {
         setAlert(false);
@@ -207,9 +156,9 @@ export const EmployeeManagement = () => {
 
     const renderList = () => {
         if (filterEmployees === options.all.value) {
-            return [...employees.active.list, ...employees.inActive.list]
+            return [...employeesList, ...inActiveEmployeesList]
         }
-        return employees[filterEmployees].list;
+        return filterEmployees === options.active.value ? employeesList : inActiveEmployeesList;
     }
     return (
         <>

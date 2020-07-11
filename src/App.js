@@ -24,7 +24,9 @@ export const UserContext = createContext({
 })
 export const EmployeesContext = createContext({
   employeesList: [],
-  setEmployeesList: ''
+  setEmployeesList: '',
+  inActiveEmployeesList: [],
+  setInActiveEmployeesList: ''
 })
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -42,6 +44,7 @@ const App = () => {
   //true for test, shuld be null
   let [loggedUser, setLoggedUser] = useState(null);
   let [employeesList, setEmployeesList] = useState([]);
+  let [inActiveEmployeesList, setInActiveEmployeesList] = useState([]);
 
   const classes = useStyles();
 
@@ -59,7 +62,7 @@ const App = () => {
     <Router basename='#'>
       <div className="App" >
         <UserContext.Provider value={{ loggedUser, setLoggedUser, activeLeftMenu, setActiveLeftMenu }}>
-          <EmployeesContext.Provider value={{ employeesList, setEmployeesList }}>
+          <EmployeesContext.Provider value={{ employeesList, setEmployeesList, inActiveEmployeesList, setInActiveEmployeesList }}>
             <Grid container className={classes.root}>
               <Grid item>
                 <NavBarLeft />
