@@ -11,4 +11,6 @@ export default {
     productionReport: '/report/production',
     productionReportList: '/report/production/reports',
     productionReportDetail: '/report/production/report',
+    lineManagement: '/management-line',
+    lineDetails: './line'
 }

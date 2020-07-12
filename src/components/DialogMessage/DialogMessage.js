@@ -5,12 +5,24 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(theme => ({
+    title: {
+        padding: '10px 50px'
+    },
+    message: {
+        padding: '50px 50px',
+        margin: '0 auto'
+    }
+}))
 
 export const DialogMessage = ({ open, close, messages }) => {
-
+    const classes = useStyles()
     return (
         <div>
             <Dialog
+
                 open={open}
                 onClose={close}
                 aria-labelledby="alert-dialog-title"
@@ -18,9 +30,10 @@ export const DialogMessage = ({ open, close, messages }) => {
             >
                 {
                     messages ? messages.map((text, index) => {
-                        if (index === 0) return <DialogTitle key={`dialog${index}`} id="alert-dialog-title">{text}</DialogTitle>
-                        return (<DialogContent key={`dialogContent${index}`}>
-                            <DialogContentText id="alert-dialog-description">
+                        if (index === 0) return <DialogTitle key={`dialog${index}`} id="alert-dialog-title" className={classes.title}>{text}</DialogTitle>
+                        return (<DialogContent key={`dialogContent${index}`} className={classes.message}>
+                            <DialogContentText
+                                id="alert-dialog-description">
                                 {text}
                             </DialogContentText>
                         </DialogContent>

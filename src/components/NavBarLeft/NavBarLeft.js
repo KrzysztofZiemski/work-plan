@@ -110,20 +110,25 @@ export const NavBarLeft = ({ isActive }) => {
                             <ListItemText primary="Produkty" />
                         </ListItem>
                     </List>
+                    <List component="div" disablePadding>
+                        <ListItem button className={classes.subListItem} component={Link} to={routes.lineManagement} selected={selected === 10 ? true : false} onClick={() => setSelected(9)}>
+                            <ListItemText primary="Linie" />
+                        </ListItem>
+                    </List>
                 </ListItemCollapse>
                 <ListItemCollapse label='Administracja' disableStrictModeCompat={true}>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 10 ? true : false} onClick={() => setSelected(10)}>
+                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 11 ? true : false} onClick={() => setSelected(10)}>
                             <ListItemText primary="Użytkownik" />
                         </ListItem>
                     </List>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 11 ? true : false} onClick={() => setSelected(11)}>
+                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 12 ? true : false} onClick={() => setSelected(11)}>
                             <ListItemText primary="Ustawienia" />
                         </ListItem>
                     </List>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 12 ? true : false} onClick={() => setSelected(12)}>
+                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 13 ? true : false} onClick={() => setSelected(12)}>
                             <ListItemText primary="Swagger" />
                         </ListItem>
                     </List>

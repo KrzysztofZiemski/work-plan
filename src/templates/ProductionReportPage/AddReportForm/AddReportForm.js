@@ -13,7 +13,7 @@ import LineService from '../../../services/LineService';
 import ProductService from '../../../services/ProductService';
 import { getEmployeesByActive } from '../../../services/employeesRequest';
 import ProductionReportService from '../../../services/ProductionReportService';
-import { UserContext, EmployeesContext } from '../../../App'
+import { UserContext, EmployeesContext, LinesContext } from '../../../App'
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -119,16 +119,18 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
 
     const { loggedUser } = useContext(UserContext);
     const { employeesList, setEmployeesList } = useContext(EmployeesContext);
+    const { linesList, setLinesList } = useContext(LinesContext);
+
     let [formData, setFormData] = useState(blankForm);
     let [errors, setErrors] = useState(blankErrors);
     let [errorLabels, setErrorLabels] = useState(blankErrorLabels);
-    let [lines, setLines] = useState([]);
     let [products, setProducts] = useState([]);
+
 
     useEffect(() => {
         (async () => {
             const linesPromise = LineService.getAllLines()
-                .then(data => setLines(data));
+                .then(data => setLinesList(data));
             const productsPromise = ProductService.getAllProducts()
                 .then(data => setProducts(data));
             const employeePromise = getEmployeesByActive()
@@ -379,7 +381,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                             label="Linia"
                             error={errors.lineId}
                         >
-                            {lines.map(line => (
+                            {linesList.map(line => (
                                 <MenuItem key={`line${line.id}`} value={line.id}>{line.name}</MenuItem>
                             ))}
                         </Select>

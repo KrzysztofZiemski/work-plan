@@ -54,7 +54,7 @@ const fieldsAddProduct = [
         label: 'Przedmioty na cykl',
         type: 'number',
         pattern: '^([2-9]|1[0-6])$',
-        errorMessage: 'musi być cyfrą od 2 do 16'
+        errorMessage: 'musi być liczbą od 2 do 16'
     },
     {
         name: 'isSerialized',
