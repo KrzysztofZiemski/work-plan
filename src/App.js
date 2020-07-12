@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from 'react';
+import React, { useState, createContext, useEffect, lazy } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -6,7 +6,6 @@ import {
 } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import GraphicPage from './templates/GraphicPage/GraphicPage';
 import HomePage from './templates/HomePage/HomePage';
 import LoginPage from './templates/LoginPage';
 import ProductionReportPage from './templates/ProductionReportPage';
@@ -15,9 +14,11 @@ import ReportsList from './templates/ProductionReportPage/ReportsList';
 import ProductManagement from './templates/ProductManagement'
 import NavBarTop from './components/NavBarTop';
 import NavBarLeft from './components/NavBarLeft';
+import Loader from './components/Loader';
 import { AuthService } from './services/AuthService';
 import { default as routes } from './utils/routes';
-
+// const GraphicPage = lazy(() => import('./templates/GraphicPage/GraphicPage'));
+import GraphicPage from './templates/GraphicPage/GraphicPage';
 export const UserContext = createContext({
   loggedUser: null,
   setLoggedUser: null

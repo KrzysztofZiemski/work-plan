@@ -174,7 +174,7 @@ export const EmployeeManagement = () => {
                         <PanelEmployeesList setFilter={setFiletrEmployees} value={filterEmployees} options={options} />
                     </Grid>
                     <Grid item>
-                        <AddFormDialog onSubmit={handleAddWEmployee} fields={fieldsAddEmployee} button='Dodaj pracownika' />
+                        <AddFormDialog onSubmit={handleAddWEmployee} fields={fieldsAddEmployee} button='Dodaj pracownika' title='dodaj pracownika' />
                     </Grid>
                 </Grid>
                 <Grid item>

@@ -33,26 +33,52 @@ const options = {
         name: 'wszystko'
     }
 }
+
 const fieldsAddProduct = [
     {
         name: 'name',
         type: 'text',
         label: 'nazwa produktu',
-        pattern: '.{3,20}',
+        pattern: '.{1,20}',
         errorMessage: 'Nazwa produktu musi zawierać od 1 do 20 znaków'
+    },
+    {
+        name: 'instructionId',
+        label: 'numer instrukcji',
+        type: 'string',
+        pattern: '.{1,20}',
+        errorMessage: 'pole obowiązkowe'
+    },
+    {
+        name: 'itemsPerCycle',
+        label: 'Przedmioty na cykl',
+        type: 'number',
+        pattern: '^[1-9][0-9]*$',
+        errorMessage: 'pole obowiązkowe'
+    },
+    {
+        name: 'isSerialized',
+        label: 'serializacja',
+        type: 'select',
+        errorMessage: 'pole obowiązkowe',
+        pattern: '^([Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee])$',
+        options: [
+            {
+                value: true,
+                label: 'TAK'
+            },
+            {
+                value: false,
+                label: 'NIE'
+            }
+        ]
     },
     {
         name: 'description',
         label: 'opis',
-        type: 'text',       
+        type: 'text',
         errorMessage: ''
     },
-    // {
-    //     name: 'desc',
-    //     label: 'opis',
-    //     type: 'text',
-    //     errorMessage: ''
-    // },
 ];
 
 export const ProductManagement = () => {
@@ -193,12 +219,19 @@ export const ProductManagement = () => {
 
     const handleAddProduct = (data) => {
         setIsLoaded(true);
+        console.log('submit', data)
         addProduct(data).then(data => {
             setIsLoaded(false);
             updateProducts();
             setAlertMessage(['Dodano produkt', `${data.name} ${data.description}`]);
             setAlert(true);
         })
+            .catch(err => {
+                setIsLoaded(false);
+                const message = err.status === 409 ? 'Istnieje już produkt z wartością nazwy lub instrukcji' : `błąd ${err.status}`;
+                setAlertMessage(['Nie udało się dodać produktu', message]);
+                setAlert(true);
+            })
     };
 
     const renderList = () => {
@@ -220,7 +253,7 @@ export const ProductManagement = () => {
                     <PanelProductsList setFilter={setFiletrProducts} value={filterProducts} options={options} />
                 </Grid>
                 <Grid item>
-                    <AddFormDialog onSubmit={handleAddProduct} fields={fieldsAddProduct} button='Dodaj produkt' />
+                    <AddFormDialog onSubmit={handleAddProduct} fields={fieldsAddProduct} button='Dodaj produkt' title='Dodaj produkt' />
                 </Grid>
             </Grid>
             <Grid item>
@@ -230,4 +263,3 @@ export const ProductManagement = () => {
         </Grid>
     );
 };
-
