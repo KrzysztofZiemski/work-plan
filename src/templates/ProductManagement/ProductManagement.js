@@ -39,8 +39,8 @@ const fieldsAddProduct = [
         name: 'name',
         type: 'text',
         label: 'nazwa produktu',
-        pattern: '.{1,20}',
-        errorMessage: 'Nazwa produktu musi zawierać od 1 do 20 znaków'
+        pattern: '.{1,70}',
+        errorMessage: 'Nazwa produktu musi zawierać od 1 do 70 znaków'
     },
     {
         name: 'instructionId',
@@ -53,8 +53,8 @@ const fieldsAddProduct = [
         name: 'itemsPerCycle',
         label: 'Przedmioty na cykl',
         type: 'number',
-        pattern: '^[1-9][0-9]*$',
-        errorMessage: 'pole obowiązkowe'
+        pattern: '^([2-9]|1[0-6])$',
+        errorMessage: 'musi być cyfrą od 2 do 16'
     },
     {
         name: 'isSerialized',
@@ -105,9 +105,7 @@ export const ProductManagement = () => {
             const PromisesProducts = [];
             products.active.fetched ? PromisesProducts.push(Promise.resolve(false)) : PromisesProducts.push(getProductsByActive());
             products.inActive.fetched ? PromisesProducts.push(Promise.resolve(false)) : PromisesProducts.push(getProductsByActive(false));
-            setIsLoaded(true);
             Promise.all(PromisesProducts).then(responseList => {
-                setIsLoaded(false);
                 setProducts(prevState => {
                     const active = responseList[0] ? {
                         active: {
@@ -130,14 +128,11 @@ export const ProductManagement = () => {
             }).catch(err => {
                 setAlertMessage(['wystapił błąd podczas pobierania produktów']);
                 setAlert(true);
-                setIsLoaded(false);
             })
         } else {
             if (!products.hasOwnProperty(filterProducts) || products[filterProducts].fetched) return;
-            setIsLoaded(true);
             const isGetActive = filterProducts === options.active.value ? true : false;
             getProductsByActive(isGetActive).then(data => {
-                setIsLoaded(false);
                 setProducts(prevState => ({
                     ...prevState,
                     [filterProducts]: {
@@ -148,7 +143,6 @@ export const ProductManagement = () => {
             }).catch(err => {
                 setAlertMessage(['wystapił błąd podczas pobierania produktów']);
                 setAlert(true);
-                setIsLoaded(false);
             })
         }
         return () => {

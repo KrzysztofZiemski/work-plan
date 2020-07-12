@@ -8,16 +8,28 @@ const useStyles = makeStyles((theme) => ({
         zIndex: 999,
         color: '#fff',
     },
+    progressBar: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        width: '100%'
+    }
 }));
 
-export const Loader = ({ open }) => {
+export const Loader = ({ open, size, backdor = true }) => {
     const classes = useStyles();
 
     return (
         <>
-            <Backdrop className={classes.backdrop} open={open}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
+            {
+                backdor ? <Backdrop className={classes.backdrop} open={open}>
+                    <CircularProgress color="inherit" size={size ? size : 50} thickness={5} variant="indeterminate" />
+                </Backdrop> :
+                    <div className={classes.progressBar}>
+                        <CircularProgress color="inherit" size={size ? size : 50} thickness={3} variant="indeterminate" />
+                    </div>
+            }
         </>
     );
 }
