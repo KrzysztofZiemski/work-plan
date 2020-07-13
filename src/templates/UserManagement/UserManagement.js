@@ -112,24 +112,24 @@ export const UserManagement = () => {
             })
     }
 
-    const handleRemove = (lines) => {
+    const handleRemove = (users) => {
         setFetching(true);
-        const deletedLinesMessage = [];
+        const deletedUsersMessage = [];
         const errors = [];
-        const requests = lines.map(line => {
-            return UserService.remove(line.id)
-                .then(resData => deletedLinesMessage.push(`nazwa: ${resData.name}, numer: ${resData.numberLine}`))
+        const requests = users.map(user => {
+            return UserService.remove(user.id)
+                .then(resData => deletedUsersMessage.push(`nazwa: ${resData.name}, numer: ${resData.surname}`))
                 .catch(status => errors.push(status));
         })
         Promise.all(requests)
             .then(() => {
                 setFetching(false);
-                setMessage(['Wystąpił błąd podczas usuwania elementów', 'usunięci użytkownicy:', ...deletedLinesMessage]);
+                setMessage(['Usunięto użytkowników', 'usunięci użytkownicy:', ...deletedUsersMessage]);
                 setOpenMessage(true);
                 refresh();
             }).catch(err => {
                 setFetching(false);
-                setMessage(['Wystąpił błąd podczas usuwania elementów', 'usunięci użytkownicy:', ...deletedLinesMessage, 'status błędów:', ...errors])
+                setMessage(['Wystąpił błąd podczas usuwania elementów', 'usunięci użytkownicy:', ...deletedUsersMessage, 'status błędów:', ...errors])
                 setOpenMessage(true);
                 refresh();
             })

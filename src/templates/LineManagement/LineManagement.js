@@ -88,7 +88,7 @@ export const LineManagement = () => {
         Promise.all(requests)
             .then(() => {
                 setFetching(false);
-                setMessage(['Wystąpił błąd podczas usuwania elementów', 'usunięte linie:', ...deletedLinesMessage]);
+                setMessage(['usunięte linie:', ...deletedLinesMessage]);
                 setOpenMessage(true);
                 refresh();
             }).catch(err => {

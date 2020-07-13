@@ -13,18 +13,30 @@ const headerProduct = [
     {
         name: 'name',
         download: true,
-        label: 'nazwa produktu'
+        label: 'Imię'
     },
     {
-        name: 'settings',
-        download: false,
-        print: false
+        name: 'surname',
+        label: 'nazwisko',
+        download: true,
+        print: true
     },
     {
-        name: 'numberLine',
+        name: 'login',
         download: true,
         print: true,
-        label: 'numer linii'
+    },
+    {
+        name: 'email',
+        download: true,
+        print: true,
+        label: 'e-mail',
+    },
+    {
+        name: 'idRole',
+        download: true,
+        print: true,
+        label: 'rola',
     },
 ];
 
@@ -131,7 +143,6 @@ export const TableUsers = ({ list, remove, roles }) => {
         filterType: "dropdown",
         fixedSelectColumn: true,
         onRowsDelete: handleRemoveProductsBtn,
-        isRowSelectable: (index) => list[index].isActive,
         rowsSelected: [],
         onDownload: (buildHead, buildBody, columns, data) => {
             return "\uFEFF" + buildHead(headerProduct) + buildBody(data);
