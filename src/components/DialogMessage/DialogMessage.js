@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
         padding: '10px 50px'
     },
     message: {
-        padding: '50px 50px',
+        padding: '10px 50px',
         margin: '0 auto'
     }
 }))

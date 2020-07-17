@@ -66,9 +66,9 @@ export const AddFormDialog = ({ onSubmit, fields, button, title }) => {
     const validation = () => {
         let isOk = true;
         fields.forEach(objField => {
+            if (!objField.pattern && !objField.same) return
             const regExp = new RegExp(objField.pattern);
             if (objField.pattern && regExp.test(fieldsValue[objField.name])) {
-                // console.log('weszlo', objField)
                 if (!errors[objField.name]) return;
                 return setErrors(prevProps => ({
                     ...prevProps,
