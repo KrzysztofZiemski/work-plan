@@ -11,7 +11,6 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../App';
-import { AuthService } from '../../services/AuthService';
 import routes from '../../utils/routes';
 
 const useStyles = makeStyles((theme) => ({
@@ -50,7 +49,7 @@ export const NavBarTop = () => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
 
-    const { loggedUser, setActiveLeftMenu, activeLeftMenu, setLoggedUser } = useContext(UserContext);
+    const { loggedUser, setActiveLeftMenu, activeLeftMenu } = useContext(UserContext);
 
     const isMenuOpen = Boolean(anchorEl);
 

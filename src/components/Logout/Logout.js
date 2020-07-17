@@ -1,15 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { AuthService } from '../../services/AuthService';
 import { UserContext } from '../../App';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link,
-    Redirect,
-    useHistory,
-    useLocation
-} from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import routes from '../../utils/routes';
 
 export const Logout = () => {
