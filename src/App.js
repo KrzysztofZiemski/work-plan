@@ -11,6 +11,7 @@ import NavBarLeft from './components/NavBarLeft';
 import Loader from './components/Loader';
 import { AuthService } from './services/AuthService';
 import { default as routes } from './utils/routes';
+import Logout from './components/Logout';
 const GraphicPage = lazy(() => import('./templates/GraphicPage/GraphicPage'));
 const HomePage = lazy(() => import('./templates/HomePage/HomePage'));
 const ProductionReportPage = lazy(() => import('./templates/ProductionReportPage'));
@@ -98,6 +99,9 @@ const App = () => {
                           </Route>
                           <Route path={routes.login} exact={true}>
                             <LoginPage className='page' />
+                          </Route>
+                          <Route path={routes.logout} exact={true}>
+                            <Logout className='page' />
                           </Route>
                           {/* todo redirect after tests*/}
                           {

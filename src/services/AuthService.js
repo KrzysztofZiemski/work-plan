@@ -15,7 +15,7 @@ export class AuthService {
             .catch(err => Promise.reject(err));
     };
 
-    static logout = () => axios.post('logout');
+    static logout = () => axios.post('logout').catch(err => Promise.reject(err.response.status));
 
     static createAuthToken = (username, password) => `Basic ${window.btoa(`${username}:${password}`)}`;
 }

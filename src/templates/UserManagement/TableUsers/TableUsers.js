@@ -120,7 +120,7 @@ export const TableUsers = ({ list, remove, roles }) => {
                 expandableRowsHeader: true,
                 customBodyRender: (value, tableMeta, updateValue) => {
                     const id = tableMeta.rowData[0];
-                    return <Link to={`${routes.lineDetails}/${id}`}><SettingsIcon color="primary" /></Link>
+                    return <Link to={`${routes.userDetails}/${id}`}><SettingsIcon color="primary" /></Link>
                 }
             }
         },

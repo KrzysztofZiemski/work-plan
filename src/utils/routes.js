@@ -3,6 +3,7 @@ export default {
     workPlan: '/workplan',
     workPlanEdit: '/workplan?edit=1',
     login: '/login',
+    logout: '/logout',
     settings: '/settings',
     employeeManagement: '/management-employee',
     employeeDetails: '/employee',
@@ -13,5 +14,6 @@ export default {
     productionReportDetail: '/report/production/report',
     lineManagement: '/management-line',
     lineDetails: './line',
-    userManagement: '/management-user'
+    userManagement: '/management-user',
+    userDetails: '/user'
 }

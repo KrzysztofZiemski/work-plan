@@ -67,13 +67,6 @@ export const NavBarTop = () => {
         setAnchorEl(null);
     };
 
-    const handleLogout = () => {
-        handleMenuClose();
-        AuthService.logout()
-            .then(res => {
-                setLoggedUser(null);
-            });
-    }
     const menuId = 'primary-search-account-menu';
 
     const renderMenu = (
@@ -87,7 +80,7 @@ export const NavBarTop = () => {
             onClose={handleMenuClose}
         >
             <MenuItem component={Link} to={routes.settings} onClick={handleMenuClose}>Ustawienia</MenuItem>
-            <MenuItem component={Link} to={routes.root} onClick={handleLogout}>Wyloguj</MenuItem>
+            <MenuItem component={Link} onClick={handleMenuClose} as={Link} to={routes.logout}>Wyloguj</MenuItem>
         </Menu>
     );
 
