@@ -1,91 +1,76 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Animate } from "react-move";
 import {
-    CircularProgressbar, CircularProgressbarWithChildren,
+    CircularProgressbar,
     buildStyles
 } from 'react-circular-progressbar';
 import { easeQuadInOut } from 'd3-ease';
 import 'react-circular-progressbar/dist/styles.css';
+import { Typography, Grid } from '@material-ui/core';
 
-class AnimatedProgressProvider extends React.Component {
+const AnimatedProgressProvider = ({ valueStart, duration, easingFunction, children, valueEnd, className }) => {
 
+    let [isAnimated, setIsAnimated] = useState(true)
+    useEffect(() => {
+        return setIsAnimated(prevProps => !prevProps)
+    }, [valueEnd])
 
-    state = {
-        isAnimated: false
-    };
-
-    static defaultProps = {
-        valueStart: 0
-    };
-
-    componentDidMount() {
-        this.setState({
-            isAnimated: !this.state.isAnimated
-        });
-
-    }
-
-    componentWillUnmount() {
-        window.clearInterval(this.interval);
-    }
-
-    render() {
-        return (
-            <div style={{ width: 300, height: 300 }}>
-                <Animate
-                    start={() => ({
-                        value: this.props.valueStart
-                    })}
-                    update={() => ({
-                        value: [
-                            this.state.isAnimated ? this.props.valueEnd : this.props.valueStart
-                        ],
-                        timing: {
-                            duration: this.props.duration * 1000,
-                            ease: this.props.easingFunction
-                        }
-                    })}
-                >
-                    {({ value }) => this.props.children(value)}
-                </Animate>
-            </div>
-        );
-    }
+    return (
+        <div className={className}>
+            <Animate
+                start={() => ({
+                    value: valueStart
+                })}
+                update={() => ({
+                    value: [
+                        isAnimated ? 0 : valueEnd
+                    ],
+                    timing: {
+                        duration: duration * 1000,
+                        ease: easingFunction
+                    }
+                })}
+            >
+                {({ value }) => children(value)}
+            </Animate>
+        </div>
+    );
 }
 
 export default AnimatedProgressProvider;
 
-export const CircleProgress = () => {
-
-    let [value, setValue] = useState(44);
+export const CircleProgress = (props) => {
 
     return (
         <>
             <AnimatedProgressProvider
                 valueStart={0}
-                valueEnd={value}
+                valueEnd={props.value}
                 duration={1.4}
                 easingFunction={easeQuadInOut}
                 repeat
-
+                style
             >
                 {value => {
                     const roundedValue = Math.round(value);
                     return (
-                        <CircularProgressbar
-                            value={value}
-                            text={`${roundedValue}%`}
-                            styles={buildStyles({
-                                pathTransition: "none",
-                                pathColor: `rgba(134, 50, 199, 1)`,
-                                textColor: 'rgba(134, 50, 199, 1)',
-                            })}
+                        <>
+                            <Typography style={{ textAlign: 'center', padding: 10, fontSize: '34px' }}>{props.title ? props.title : ''}</Typography>
+                            <CircularProgressbar
+                                className={props.className}
+                                value={value}
+                                text={`${roundedValue}%`}
+                                styles={buildStyles({
+                                    pathTransition: "none",
+                                    pathColor: `rgb(60, 141, 188)`,
+                                    textColor: 'rgba(0, 0, 0, 1)',
+                                })}
 
-                        />
+                            />
+                        </>
                     );
                 }}
             </AnimatedProgressProvider>
-            <button onClick={() => setValue(prevProps => prevProps + 10)}>++</button>
         </>
     )
 }

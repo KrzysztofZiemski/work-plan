@@ -22,7 +22,6 @@ export const DialogMessage = ({ open, close, messages }) => {
     return (
         <div>
             <Dialog
-
                 open={open}
                 onClose={close}
                 aria-labelledby="alert-dialog-title"

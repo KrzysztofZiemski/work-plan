@@ -21,7 +21,7 @@ const ProductManagement = lazy(() => import('./templates/ProductManagement'));
 const LoginPage = lazy(() => import('./templates/LoginPage'));
 const LineManagement = lazy(() => import('./templates/LineManagement'));
 const UserManagement = lazy(() => import('./templates/UserManagement'));
-
+const LineDetails = lazy(() => import('./templates/LineDetails'));
 export const UserContext = createContext({
   loggedUser: null,
   setLoggedUser: null
@@ -114,6 +114,7 @@ const App = () => {
                                 <Route path={routes.productManagement} exact render={(props) => <ProductManagement className='page' {...props} />} />
                                 <Route path={routes.lineManagement} exact render={(props) => <LineManagement className='page' {...props} />} />
                                 <Route path={routes.userManagement} exact render={(props) => <UserManagement className='page' {...props} />} />
+                                <Route path={`${routes.lineDetails}/:idLine`} render={(props) => <LineDetails className='page' {...props} />} />
                               </>
                             )
                           }

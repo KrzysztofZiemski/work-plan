@@ -13,7 +13,7 @@ export default {
     productionReportList: '/report/production/reports',
     productionReportDetail: '/report/production/report',
     lineManagement: '/management-line',
-    lineDetails: './line',
+    lineDetails: '/line',
     userManagement: '/management-user',
     userDetails: '/user'
 }

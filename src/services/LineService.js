@@ -24,8 +24,6 @@ class LineService {
             })
     }
     static remove = (id) => {
-
-        console.log('id', id)
         const options = {
             method: 'DELETE',
         }
@@ -35,6 +33,14 @@ class LineService {
                 return Promise.reject(res.status);
             })
 
+    }
+    static get = (id) => {
+        return fetch(`${SERVER_LINES}/${id}`)
+            .then(resp => {
+                if (resp.status === 200) return resp.json();
+                return Promise.reject(resp.status)
+            })
+            .catch(err => Promise.reject(err))
     }
 }
 

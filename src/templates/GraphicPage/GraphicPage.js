@@ -90,8 +90,7 @@ const GraphicPage = (props) => {
     let [workPlan, setWorkPlan] = useState(false);
 
     const classes = useStyles();
-    console.log('freeEmployees', freeEmployees)
-    console.log('employeesList', employeesList)
+
     useEffect(() => {
         if (!loggedUser) return;
         if (!dateStart || !dateEnd) return;
@@ -99,7 +98,6 @@ const GraphicPage = (props) => {
 
         const fetchWorkPlan = async () => {
             if (workPlan) return;
-            console.log(workPlan)
             let workPlanRequest = await getWorkPlanByDate(dateStart, dateEnd);
             if (workPlanRequest.status === 404 && isSubscribed) {
                 const confirmMessage = 'Plan pracy w podanym terminie, nie został jeszcze stworzony. Czy chcesz go utworzyć?'
