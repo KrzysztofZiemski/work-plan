@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import 'date-fns';
 import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import { makeStyles } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
@@ -12,16 +14,30 @@ import {
 // The first commit of Material-UI
 
 
+const useStyles = makeStyles(({
+    root: {
+        margin: 10,
+        padding: 10
+    }
+}))
 
+const DateTimePicker = ({ name = '', date, setDate }) => {
 
-const DateTimePicker = ({ dateName, timeName }) => {
-    const [selectedDate, setSelectedDate] = React.useState(new Date());
+    useEffect(() => {
+        if (!date) {
+            setDate(new Date(Date.now()))
+        }
+    }, [date, setDate])
+
+    const classes = useStyles()
+
     const handleDateChange = (date) => {
-        setSelectedDate(date);
+        setDate(date);
     };
 
     return (
-        <div>
+        <Card className={classes.root}>
+            <legend>{name}</legend>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Grid container >
                     <KeyboardDatePicker
@@ -30,21 +46,20 @@ const DateTimePicker = ({ dateName, timeName }) => {
                         format="dd/MM/yyyy"
                         margin="normal"
                         id="date-picker"
-                        label={dateName ? dateName : ''}
-                        value={selectedDate}
+
+                        value={date}
                         onChange={handleDateChange}
                         KeyboardButtonProps={{
                             'aria-label': 'change date',
                         }}
                     />
-
                     <KeyboardTimePicker
                         ampm={false}
                         margin="normal"
                         format="HH:mm"
                         id="time-picker"
-                        label={timeName ? timeName : ''}
-                        value={selectedDate}
+
+                        value={date}
                         onChange={handleDateChange}
                         KeyboardButtonProps={{
                             'aria-label': 'change time',
@@ -52,7 +67,7 @@ const DateTimePicker = ({ dateName, timeName }) => {
                     />
                 </Grid>
             </MuiPickersUtilsProvider>
-        </div>
+        </Card>
     );
 };
 

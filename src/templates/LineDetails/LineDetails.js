@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-import PropTypes from 'prop-types';
 import LineService from '../../services/LineService';
 import DialogMessage from '../../components/DialogMessage';
 import HeaderDetails from './HeaderDetails';
-import DateTimePicker from './DateTimePicker';
-
+import StatisticsContainer from './StatisticsContainer';
 
 const LineDetails = props => {
     const { match: { params } } = props;
@@ -43,9 +41,9 @@ const LineDetails = props => {
     }, [params.idLine])
     return (
         <div>
-            {/* <DateTimePicker /> */}
             <HeaderDetails content={content} type='LINE' setMessage={setMessage} id={params.idLine} />
             <DialogMessage open={message.isOpen} close={handleCloseMessage} messages={message.text} />
+            <StatisticsContainer />
         </div >
     );
 };

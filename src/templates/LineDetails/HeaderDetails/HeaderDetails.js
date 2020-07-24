@@ -11,14 +11,19 @@ const styles = makeStyles(({
     root: {
         minHeight: '30vh',
         margin: 5,
-        display: 'flex'
+        display: 'flex',
+        backgroundColor: 'rgba(60,141,188,.1)',
+        boxShadow: 'inset 39px 0px 78px -28px rgba(60,141,188,0.74)',
+        borderRadius: 20,
+        overflow: 'hidden'
     },
     about: {
         display: 'flex',
         minWidth: 380,
         borderRadius: 20,
+        // backgroundColor: 'rgba(60,141,188,.1)',
+        margin: '0px 40px 00px 0px',
         backgroundColor: 'rgba(60,141,188,.1)',
-        margin: '10px 40px 10px 10px',
         boxShadow: 'inset 39px 0px 78px -28px rgba(60,141,188,0.74)'
     },
     about__titles: {
@@ -35,7 +40,7 @@ const styles = makeStyles(({
         right: 0,
         width: 2,
         height: '100%',
-        backgroundColor: 'rgba(60,141,188,0.74)'
+        backgroundColor: '#5485a2'
     },
     about__values: {
         padding: '0 40px 0 30px',
@@ -67,7 +72,17 @@ const styles = makeStyles(({
     productionTitle: {
         alignSelf: 'flex-end',
         fontSize: 20,
-        width: 40
+        width: 40,
+        position: 'relative',
+        paddingTop: 15
+    },
+    productionTitle__border: {
+        position: 'absolute',
+        width: '100vw',
+        height: 2,
+        top: 0,
+        left: '50%',
+        backgroundColor: '#bc493c'
     }
 }));
 
@@ -140,6 +155,7 @@ export const HeaderDetails = ({ content, id, setMessage }) => {
 
         }
     }, [id, setMessage]);
+
     const renderDetails = () => {
         const titles = [];
         const values = [];
@@ -159,13 +175,17 @@ export const HeaderDetails = ({ content, id, setMessage }) => {
             </>
         )
     }
+
     return (
         <Paper container className={classes.root}>
             <Paper className={classes.about}>
                 {renderDetails()}
             </Paper>
             <Grid className={classes.circlesContainer}>
-                < Typography className={classes.productionTitle}> Produkcja</Typography>
+                <Grid className={classes.productionTitle}>
+                    < Typography > Produkcja</Typography>
+                    <span className={classes.productionTitle__border}></span>
+                </Grid>
                 <Grid className={classes.circle}>
                     {lastStats.last24H.percentage ? < CircleProgress value={lastStats.last24H.percentage} title='24H' /> : ''}
                     < Typography > {convertNumber(lastStats.last24H.totalProduced)}</Typography>
