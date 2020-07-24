@@ -6,7 +6,9 @@ import {
 } from 'react-circular-progressbar';
 import { easeQuadInOut } from 'd3-ease';
 import 'react-circular-progressbar/dist/styles.css';
-import { Typography, Grid } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+
 
 const AnimatedProgressProvider = ({ valueStart, duration, easingFunction, children, valueEnd, className }) => {
 
@@ -39,8 +41,16 @@ const AnimatedProgressProvider = ({ valueStart, duration, easingFunction, childr
 
 export default AnimatedProgressProvider;
 
-export const CircleProgress = (props) => {
+const useStyles = makeStyles(({
+    title: {
+        textAlign: 'center',
+        fontSize: 20,
+        margin: 10
+    }
+}))
 
+export const CircleProgress = (props) => {
+    const classes = useStyles();
     return (
         <>
             <AnimatedProgressProvider
@@ -55,7 +65,7 @@ export const CircleProgress = (props) => {
                     const roundedValue = Math.round(value);
                     return (
                         <>
-                            <Typography style={{ textAlign: 'center', padding: 10, fontSize: '34px' }}>{props.title ? props.title : ''}</Typography>
+                            <Typography className={classes.title}>{props.title ? props.title : ''}</Typography>
                             <CircularProgressbar
                                 className={props.className}
                                 value={value}

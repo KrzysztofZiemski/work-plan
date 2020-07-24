@@ -2,8 +2,21 @@ import React, { useState } from 'react';
 import { LogService } from '../../services/LogsService';
 import { UserService } from '../../services/UserService';
 import CircleProgress from '../../components/CircleProgress';
-
+import { makeStyles } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+const useStyles = makeStyles(({
+    root: {
+        backgroundColor: 'red',
+        '& ::after': {
+            display: 'block',
+            constent: '"fffff"',
+            height: '20px',
+            width: '20px'
+        }
+    }
+}))
 const HomePage = () => {
+    const classes = useStyles()
     let [logs, setLogs] = useState('');
     let [id, setId] = useState('');
 
@@ -21,8 +34,9 @@ const HomePage = () => {
 
     return (
         <>
-            <section>
-                <div>Tu na razie jest ściernisko
+            <section >
+                <CssBaseline className={classes.root} />
+                <div >Tu na razie jest ściernisko
                         Ale będzie</div>
                 <button onClick={getLogs}>Get logs</button>
                 <br />
