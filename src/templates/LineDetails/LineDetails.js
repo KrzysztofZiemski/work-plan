@@ -41,9 +41,9 @@ const LineDetails = props => {
     }, [params.idLine])
     return (
         <div>
-            <HeaderDetails content={content} type='LINE' setMessage={setMessage} id={params.idLine} />
             <DialogMessage open={message.isOpen} close={handleCloseMessage} messages={message.text} />
-            <StatisticsContainer />
+            <HeaderDetails content={content} type='LINE' setMessage={setMessage} id={params.idLine} />
+            <StatisticsContainer id={params.idLine} type='LINE' />
         </div >
     );
 };

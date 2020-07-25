@@ -15,8 +15,7 @@ const options = {
 }
 
 const create = ({ start, end, idItems, type, options }) => {
-    if (!start || !end || !idItems || !type) return Promise.reject('Błąd wysłania zapytania - niewystarczające dane');
-
+    console.log(start, end, idItems, type, options)
     const data = {
         start, end, idItems, type, options: options ? options : {}
     }

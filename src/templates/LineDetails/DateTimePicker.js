@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import 'date-fns';
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import { makeStyles } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
@@ -14,14 +12,7 @@ import {
 // The first commit of Material-UI
 
 
-const useStyles = makeStyles(({
-    root: {
-        margin: 10,
-        padding: 10
-    }
-}))
-
-const DateTimePicker = ({ name = '', date, setDate }) => {
+const DateTimePicker = ({ name = '', date, setDate, className }) => {
 
     useEffect(() => {
         if (!date) {
@@ -29,14 +20,12 @@ const DateTimePicker = ({ name = '', date, setDate }) => {
         }
     }, [date, setDate])
 
-    const classes = useStyles()
-
     const handleDateChange = (date) => {
         setDate(date);
     };
 
     return (
-        <Card className={classes.root}>
+        <Grid className={className}>
             <legend>{name}</legend>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Grid container >
@@ -67,7 +56,7 @@ const DateTimePicker = ({ name = '', date, setDate }) => {
                     />
                 </Grid>
             </MuiPickersUtilsProvider>
-        </Card>
+        </Grid>
     );
 };
 

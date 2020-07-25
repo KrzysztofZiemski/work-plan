@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Typography, Grid } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
-
+import { getCorrectlyFormatData, subtractionDate } from '../../../helpers/dataHelper';
 import PrimaryButton from '../../../components/PrimaryButton';
 import CircleProgress from '../../../components/CircleProgress';
 import statisticsService from '../../../services/statisticsService';
@@ -10,7 +10,7 @@ import statisticsService from '../../../services/statisticsService';
 const styles = makeStyles(({
     root: {
         minHeight: '30vh',
-        margin: 5,
+        margin: 10,
         display: 'flex',
         backgroundColor: 'rgba(60,141,188,.1)',
         boxShadow: 'inset 39px 0px 78px -28px rgba(60,141,188,0.74)',
@@ -97,23 +97,11 @@ export const HeaderDetails = ({ content, id, setMessage }) => {
     });
 
 
-    const getSubtractionDate = (countDays = 0, date) => {
-        const subtractionMilliseconds = countDays * 24 * 60 * 60 * 1000;
-        const dateStart = date ? new Date(date).getTime() : Date.now();
-        return new Date(dateStart - subtractionMilliseconds);
-    }
-    const getFormatData = (date) => {
-        const year = date.getFullYear();
-        const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
-        const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
-        const hours = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours();
-        const minutes = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
-        return `${year}-${month}-${day}-${hours}:${minutes}`
-    }
+
 
     const getDataRequest = (start, end, type = 'LINE', options = { percentage: true, totalProduced: true }) => ({
-        start: getFormatData(start),
-        end: getFormatData(end),
+        start: getCorrectlyFormatData(start),
+        end: getCorrectlyFormatData(end),
         idItems: [
             id
         ],
@@ -134,9 +122,9 @@ export const HeaderDetails = ({ content, id, setMessage }) => {
 
         const getLastStats = async () => {
             try {
-                const last24Hoptions = getDataRequest(getSubtractionDate(100), getSubtractionDate(0));
-                const last7Doptions = getDataRequest(getSubtractionDate(50), getSubtractionDate(0));
-                const last30Doptions = getDataRequest(getSubtractionDate(100), getSubtractionDate(0));
+                const last24Hoptions = getDataRequest(subtractionDate(100), subtractionDate(0));
+                const last7Doptions = getDataRequest(subtractionDate(50), subtractionDate(0));
+                const last30Doptions = getDataRequest(subtractionDate(100), subtractionDate(0));
 
                 const last24H = await statisticsService.create(last24Hoptions).then(data => data.options);
                 const last7Days = await statisticsService.create(last7Doptions).then(data => data.options);
