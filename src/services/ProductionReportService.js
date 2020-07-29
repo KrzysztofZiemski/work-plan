@@ -2,6 +2,7 @@ import { SERVER } from '../config';
 const SERVER_REPORT = `${SERVER}/api/v1/production-report`;
 class ProductionReportService {
     static save = (data, loggedUserId) => {
+        console.log('report', data)
         const URL = `${SERVER_REPORT}?idUser=${loggedUserId}`;
         const requestOptions = {
             method: 'POST',

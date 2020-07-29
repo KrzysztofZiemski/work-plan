@@ -12,7 +12,7 @@ import {
 // The first commit of Material-UI
 
 
-const DateTimePicker = ({ name = '', date, setDate, className }) => {
+export const DateTimePicker = ({ name = '', date, setDate, className }) => {
 
     useEffect(() => {
         if (!date) {
@@ -28,14 +28,11 @@ const DateTimePicker = ({ name = '', date, setDate, className }) => {
         <Grid className={className}>
             <legend>{name}</legend>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <Grid container >
+                <Grid container style={{ flexWrap: 'nowrap' }}>
                     <KeyboardDatePicker
-
                         variant="inline"
                         format="dd/MM/yyyy"
                         margin="normal"
-                        id="date-picker"
-
                         value={date}
                         onChange={handleDateChange}
                         KeyboardButtonProps={{
@@ -46,8 +43,6 @@ const DateTimePicker = ({ name = '', date, setDate, className }) => {
                         ampm={false}
                         margin="normal"
                         format="HH:mm"
-                        id="time-picker"
-
                         value={date}
                         onChange={handleDateChange}
                         KeyboardButtonProps={{

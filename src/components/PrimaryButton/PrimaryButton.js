@@ -11,13 +11,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export function PrimaryButton({ value, onClick, size, className }) {
+export function PrimaryButton({ value, onClick, size, className, children }) {
     const classes = useStyles();
 
     return (
         <>
             <Button variant="contained" size={size ? size : "large"} color="primary" className={className ? className : classes.margin} onClick={onClick}>
-                {value}
+                {children ? children : value}
             </Button>
         </>
     );

@@ -9,6 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import PrimaryButton from '../../../components/PrimaryButton';
+import ButtonLoader from '../../../components/ButtonLoader';
 import LineService from '../../../services/LineService';
 import ProductService from '../../../services/ProductService';
 import { getEmployeesByActive } from '../../../services/employeesRequest';
@@ -97,9 +98,9 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
     let patterns = {
         lineId: '.{1,20}',
         productId: '.{1,20}',
-        series: '.{1,20}',
+        series: '.{3,20}|^$',
         speedMachinePerMinute: `^[1-9][0-9]*$`,
-        totalQuantityProduced: '.{1,20}'
+        totalQuantityProduced: '(.{1,20})'
     }
     const blankErrorLabels = {
         productionStart: '',
@@ -125,7 +126,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
     let [errors, setErrors] = useState(blankErrors);
     let [errorLabels, setErrorLabels] = useState(blankErrorLabels);
     let [products, setProducts] = useState([]);
-
+    let [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -154,16 +155,17 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
         data.firstWorkplaceIdEmployee = data.firstWorkplaceIdEmployee.id;
         data.secondWorkplaceIdEmployee = data.secondWorkplaceIdEmployee.id;
         data.thirdWorkplaceIdEmployee = data.thirdWorkplaceIdEmployee.id;
-        setLoader(true);
+        if (!data.series) delete data.series;
+        setIsSubmitting(true);
         ProductionReportService.save(data, loggedUser.id)
             .then(data => {
-                setLoader(false);
+                setIsSubmitting(false);
                 setMessages(['Dodano raport']);
                 setOpenMessage(true);
                 setFormData(blankForm);
             })
             .catch(err => {
-                setLoader(false);
+                setIsSubmitting(false);
                 setMessages(['Nie udało się zapisać raportu', 'wystąpił błąd łączności', `status ${err}`]);
                 setOpenMessage(true);
             })
@@ -531,7 +533,8 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                     />
                 </Grid>
                 <Grid justify='flex-end' container>
-                    <PrimaryButton value='ZAPISZ' onClick={handleSubmit} />
+
+                    <ButtonLoader isSubmitting={isSubmitting} value='ZAPISZ' onClick={handleSubmit} />
                 </Grid>
             </Grid>
         </Grid >

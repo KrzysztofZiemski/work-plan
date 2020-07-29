@@ -18,13 +18,14 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const DialogMessage = ({ open, close, messages }) => {
+
     const classes = useStyles()
     return (
         <div>
             <Dialog
                 open={open}
                 onClose={close}
-                aria-labelledby="alert-dialog-title"
+                aria-labelledby="alert-dialog-message"
                 aria-describedby="alert-dialog-description"
             >
                 {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -7,7 +7,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import DialogMessage from '../../components/DialogMessage';
 const StyledTableCell = withStyles((theme) => ({
     head: {
         backgroundColor: theme.palette.common.black,
@@ -23,6 +22,9 @@ const StyledTableRow = withStyles((theme) => ({
         '&:nth-of-type(odd)': {
             backgroundColor: theme.palette.action.hover,
         },
+        '&:last-child': {
+            borderTop: 'black 3px solid'
+        },
         '& *': {
             textAlign: 'center'
         }
@@ -30,33 +32,18 @@ const StyledTableRow = withStyles((theme) => ({
 
 }))(TableRow);
 
-const createData = (name, calories, fat, carbs, protein) => {
-    return { name, calories, fat, carbs, protein };
-}
-const createCell = (cell, comnponent) => <StyledTableCell key={cell} component={comnponent ? comnponent : null} scope="row">{cell}</StyledTableCell>
+const createCell = (cell, comnponent, key) => <StyledTableCell key={cell + key} component={comnponent ? comnponent : null} scope="row">{cell}</StyledTableCell>
 const renderRow = (arr) => {
     return arr.map((row, index) => {
+
         return (
             <StyledTableRow key={`${index}tableRow`} >
-                {row.map((cell, index) => index === 0 ? createCell(cell, 'th') : createCell(cell))}
+                {row.map((cell, index) => index === 0 ? createCell(cell, 'th', `${index}th`) : createCell(cell, 'td', index))}
             </StyledTableRow >
         )
     })
-}
-const rows = [
-    createData('Produkty', 159, 6.0, 24, 4.0),
-    createData('Wydajność', 237, 9.0, 37, 4.3),
-    createData('Prędkość', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-const rows2 = [
-    ['Produkty', 159, 6.0, 24, 4.0],
-    ['Wydajność', 237, 9.0, 37, 4.3],
-    ['Prędkość', 262, 16.0, 24, 6.0],
-    ['Cupcake', 305, 3.7, 67, 4.3],
-    ['Gingerbread', 356, 16.0, 49, 3.9]
-]
+};
+
 
 const useStyles = makeStyles({
     table: {
@@ -68,25 +55,9 @@ const useStyles = makeStyles({
     }
 });
 
-
-export const TableDetails = ({ headers }) => {
+export const TableDetails = ({ headers, rows }) => {
 
     const classes = useStyles();
-    const renderCell = (arr) => {
-        return arr.map(row => {
-            return (
-                <StyledTableRow key={row.name} >
-                    <StyledTableCell component="th" scope="row">
-                        {row.name}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">{row.calories}</StyledTableCell>
-                    <StyledTableCell align="right">{row.fat}</StyledTableCell>
-                    <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-                    <StyledTableCell align="right">{row.protein}</StyledTableCell>
-                </StyledTableRow>
-            )
-        })
-    }
     const renderHeaders = () => headers.map(header => <StyledTableCell className={classes.cells} key={`${header} tableHeader`}>{header ? header : null}</StyledTableCell>)
 
     return (
@@ -94,27 +65,11 @@ export const TableDetails = ({ headers }) => {
             <Table className={classes.table} aria-label="customized table">
                 <TableHead>
                     <TableRow>
-                        {/* <StyledTableCell></StyledTableCell>
-                        <StyledTableCell align="right">Stanowisko 1</StyledTableCell>
-                        <StyledTableCell align="right">Stanowisko 2</StyledTableCell>
-                        <StyledTableCell align="right">Stanowisko 3</StyledTableCell>
-                        <StyledTableCell align="right">Podsumowanie</StyledTableCell> */}
                         {renderHeaders()}
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {/* {rows.map((row) => (
-                        <StyledTableRow key={row.name}>
-                            <StyledTableCell component="th" scope="row">
-                                {row.name}
-                            </StyledTableCell>
-                            <StyledTableCell align="right">{row.calories}</StyledTableCell>
-                            <StyledTableCell align="right">{row.fat}</StyledTableCell>
-                            <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-                            <StyledTableCell align="right">{row.protein}</StyledTableCell>
-                        </StyledTableRow>
-                    ))} */}
-                    {renderRow(rows2)}
+                    {renderRow(rows)}
                 </TableBody>
             </Table>
         </TableContainer>

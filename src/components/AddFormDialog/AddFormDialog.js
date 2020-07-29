@@ -111,7 +111,7 @@ export const AddFormDialog = ({ onSubmit, fields, button, title }) => {
                         <InputLabel id={`${field.label}-${index}`} error={errors && errors[field.name]}> {field.label}</InputLabel>
                         <Select
                             label={field.label}
-                            value={fieldsValue ? fieldsValue[field.name] : ''}
+                            value={value}
                             onChange={(e) => handleChangeSelect(field.name, e.target.value)}
                             error={errors && errors[field.name]}
                         >

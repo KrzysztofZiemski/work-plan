@@ -63,6 +63,7 @@ export const LoginPage = () => {
                         setStatus(false);
                     }
                     catch (err) {
+                        console.log('rrr', err)
                         setSubmitting(false);
                         if (loggedUser !== false) setLoggedUser(false)
                         const status = err.response.status;

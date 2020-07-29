@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 
-const ButtonLoader = ({ isSubmitting, className, value, fullWidth = true }) => {
+const ButtonLoader = ({ isSubmitting, className, value, fullWidth = true, onClick }) => {
 
     return (
         <Button
@@ -11,6 +11,7 @@ const ButtonLoader = ({ isSubmitting, className, value, fullWidth = true }) => {
             color="primary"
             className={className}
             disabled={isSubmitting}
+            onClick={onClick}
         >
             {!isSubmitting && value}
             {isSubmitting &&

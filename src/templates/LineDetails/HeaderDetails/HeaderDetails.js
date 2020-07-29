@@ -107,7 +107,7 @@ export const HeaderDetails = ({ content, id, setMessage }) => {
         ],
         options,
         type
-    })
+    });
     const convertNumber = (number) => {
         if (!number && number !== 0) return;
 
@@ -122,9 +122,9 @@ export const HeaderDetails = ({ content, id, setMessage }) => {
 
         const getLastStats = async () => {
             try {
-                const last24Hoptions = getDataRequest(subtractionDate(100), subtractionDate(0));
-                const last7Doptions = getDataRequest(subtractionDate(50), subtractionDate(0));
-                const last30Doptions = getDataRequest(subtractionDate(100), subtractionDate(0));
+                const last24Hoptions = getDataRequest(subtractionDate(1), subtractionDate(0));
+                const last7Doptions = getDataRequest(subtractionDate(7), subtractionDate(0));
+                const last30Doptions = getDataRequest(subtractionDate(30), subtractionDate(0));
 
                 const last24H = await statisticsService.create(last24Hoptions).then(data => data.options);
                 const last7Days = await statisticsService.create(last7Doptions).then(data => data.options);
@@ -148,8 +148,8 @@ export const HeaderDetails = ({ content, id, setMessage }) => {
         const titles = [];
         const values = [];
         content.forEach((element, index) => {
-            titles.push(<Typography key={element.name + index} component={'p'}>{element.name}</Typography>)
-            values.push(<Typography key={element.value + index} component={element.type ? element.type : 'p'}>{element.value}</Typography>)
+            titles.push(<Typography key={`${element.name}${index}`} component={'p'}>{element.name}</Typography>)
+            values.push(<Typography key={`${element.value}${index}`} component={element.type ? element.type : 'p'}>{element.value}</Typography>)
         })
         return (
             <>
