@@ -2,8 +2,16 @@ import React, { useState, useEffect } from 'react';
 
 import LineService from '../../services/LineService';
 import DialogMessage from '../../components/DialogMessage';
-import HeaderDetails from './HeaderDetails';
+import { makeStyles } from '@material-ui/core/styles';
+
 import StatisticsContainer from './StatisticsContainer';
+import { Grid, Card } from '@material-ui/core';
+import HeaderDetailsCircles from '../../components/HeaderDetailsCircles';
+import HeaderDetails from './../../components/HeaderDetails';
+
+const styles = makeStyles(({
+
+}))
 
 const LineDetails = props => {
     const { match: { params } } = props;
@@ -42,7 +50,11 @@ const LineDetails = props => {
     return (
         <div>
             <DialogMessage open={message.isOpen} close={handleCloseMessage} messages={message.text} />
-            <HeaderDetails content={content} type='LINE' setMessage={setMessage} id={params.idLine} />
+            <Card container component={Grid}>
+                <HeaderDetails content={content} />
+                <HeaderDetailsCircles title='Produkcja' id={params.idLine} type='LINE' setMessage={setMessage} />
+            </Card>
+            {/* <HeaderDetails content={content} type='LINE' setMessage={setMessage} id={params.idLine} /> */}
             <StatisticsContainer id={params.idLine} type='LINE' />
         </div >
     );

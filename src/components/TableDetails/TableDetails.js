@@ -34,8 +34,9 @@ const StyledTableRow = withStyles((theme) => ({
 
 const createCell = (cell, comnponent, key) => <StyledTableCell key={cell + key} component={comnponent ? comnponent : null} scope="row">{cell}</StyledTableCell>
 const renderRow = (arr) => {
+    if (!Array.isArray(arr)) return null;
     return arr.map((row, index) => {
-
+        if (!Array.isArray(row)) return null;
         return (
             <StyledTableRow key={`${index}tableRow`} >
                 {row.map((cell, index) => index === 0 ? createCell(cell, 'th', `${index}th`) : createCell(cell, 'td', index))}

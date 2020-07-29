@@ -95,10 +95,11 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
         thirdWorkplaceIdEmployee: false,
         totalQuantityProduced: false
     }
+    //series: '.{3,20}|^$',
     let patterns = {
         lineId: '.{1,20}',
         productId: '.{1,20}',
-        series: '.{3,20}|^$',
+        series: '.{3,20}',
         speedMachinePerMinute: `^[1-9][0-9]*$`,
         totalQuantityProduced: '(.{1,20})'
     }

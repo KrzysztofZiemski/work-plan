@@ -31,13 +31,13 @@
 //     return output;
 // }
 
-export const getProductsReport = (reportsArr) => {
-    const products = reportsArr.map(report => report.product);
-    const output = [];
-    products.forEach(productOne => {
-        let duplicate = false;
-        output.forEach(productTwo => { if (productOne.id === productTwo.id) duplicate = true });
-        if (!duplicate) output.push(productOne);
-    });
-    return output;
-}
+// export const getProductsReport = (reportsArr) => {
+//     const products = reportsArr.map(report => report.product);
+//     const output = [];
+//     products.forEach(productOne => {
+//         let duplicate = false;
+//         output.forEach(productTwo => { if (productOne.id === productTwo.id) duplicate = true });
+//         if (!duplicate) output.push(productOne);
+//     });
+//     return output;
+// }

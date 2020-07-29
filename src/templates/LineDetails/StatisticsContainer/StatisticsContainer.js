@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 // import FormControl from '@material-ui/core/FormControl';
@@ -10,9 +10,8 @@ import TableDetails from './../../../components/TableDetails';
 import ButtonLoader from '../../../components/ButtonLoader';
 
 import DateTimePicker from './../../../components/DateTimePicker';
-import { getCorrectlyFormatData, subtractionDate } from '../../../helpers/dataHelper';
+import { subtractionDate } from '../../../helpers/dateHelper';
 // import { getEmployeesReports, getSeriesReports } from '../../../helpers/statisticsHelper';
-import { getProductsReport } from '../../../helpers/statisticsHelper';
 import DialogMessage from '../../../components/DialogMessage';
 // import { AddFilter } from '../../../components/AddFilter/AddFilter';
 import { TextField } from '@material-ui/core';
@@ -41,12 +40,6 @@ const useStyles = makeStyles(({
     seriesInput: {
         margin: '10px 0'
     }
-    // filterSelect: {
-    //     margin: '10px 0'
-    // },
-    // options: {
-    //     textTransform: 'capitalize'
-    // }
 }));
 
 
@@ -54,14 +47,17 @@ const useStyles = makeStyles(({
 const headersTable = [' ', 'Ilość wyprodukowana', 'Wydajność', 'Prędkość', 'Wydajność na godzinę'];
 
 const StatisticsContainer = ({ id, type }) => {
+
     const classes = useStyles();
-    let [stats, setStats] = useState('');
     let [dateStart, setDateStart] = useState(subtractionDate(30));
     let [dateEnd, setDateEnd] = useState(subtractionDate(0));
     let [isFetching, setFetching] = useState(false);
     let [message, setMessage] = useState({ isOpen: false, text: [] });
-    let [dataTable, setDataTable] = useState([]);
+    let [dataTable, setDataTable] = useState(['Brak produktów spełniających kryteria', "0", "s", "d", "d"]);
     let [seriesFilter, setSeriesFilter] = useState('');
+
+    if (!id || !type) return;
+    //przy każdej zmianie wartości aktualizuje się od razu, a nie po przyciśnięiu przycisku i 400
 
     const handleCloseMessage = () => {
         setMessage({ isOpen: false, text: [] })
@@ -70,38 +66,14 @@ const StatisticsContainer = ({ id, type }) => {
     const handleSeriesFilter = ({ target }) => {
         setSeriesFilter(target.value)
     }
-    //przy każdej zmianie wartości aktualizuje się od razu, a nie po przyciśnięiu przycisku i 400
-    const getReport = useCallback(() => {
+
+    const getReportByProduct = async () => {
+        const dataProducts = { id, type, start: dateStart, end: dateEnd }
+        const products = await statistics.getProductsInReports(dataProducts);
+
         const data = {
-            start: getCorrectlyFormatData(dateStart),
-            end: getCorrectlyFormatData(dateEnd),
-            idItems: [id],
-            type,
-            options: { averagePerHour: true, percentage: true, averageSpeed: true, totalProduced: true }
-        }
-        if (seriesFilter) data.options.series = seriesFilter
-
-        return statistics.create(data)
-            .then(data => {
-                setStats(data);
-                setFetching(false);
-            })
-            .catch(err => {
-                setMessage({ isOpen: true, text: ['Wystąpił błąd łączności', `${err}`, 'spróbuj ponownie'] });
-                setFetching(false);
-            })
-    }, [])
-
-    // getProductsReport
-
-    //usrtawić loader i errory
-    const getReportByProduct = () => {
-
-        if (!stats.dataReport) return
-        const products = getProductsReport(stats.dataReport);
-        const data = {
-            start: getCorrectlyFormatData(dateStart),
-            end: getCorrectlyFormatData(dateEnd),
+            start: dateStart,
+            end: dateEnd,
             idItems: [id],
             type,
             options: {}
@@ -120,12 +92,14 @@ const StatisticsContainer = ({ id, type }) => {
         Promise.all(productRequests)
             .then(dataArr => {
                 const rows = [];
+                setFetching(false);
                 dataArr.forEach(data => {
-                    setFetching(false);
+                    if (data.options.totalProduced === 0) return;
                     const name = data.options.product ? data.options.product : 'Total';
                     const row = [name, data.options.totalProduced, `${data.options.percentage}%`, data.options.averageSpeed, data.options.averagePerHour];
                     rows.push(row);
                 })
+                if (rows.length === 0) rows.push(['Brak produktów spełniających kryteria', 0, 0, 0, 0])
                 setDataTable(rows);
             })
             .catch(err => {
@@ -137,14 +111,6 @@ const StatisticsContainer = ({ id, type }) => {
             })
     }
 
-    useEffect(() => {
-        if (id && type) {
-            getReport();
-        }
-        return () => {
-            setFetching(false)
-        }
-    }, [id, type, getReport]);
 
     return (
         <Grid container className={classes.root}>

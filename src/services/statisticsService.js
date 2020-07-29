@@ -1,5 +1,6 @@
 import axios from '../utils/axios';
 import { SERVER } from '../config';
+import { getCorrectlyFormatData } from '../helpers/dateHelper';
 const SERVER_STATISTICS = `${SERVER}/api/v1/statistic-report`;
 const options = {
     averagePerHour: 'averagePerHour',
@@ -13,16 +14,33 @@ const options = {
     line: 'line',
     series: 'series'
 }
-
-const create = ({ start, end, idItems, type, options }) => {
+const getProductsInReports = ({ id, start, end, type = 'LINE', options = {} }) => {
     const data = {
-        start, end, idItems, type, options: options ? options : {}
+        start: getCorrectlyFormatData(start),
+        end: getCorrectlyFormatData(end),
+        idItems: Array.isArray(id) ? id : [id],
+        type,
+        options
     }
+
+    return axios.post(`${SERVER_STATISTICS}/products`, JSON.stringify(data))
+        .then(res => res.data)
+        .catch(err => Promise.reject(err.response.status));
+}
+const create = ({ start, end, id, type, options = {} }) => {
+    const data = {
+        start: getCorrectlyFormatData(start),
+        end: getCorrectlyFormatData(end),
+        idItems: id,
+        type,
+        options
+    }
+
     return axios.post(`${SERVER_STATISTICS}`, JSON.stringify(data))
         .then(res => res.data)
         .catch(err => Promise.reject(err.response.status));
 }
-const createCircle = ({ start, end, idItems, type, options }) => {
+const createCircle = ({ start, end, idItems, type, options = {} }) => {
     const defaultOptions = {
         totalProduced: true,
         averageSpeed: true,
@@ -30,9 +48,13 @@ const createCircle = ({ start, end, idItems, type, options }) => {
         averagePerHour: true,
     }
     const data = {
-        end, idItems: idItems, options: { ...defaultOptions, ...options }, start: start, type: type,
+        end: getCorrectlyFormatData(end),
+        idItems: idItems,
+        options: { ...defaultOptions, ...options },
+        start: getCorrectlyFormatData(start),
+        type,
     }
-    console.log(data)
+
     return axios.post(`${SERVER_STATISTICS}/circleChart`, JSON.stringify(data))
         .then(res => res.data)
         .catch(err => Promise.reject(err.response.status));
@@ -44,4 +66,4 @@ const getOptions = () => {
         .catch(err => Promise.reject(err.response));
 }
 
-export default { create, getOptions, options, createCircle };
+export default { create, getOptions, options, createCircle, getProductsInReports };
