@@ -5,7 +5,7 @@ import { Grid, Card } from '@material-ui/core';
 
 import HeaderDetailsCircles from '../../components/HeaderDetailsCircles';
 import HeaderDetails from './../../components/HeaderDetails';
-import { getProduct } from '../../services/productService';
+import { getProduct } from '../../services/ProductService';
 import DialogMessage from '../../components/DialogMessage';
 import ProductTable from './ProductTable';
 

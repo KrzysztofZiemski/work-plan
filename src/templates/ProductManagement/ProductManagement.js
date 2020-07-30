@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TableProducts from './TableProducts/TableProducts';
 import Loader from '../../components/Loader';
 import DialogMessage from '../../components/DialogMessage';
-import { getProductsByActive, removeProduct, addProduct } from '../../services/productService';
+import { getProductsByActive, removeProduct, addProduct } from '../../services/ProductService';
 import PanelProductsList from './PanelProductsList';
 import AddFormDialog from '../../components/AddFormDialog';
 const useStyles = makeStyles(theme => ({
