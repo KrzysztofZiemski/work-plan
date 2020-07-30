@@ -15,5 +15,5 @@ export default {
     lineManagement: '/management-line',
     lineDetails: '/line',
     userManagement: '/management-user',
-    userDetails: '/user'
+    userDetails: '/user',
 }

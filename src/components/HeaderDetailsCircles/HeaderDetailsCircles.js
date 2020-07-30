@@ -7,10 +7,11 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const styles = makeStyles(({
     root: {
-        flexGrow: 1
+        flexGrow: 1,
     },
     circlesContainer: {
         display: 'flex',
+        flexWrap: 'nowrap',
         justifyContent: 'space-between',
         flexGrow: 1,
         padding: 10,
@@ -69,7 +70,7 @@ export const HeaderDetailsCircles = ({ title, id, type, setMessage, className })
     const getDataRequest = (start, end, options = { percentage: true, totalProduced: true }) => ({
         start,
         end,
-        idItems: [id],
+        id: [id],
         options,
         type
     });
@@ -92,7 +93,7 @@ export const HeaderDetailsCircles = ({ title, id, type, setMessage, className })
                     ...prevStats, last24H: last24H
                 }))
             } catch (err) {
-                setMessage({ isOpen: true, text: ['Coś ssssssposzło nie tak', 'Błąd przy próbie pobrania informacji', `Błąd ${err}`] })
+                setMessage({ isOpen: true, text: ['Coś poszło nie tak', 'Błąd przy próbie pobrania informacji', `Błąd ${err}`] })
             }
         }
         getLastStats();
@@ -111,15 +112,15 @@ export const HeaderDetailsCircles = ({ title, id, type, setMessage, className })
                     <span className={classes.productionTitle__border}></span>
                 </Grid>
                 <Grid className={classes.circle}>
-                    {lastStats.last24H.percentage ? < CircleProgress value={lastStats.last24H.percentage} title='24H' /> : ''}
+                    {lastStats.last24H.percentage || lastStats.last24H.percentage === 0 ? < CircleProgress value={lastStats.last24H.percentage} title='24H' /> : ''}
                     < Typography > {convertNumber(lastStats.last24H.totalProduced)}</Typography>
                 </Grid>
                 <Grid className={classes.circle}>
-                    {lastStats.last7Days.percentage ? < CircleProgress value={lastStats.last7Days.percentage} title='7 dni' /> : ''}
+                    {lastStats.last7Days.percentage || lastStats.last24H.percentage === 0 ? < CircleProgress value={lastStats.last7Days.percentage} title='7 dni' /> : ''}
                     < Typography > {convertNumber(lastStats.last7Days.totalProduced)}</Typography>
                 </Grid>
                 <Grid className={classes.circle}>
-                    {lastStats.last30Days.percentage ? < CircleProgress value={lastStats.last30Days.percentage} title='30 dni' /> : ''}
+                    {lastStats.last30Days.percentage || lastStats.last24H.percentage === 0 ? < CircleProgress value={lastStats.last30Days.percentage} title='30 dni' /> : ''}
                     < Typography > {convertNumber(lastStats.last30Days.totalProduced)}</Typography>
                 </Grid>
             </Grid>

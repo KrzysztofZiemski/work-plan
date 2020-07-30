@@ -8,10 +8,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import PrimaryButton from '../../../components/PrimaryButton';
 import ButtonLoader from '../../../components/ButtonLoader';
 import LineService from '../../../services/LineService';
-import ProductService from '../../../services/ProductService';
+import { getProductsByActive } from '../../../services/productService';
 import { getEmployeesByActive } from '../../../services/employeesRequest';
 import ProductionReportService from '../../../services/ProductionReportService';
 import { UserContext, EmployeesContext, LinesContext } from '../../../App'
@@ -133,7 +132,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
         (async () => {
             const linesPromise = LineService.getAllLines()
                 .then(data => setLinesList(data));
-            const productsPromise = ProductService.getAllProducts()
+            const productsPromise = getProductsByActive()
                 .then(data => setProducts(data));
             const employeePromise = getEmployeesByActive()
                 .then(data => setEmployeesList(data.sort((a, b) => (a.lastName < b.lastName) ? -1 : (a.lastName > b.lastName) ? 1 : 0)));
@@ -372,7 +371,6 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                 </Grid>
                 <h2 className={classes.subTitlesForm}>Parametry</h2>
                 <Grid>
-
                     <FormControl variant="outlined" className={classes.formControl}>
                         <InputLabel id="lineId">Linia</InputLabel>
                         <Select

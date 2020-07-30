@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TableProducts from './TableProducts/TableProducts';
 import Loader from '../../components/Loader';
 import DialogMessage from '../../components/DialogMessage';
-import { getProductsByActive, deleteProduct, addProduct } from '../../services/productRequest';
+import { getProductsByActive, removeProduct, addProduct } from '../../services/productService';
 import PanelProductsList from './PanelProductsList';
 import AddFormDialog from '../../components/AddFormDialog';
 const useStyles = makeStyles(theme => ({
@@ -81,7 +81,7 @@ const fieldsAddProduct = [
     },
 ];
 
-export const ProductManagement = () => {
+export const ProductManagement = ({ className }) => {
     const classes = useStyles();
 
     let [products, setProducts] = useState({
@@ -191,7 +191,7 @@ export const ProductManagement = () => {
 
     const removeProducts = (idArr) => {
         setIsLoaded(true);
-        const promiesList = idArr.map(product => deleteProduct(product.id))
+        const promiesList = idArr.map(product => removeProduct(product.id))
         Promise.all(promiesList)
             .then(results => {
                 const messages = ['Usunięto produkty'];
@@ -235,7 +235,7 @@ export const ProductManagement = () => {
         return products[filterProducts].list;
     }
     return (
-        <Grid container component='section' direction='column'>
+        <Grid container component='section' direction='column' className={className}>
             <DialogMessage open={alert} close={closeAlert} messages={alertMessage} />
             <Grid item>
                 <Typography component='h2' align='center' variant='button' className={classes.header}>

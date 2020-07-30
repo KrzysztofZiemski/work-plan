@@ -15,7 +15,7 @@ const useStyles = makeStyles(({
         }
     }
 }))
-const HomePage = () => {
+const HomePage = ({ className }) => {
     const classes = useStyles()
     let [logs, setLogs] = useState('');
     let [id, setId] = useState('');
@@ -34,7 +34,7 @@ const HomePage = () => {
 
     return (
         <>
-            <section >
+            <section classname={className}>
                 <CssBaseline className={classes.root} />
                 <div >Tu na razie jest ściernisko
                         Ale będzie</div>

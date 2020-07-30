@@ -23,24 +23,7 @@ const fieldsAddLine = [
         type: 'number',
         pattern: '^[1-9][0-9]*$',
         errorMessage: 'musi być liczbą większą od zera'
-    },
-    // {
-    //     name: 'isSerialized',
-    //     label: 'serializacja',
-    //     type: 'select',
-    //     errorMessage: 'pole obowiązkowe',
-    //     pattern: '^([Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee])$',
-    //     options: [
-    //         {
-    //             value: true,
-    //             label: 'TAK'
-    //         },
-    //         {
-    //             value: false,
-    //             label: 'NIE'
-    //         }
-    //     ]
-    // },
+    }
 ];
 const useStyles = makeStyles(theme => ({
     header: {
@@ -53,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const LineManagement = () => {
+export const LineManagement = ({ className }) => {
     const classes = useStyles();
     const { linesList, setLinesList } = useContext(LinesContext);
     let [openMessage, setOpenMessage] = useState(false);
@@ -118,7 +101,7 @@ export const LineManagement = () => {
         setOpenMessage(false);
     }
     return (
-        <Grid container component='section' direction='column'>
+        <Grid container component='section' direction='column' className={className}>
             <DialogMessage open={openMessage} close={handleCloseMessage} messages={message} />
             <Grid item>
                 <Typography component='h2' align='center' variant='button' className={classes.header}>

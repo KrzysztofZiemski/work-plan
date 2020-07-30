@@ -28,19 +28,25 @@ const getProductsInReports = ({ id, start, end, type = 'LINE', options = {} }) =
         .catch(err => Promise.reject(err.response.status));
 }
 const create = ({ start, end, id, type, options = {} }) => {
+    const defaultOptions = {
+        totalProduced: true,
+        averageSpeed: true,
+        percentage: true,
+        averagePerHour: true,
+    }
+
     const data = {
         start: getCorrectlyFormatData(start),
         end: getCorrectlyFormatData(end),
         idItems: id,
         type,
-        options
+        options: { ...defaultOptions, options }
     }
-
     return axios.post(`${SERVER_STATISTICS}`, JSON.stringify(data))
         .then(res => res.data)
         .catch(err => Promise.reject(err.response.status));
 }
-const createCircle = ({ start, end, idItems, type, options = {} }) => {
+const createCircle = ({ start, end, id, type, options = {} }) => {
     const defaultOptions = {
         totalProduced: true,
         averageSpeed: true,
@@ -49,7 +55,7 @@ const createCircle = ({ start, end, idItems, type, options = {} }) => {
     }
     const data = {
         end: getCorrectlyFormatData(end),
-        idItems: idItems,
+        idItems: Array.isArray(id) ? id : [id],
         options: { ...defaultOptions, ...options },
         start: getCorrectlyFormatData(start),
         type,

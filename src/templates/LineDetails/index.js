@@ -1,3 +1,3 @@
-import LineDetails from './LineDetails';
+import { LineDetails } from './LineDetails';
 
 export default LineDetails;

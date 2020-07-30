@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const LoginPage = () => {
+export const LoginPage = ({ className }) => {
     const classes = useStyles();
     const { loggedUser, setLoggedUser } = useContext(UserContext);
     const usernameMsg = 'Musisz uzupełnić pole login';
@@ -47,7 +47,7 @@ export const LoginPage = () => {
     if (loggedUser) return <Redirect to={routes.root} />
 
     return (
-        <section>
+        <section className={className}>
             <Formik
                 initialValues={{
                     username: '',

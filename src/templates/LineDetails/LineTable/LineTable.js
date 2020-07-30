@@ -1,19 +1,14 @@
 import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-// import FormControl from '@material-ui/core/FormControl';
-// import Select from '@material-ui/core/Select';
-// import InputLabel from '@material-ui/core/InputLabel';
 
 import statistics from '../../../services/statisticsService';
-import TableDetails from './../../../components/TableDetails';
+import TableDetails from '../../../components/TableDetails';
 import ButtonLoader from '../../../components/ButtonLoader';
 
-import DateTimePicker from './../../../components/DateTimePicker';
+import DateTimePicker from '../../../components/DateTimePicker';
 import { subtractionDate } from '../../../helpers/dateHelper';
-// import { getEmployeesReports, getSeriesReports } from '../../../helpers/statisticsHelper';
 import DialogMessage from '../../../components/DialogMessage';
-// import { AddFilter } from '../../../components/AddFilter/AddFilter';
 import { TextField } from '@material-ui/core';
 
 const useStyles = makeStyles(({
@@ -57,7 +52,6 @@ const StatisticsContainer = ({ id, type }) => {
     let [seriesFilter, setSeriesFilter] = useState('');
 
     if (!id || !type) return;
-    //przy każdej zmianie wartości aktualizuje się od razu, a nie po przyciśnięiu przycisku i 400
 
     const handleCloseMessage = () => {
         setMessage({ isOpen: false, text: [] })
@@ -74,7 +68,7 @@ const StatisticsContainer = ({ id, type }) => {
         const data = {
             start: dateStart,
             end: dateEnd,
-            idItems: [id],
+            id: [id],
             type,
             options: {}
         }

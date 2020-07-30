@@ -19,7 +19,7 @@ const styles = makeStyles({
     }
 })
 
-export const ProductionReportPage = () => {
+export const ProductionReportPage = ({ className }) => {
     let [messages, setMessages] = useState('')
     let [openMessage, setOpenMessage] = useState(false);
     let [wait, setWait] = useState(false);
@@ -30,7 +30,7 @@ export const ProductionReportPage = () => {
         setOpenMessage(false)
     }
     return (
-        <section>
+        <section classname={className}>
             <Loader open={wait} />
             <DialogMessage open={openMessage} close={handleClose} messages={messages} />
             <Card className={classes.card}>

@@ -1,14 +1,46 @@
-import { SERVER } from '../config';
-const SERVER_LOGS = `${SERVER}/api/v1/product`;
+import axios from '../utils/axios';
 
-class ProductService {
+const PRODUCTS_URL = '/api/v1/product';
+const FILTER_FALSE = '?filterIsActive=false';
 
-    static getAllProducts = () => {
-        return fetch(SERVER_LOGS)
-            .then(res => {
-                if (res.ok === true) return res.json();
-                return Promise.reject(res.status);
-            })
-    }
+export const getProductsByActive = (active = true) => {
+    const URL = active ? PRODUCTS_URL : PRODUCTS_URL + FILTER_FALSE;
+    return axios.get(URL)
+        .then(res => res.data)
+        .catch(err => Promise.reject(err));
 }
-export default ProductService
+
+export const getAllProducts = async () => {
+    try {
+        const activeProduct = await axios.get(PRODUCTS_URL)
+            .then(res => res.data)
+            .catch(err => Promise.reject(err));
+
+        const inActiveProducts = await axios.get(PRODUCTS_URL + FILTER_FALSE)
+            .then(res => res.data)
+            .catch(err => Promise.reject(err));
+
+        return Promise.resolve([...activeProduct, ...inActiveProducts]);
+
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
+export const addProduct = (data) => {
+    return axios.post(PRODUCTS_URL, JSON.stringify(data))
+        .then(res => res.data)
+        .catch(err => Promise.reject(err.response));
+};
+
+export const removeProduct = (id) => {
+    return axios.delete(`${PRODUCTS_URL}/${id}`)
+        .then(res => res.data)
+        .catch(err => Promise.reject(err));
+};
+
+export const getProduct = (id) => {
+    return axios.get(`${PRODUCTS_URL}/${id}`)
+        .then(res => res.data)
+        .catch(err => Promise.reject(err.response))
+}

@@ -210,7 +210,7 @@ const GraphicPage = (props) => {
     }
 
     return (
-        <>
+        <section className={props.className}>
             <DndProvider backend={Backend}>
                 <section className={`${props.className} graphicPage`}>
                     <WorkPlanContext.Provider value={{ setWorkplaceEmployee, removeEmployee, workPlan, dragable, setDragable, submitWorkPlan }}>
@@ -317,7 +317,7 @@ const GraphicPage = (props) => {
 
                 </section >
             </DndProvider>
-        </>
+        </section>
     )
 }
 

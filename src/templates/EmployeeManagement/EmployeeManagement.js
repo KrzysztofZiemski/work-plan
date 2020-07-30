@@ -57,7 +57,7 @@ const fieldsAddEmployee = [
     },
 ];
 
-export const EmployeeManagement = () => {
+export const EmployeeManagement = ({ className }) => {
     const classes = useStyles();
 
     const { employeesList, setEmployeesList, inActiveEmployeesList, setInActiveEmployeesList } = useContext(EmployeesContext);
@@ -162,7 +162,7 @@ export const EmployeeManagement = () => {
     }
     return (
         <>
-            <Grid container component='section' direction='column'>
+            <Grid container component='section' direction='column' className={className}>
                 <DialogMessage open={alert} close={closeAlert} messages={alertMessage} />
                 <Grid item>
                     <Typography component='h2' align='center' variant='button' className={classes.header}>

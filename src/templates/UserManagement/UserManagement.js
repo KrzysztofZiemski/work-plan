@@ -76,7 +76,7 @@ const renderFields = (roleList) => ([
         }))
     },
 ])
-export const UserManagement = () => {
+export const UserManagement = ({ className }) => {
     const classes = useStyles();
     const { roleList, setRoleList } = useContext(RoleContext);
     const { usersList, setUsersList } = useContext(UsersContext);
@@ -155,7 +155,7 @@ export const UserManagement = () => {
         setOpenMessage(false);
     }
     return (
-        <Grid container component='section' direction='column'>
+        <Grid container component='section' direction='column' className={className}>
             <DialogMessage open={openMessage} close={handleCloseMessage} messages={message} />
             <Grid item>
                 <Typography component='h2' align='center' variant='button' className={classes.header}>
