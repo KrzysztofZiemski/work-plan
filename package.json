@@ -1,6 +1,6 @@
 {
   "name": "react-hextl",
-  "homepage": "http://193.59.72.159/hextl",
+  "homepage": "http://localhost:8080",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
