@@ -114,22 +114,6 @@ export const ProductTable = ({ id, type }) => {
             <Grid className={classes.panelFilter}>
                 <DateTimePicker date={dateStart} setDate={setDateStart} name='Czas początkowy' className={classes.date} />
                 <DateTimePicker date={dateEnd} setDate={setDateEnd} name='Czas końcowy' className={classes.date} />
-                <FormControl variant="outlined" className={classes.formControl}>
-                    <InputLabel id="lineId">Linia</InputLabel>
-                    <Select
-                        labelId="lineId"
-                        id="lineSelect"
-                        value={linesFilter}
-                        onChange={handleChangeLine}
-                        name='lineId'
-                        label="Linia"
-                    >
-                        {linesList.map(line => (
-                            <MenuItem key={`line${line.id}`} value={line.id}>{line.name}</MenuItem>
-                        ))}
-                    </Select>
-                    <FormHelperText error>jakis text</FormHelperText>
-                </FormControl>
                 <ButtonLoader onClick={getReportProduct} className={classes.button} value='Pobierz dane' isSubmitting={isFetching} />
             </Grid>
             <Grid className={classes.tableContainer}>
