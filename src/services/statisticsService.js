@@ -40,7 +40,7 @@ const create = ({ start, end, id, type, options = {} }) => {
         end: getCorrectlyFormatData(end),
         idItems: id,
         type,
-        options: { ...defaultOptions, options }
+        options: { ...defaultOptions, ...options }
     }
     return axios.post(`${SERVER_STATISTICS}`, JSON.stringify(data))
         .then(res => res.data)

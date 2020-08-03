@@ -12,7 +12,6 @@ export class UserService {
     static getAll() {
         return fetch(USER_SERVER)
             .then(res => {
-                console.log(res)
                 if (res.ok) return res.json();
                 Promise.reject(res.status)
             })
