@@ -39,6 +39,12 @@ const useStyles = makeStyles(() => ({
         textAlign: 'center',
         fontSize: 20
     }),
+    disable: {
+        backgroundColor: '#aaa',
+        '&:hover': {
+            backgroundColor: '#aaa',
+        }
+    }
 }));
 
 export const NavBarLeft = ({ isActive }) => {
@@ -82,7 +88,10 @@ export const NavBarLeft = ({ isActive }) => {
                         </ListItem>
                     </List>
                 </ListItemCollapse>
-                <ListItemCollapse label='Statystyki' disableStrictModeCompat={true}>
+                <ListItem button to={routes.root} className={classes.disable}>
+                    <ListItemText primary="Statystyki" />
+                </ListItem>
+                {/* <ListItemCollapse label='Statystyki' disableStrictModeCompat={true}>
                     <List component="div" disablePadding>
                         <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 5 ? true : false} onClick={() => setSelected(5)}>
                             <ListItemText primary="Pracownicy" />
@@ -98,7 +107,7 @@ export const NavBarLeft = ({ isActive }) => {
                             <ListItemText primary="Wpisy" />
                         </ListItem>
                     </List>
-                </ListItemCollapse>
+                </ListItemCollapse> */}
                 <ListItemCollapse label='Zarządzanie' disableStrictModeCompat={true}>
                     <List component="div" disablePadding>
                         <ListItem button className={classes.subListItem} component={Link} to={routes.employeeManagement} selected={selected === 8 ? true : false} onClick={() => setSelected(8)}>
@@ -115,25 +124,15 @@ export const NavBarLeft = ({ isActive }) => {
                             <ListItemText primary="Linie" />
                         </ListItem>
                     </List>
+                </ListItemCollapse>
+                <ListItemCollapse label='Administracja' disableStrictModeCompat={true}>
                     <List component="div" disablePadding>
                         <ListItem button className={classes.subListItem} component={Link} to={routes.userManagement} selected={selected === 11 ? true : false} onClick={() => setSelected(11)}>
                             <ListItemText primary="Użytkownicy" />
                         </ListItem>
                     </List>
-                </ListItemCollapse>
-                <ListItemCollapse label='Administracja' disableStrictModeCompat={true}>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 12 ? true : false} onClick={() => setSelected(12)}>
-                            <ListItemText primary="Użytkownik" />
-                        </ListItem>
-                    </List>
-                    <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 13 ? true : false} onClick={() => setSelected(13)}>
-                            <ListItemText primary="Ustawienia" />
-                        </ListItem>
-                    </List>
-                    <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 14 ? true : false} onClick={() => setSelected(14)}>
+                        <ListItem button className={classes.subListItem} component={'a'} target="_blank" href='https://193.59.72.159:8080/swagger-ui.html' selected={selected === 12 ? true : false} onClick={() => setSelected(12)}>
                             <ListItemText primary="Swagger" />
                         </ListItem>
                     </List>

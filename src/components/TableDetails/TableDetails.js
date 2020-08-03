@@ -17,34 +17,6 @@ const StyledTableCell = withStyles((theme) => ({
     },
 }))(TableCell);
 
-const StyledTableRow = withStyles((theme) => ({
-    root: {
-        '&:nth-of-type(odd)': {
-            backgroundColor: theme.palette.action.hover,
-        },
-        '&:last-child': {
-            borderTop: 'black 3px solid'
-        },
-        '& *': {
-            textAlign: 'center'
-        }
-    },
-
-}))(TableRow);
-
-const createCell = (cell, comnponent, key) => <StyledTableCell key={cell + key} component={comnponent ? comnponent : null} scope="row">{cell}</StyledTableCell>
-const renderRow = (arr) => {
-    if (!Array.isArray(arr)) return null;
-    return arr.map((row, index) => {
-        if (!Array.isArray(row)) return null;
-        return (
-            <StyledTableRow key={`${index}tableRow`} >
-                {row.map((cell, index) => index === 0 ? createCell(cell, 'th', `${index}th`) : createCell(cell, 'td', index))}
-            </StyledTableRow >
-        )
-    })
-};
-
 
 const useStyles = makeStyles({
     table: {
@@ -56,17 +28,46 @@ const useStyles = makeStyles({
     }
 });
 
-export const TableDetails = ({ headers, rows }) => {
+export const TableDetails = ({ headers, rows, summary = true }) => {
 
-    const classes = useStyles();
-    const renderHeaders = () => headers.map(header => <StyledTableCell className={classes.cells} key={`${header} tableHeader`}>{header ? header : null}</StyledTableCell>)
+    const classes = useStyles(summary);
+    const renderHeaders = () => headers.map(header => <StyledTableCell className={classes.cells} key={`${header} tableHeader`}>{header ? header : null}</StyledTableCell>);
+
+    const createCell = (cell, comnponent, key) => <StyledTableCell key={cell + key} component={comnponent ? comnponent : null} scope="row">{cell}</StyledTableCell>;
+
+    const StyledTableRow = withStyles((theme) => ({
+        root: {
+            '&:nth-of-type(odd)': {
+                backgroundColor: theme.palette.action.hover,
+            },
+            '&:last-child': {
+                borderTop: summary ? 'black 3px solid' : ''
+            },
+            '& *': {
+                textAlign: 'center'
+            }
+        },
+
+    }))(TableRow);
+
+    const renderRow = (arr) => {
+        if (!Array.isArray(arr)) return null;
+        return arr.map((row, index) => {
+            if (!Array.isArray(row)) return null;
+            return (
+                <StyledTableRow key={`${index}tableRow`} >
+                    {row.map((cell, index) => index === 0 ? createCell(cell, 'th', `${index}th`) : createCell(cell, 'td', index))}
+                </StyledTableRow >
+            )
+        })
+    };
 
     return (
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="customized table">
                 <TableHead>
                     <TableRow>
-                        {renderHeaders()}
+                        {rows && rows.length > 0 ? renderHeaders() : <StyledTableCell className={classes.cells}>Brak danych</StyledTableCell>}
                     </TableRow>
                 </TableHead>
                 <TableBody>
