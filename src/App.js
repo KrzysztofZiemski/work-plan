@@ -23,6 +23,7 @@ const ProductDetails = lazy(() => import('./templates/ProductDetails'));
 const LineManagement = lazy(() => import('./templates/LineManagement'));
 const UserManagement = lazy(() => import('./templates/UserManagement'));
 const LineDetails = lazy(() => import('./templates/LineDetails'));
+const EmployeeDetails = lazy(() => import('./templates/EmployeeDetails'));
 export const UserContext = createContext({
   loggedUser: null,
   setLoggedUser: null
@@ -117,6 +118,7 @@ const App = () => {
                                 <Route path={routes.userManagement} exact render={(props) => <UserManagement className='page' {...props} />} />
                                 <Route path={`${routes.lineDetails}/:idLine`} render={(props) => <LineDetails className='page' {...props} />} />
                                 <Route path={`${routes.productDetails}/:idProduct`} render={(props) => <ProductDetails className='page' {...props} />} />
+                                <Route path={`${routes.employeeDetails}/:idEmployee`} render={(props) => <EmployeeDetails className='page' {...props} />} />
                               </>
                             )
                           }

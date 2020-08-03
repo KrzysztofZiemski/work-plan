@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TableEmployees from './TableEmployees/TableEmployees';
 import Loader from '../../components/Loader';
 import DialogMessage from '../../components/DialogMessage';
-import { getEmployeesByActive, deleteEmployee, addWEmployee } from '../../services/employeesRequest';
+import { getEmployeesByActive, deleteEmployee, addWEmployee } from '../../services/employeesService';
 import PanelEmployeesList from './PanelEmployeesList';
 import AddFormDialog from '../../components/AddFormDialog';
 import { EmployeesContext } from '../../App';

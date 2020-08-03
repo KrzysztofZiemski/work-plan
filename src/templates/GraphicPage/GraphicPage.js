@@ -8,7 +8,7 @@ import Backend from 'react-dnd-html5-backend';
 import { EmployeesContext, UserContext } from '../../App';
 
 import queryString from 'query-string';
-import { getEmployeesByActive } from '../../services/employeesRequest';
+import { getEmployeesByActive } from '../../services/employeesService';
 import NavGraphic from './NavGraphic/NavGraphic';
 import WorkPlace from './WorkPlace/WorkPlace';
 import Employee from './Employee/Employee';

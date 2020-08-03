@@ -38,3 +38,10 @@ export const deleteEmployee = (id) => {
         .then(res => res.data)
         .catch(err => Promise.reject(err));
 };
+
+export const getEmployee = id => {
+    console.log('xxxxx', id)
+    return axios.get(`${WORKERS_URL}/${id}`)
+        .then(res => res.data)
+        .catch(err => Promise.reject(err));
+}

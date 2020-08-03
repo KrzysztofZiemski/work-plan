@@ -11,7 +11,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import ButtonLoader from '../../../components/ButtonLoader';
 import LineService from '../../../services/LineService';
 import { getProductsByActive } from '../../../services/ProductService';
-import { getEmployeesByActive } from '../../../services/employeesRequest';
+import { getEmployeesByActive } from '../../../services/employeesService';
 import ProductionReportService from '../../../services/ProductionReportService';
 import { UserContext, EmployeesContext, LinesContext } from '../../../App'
 
