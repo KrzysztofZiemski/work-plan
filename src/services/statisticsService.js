@@ -60,6 +60,7 @@ const createCircle = ({ start, end, id, type, options = {} }) => {
         start: getCorrectlyFormatData(start),
         type,
     }
+    console.log(data)
 
     return axios.post(`${SERVER_STATISTICS}/circleChart`, JSON.stringify(data))
         .then(res => res.data)

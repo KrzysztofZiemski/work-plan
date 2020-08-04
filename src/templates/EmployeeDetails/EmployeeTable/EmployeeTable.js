@@ -10,10 +10,12 @@ import statistics from '../../../services/statisticsService';
 import TableDetails from '../../../components/TableDetails';
 import ButtonLoader from '../../../components/ButtonLoader';
 import LineService from '../../../services/LineService';
+import TabBars from '../../../components/TabBars';
 
 
 const headersTable = [' ', 'Ilość wyprodukowana', 'Wydajność', 'Prędkość', 'Wydajność na godzinę'];
 const headerReports = ['Czas', 'Wyprodukowano', 'Seria', 'Czas Produkcji', 'Prędkość', 'Linia', 'Stanowisko 1', 'Stanowisko 2', 'Stanowisko 3']
+const tabHeaders = ['Wszystkie', 'stanowisko pierwsze', 'stanowisko drugie', 'stanowisko trzecie']
 
 const useStyles = makeStyles(({
     root: {
@@ -55,7 +57,12 @@ export const EmployeeTable = ({ id, type }) => {
     let [dateEnd, setDateEnd] = useState(subtractionDate(0));
     let [isFetching, setFetching] = useState(false);
     let [message, setMessage] = useState({ isOpen: false, text: [] });
-    let [dataTable, setDataTable] = useState([]);
+
+    let [dataTableAll, setDataTableAll] = useState([]);
+    let [dataTableFirstWorkplace, setDataTableFirstWorkplace] = useState([]);
+    let [dataTableSecondWorkplace, setDataTableSecondWorkplace] = useState([]);
+    let [dataTableThirdWorkplace, setDataTableThirdWorkplace] = useState([]);
+
     let [linesFilter, setLinesFilter] = useState('');
     let [linesList, setLinesList] = useState([]);
     let [reports, setReports] = useState([]);
@@ -65,7 +72,8 @@ export const EmployeeTable = ({ id, type }) => {
         LineService.getAllLines()
             .then(data => setLinesList(data))
             .catch(err => setMessage({ isOpen: true, text: ['Wystąpił błąd podczas wczytywania zasobu', `Błąd ${err}`] }))
-    }, [])
+    }, []);
+
     if (!id || !type) return;
 
     const handleCloseMessage = () => {
@@ -74,55 +82,76 @@ export const EmployeeTable = ({ id, type }) => {
     const handleChangeLine = (e) => {
         setLinesFilter(e.target.value);
     }
-
-    const getReportEmployee = async () => {
+    const getDataTables = (options = {}, isGetReports = false) => {
         const dataRequest = {
             start: dateStart,
             end: dateEnd,
             id: [id],
             type,
-            options: {}
-        }
-        try {
-            setFetching(true);
-            if (linesFilter) {
-                dataRequest.options = { line: linesFilter };
-                const response = await statistics.create(dataRequest);
+            options
+        };
+        return isGetReports ? statistics.create(dataRequest) : statistics.createCircle(dataRequest);
+    };
 
-                const dataTable = [response.options.line, response.options.totalProduced, response.options.percentage, response.options.averageSpeed, response.options.averagePerHour];
+    const convertToDataTable = (report) => [report.options.line ? report.options.line : 'Podsumowanie', report.options.totalProduced, report.options.percentage, report.options.averageSpeed, report.options.averagePerHour];
+    const getReportEmployee = async () => {
+        setFetching(true);
 
-                setReports(response.dataReport);
-                setDataTable([dataTable]);
-            } else {
-                const requests = linesList.map(line => {
-                    dataRequest.options = { line: line.id };
-                    return statistics.create(dataRequest);
-                });
+        const linesToRequest = linesFilter ? [{ id: linesFilter }] : linesList;
 
-                Promise.all(requests).then(async responses => {
-                    const reportList = [];
+        const dataAllWorkplaces = [];
+        const dataFirstWorkplace = [];
+        const dataSecondWorkplace = [];
+        const dataThirdWorkplace = [];
+        const promises = linesToRequest.map(async (line, index) => {
+            const options = { line: line.id };
 
-                    const dataTable = responses.map(response => {
-                        reportList.push(...response.dataReport)
-                        return [response.options.line, response.options.totalProduced, response.options.percentage, response.options.averageSpeed, response.options.averagePerHour];
-                    });
+            const all = await getDataTables(options, true);
+            dataAllWorkplaces.push(convertToDataTable(all));
 
-                    dataRequest.options = {};
-                    const summaryResponse = await statistics.create(dataRequest);
-                    const summaryData = ['Podsumowanie', summaryResponse.options.totalProduced, summaryResponse.options.percentage, summaryResponse.options.averageSpeed, summaryResponse.options.averagePerHour];
+            options.firstWorkplace = +id;
+            const first = await getDataTables(options);
+            dataFirstWorkplace.push(convertToDataTable(first));
 
-                    dataTable.push(summaryData);
+            delete options.firstWorkplace;
+            options.secondWorkplace = +id;
+            const second = await getDataTables(options);
+            dataSecondWorkplace.push(convertToDataTable(second));
 
-                    setReports(reportList);
-                    setDataTable(dataTable);
+            delete options.secondWorkplace;
+            options.thirdWorkplace = +id;
+            const third = await getDataTables(options);
+            dataThirdWorkplace.push(convertToDataTable(third));
+            if (index === linesToRequest.length - 1 && linesToRequest.length > 1) {
+                delete options.line;
+                const all = await getDataTables(options, true);
+                dataAllWorkplaces.push(convertToDataTable(all));
 
-                })
+                options.firstWorkplace = +id;
+                const first = await getDataTables(options);
+                dataFirstWorkplace.push(convertToDataTable(first));
+
+                delete options.firstWorkplace;
+                options.secondWorkplace = +id;
+                const second = await getDataTables(options);
+                dataSecondWorkplace.push(convertToDataTable(second));
+
+                delete options.secondWorkplace;
+                options.thirdWorkplace = +id;
+                const third = await getDataTables(options);
+                dataThirdWorkplace.push(convertToDataTable(third));
             }
+            return Promise.resolve();
+        })
+        Promise.all(promises).then(t => {
             setFetching(false);
-        } catch (err) {
-            setFetching(false);
-            setMessage({ isOpen: true, text: ['Nie udało się pobrać danych', `Błąd ${err}`] });
-        }
+            setDataTableAll(dataAllWorkplaces);
+            setDataTableFirstWorkplace(dataFirstWorkplace);
+            setDataTableSecondWorkplace(dataSecondWorkplace);
+            setDataTableThirdWorkplace(dataThirdWorkplace);
+        })
+
+
     }
     const renderReports = () => {
         if (!reports) return [];
@@ -134,6 +163,13 @@ export const EmployeeTable = ({ id, type }) => {
         })
 
     }
+    const dataTableComponents = () => ([
+        <TableDetails headers={headersTable} rows={dataTableAll ? dataTableAll : []} summary={dataTableAll && dataTableAll.length > 1} />,
+        <TableDetails headers={headersTable} rows={dataTableFirstWorkplace ? dataTableFirstWorkplace : []} summary={dataTableFirstWorkplace && dataTableFirstWorkplace.length > 1} />,
+        <TableDetails headers={headersTable} rows={dataTableSecondWorkplace ? dataTableSecondWorkplace : []} summary={dataTableSecondWorkplace && dataTableSecondWorkplace.length > 1} />,
+        <TableDetails headers={headersTable} rows={dataTableThirdWorkplace ? dataTableThirdWorkplace : []} summary={dataTableThirdWorkplace && dataTableThirdWorkplace.length > 1} />
+    ]);
+
     return (
         <Grid container>
             <Grid container className={classes.root}>
@@ -159,9 +195,7 @@ export const EmployeeTable = ({ id, type }) => {
                     </FormControl>
                     <ButtonLoader onClick={getReportEmployee} className={classes.button} value='Pobierz dane' isSubmitting={isFetching} />
                 </Grid>
-                <Grid className={classes.tableContainer}>
-                    <TableDetails headers={headersTable} rows={dataTable ? dataTable : []} />
-                </Grid>
+                <TabBars headers={tabHeaders} components={dataTableComponents()} />
             </Grid>
             {reports.length > 0 ? <Grid container>
                 <Typography component='h2' className={classes.reportsHeader}>Raporty</Typography>

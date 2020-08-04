@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { getProduct } from '../../services/ProductService';
 import DialogMessage from '../../components/DialogMessage';
 import Grid from '@material-ui/core/Grid';
 import HeaderDetails from '../../components/HeaderDetails';

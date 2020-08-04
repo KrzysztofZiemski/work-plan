@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
+
 import { subtractionDate } from '../../../helpers/dateHelper';
 import { Select, InputLabel, FormControl, MenuItem, Typography } from '@material-ui/core';
 import { getCorrectlyFormatData } from './../../../helpers/dateHelper';
@@ -10,7 +12,7 @@ import statistics from '../../../services/statisticsService';
 import TableDetails from '../../../components/TableDetails';
 import ButtonLoader from '../../../components/ButtonLoader';
 import LineService from '../../../services/LineService';
-
+import TabBars from '../../../components/TabBars';
 
 const headersTable = [' ', 'Ilość wyprodukowana', 'Wydajność', 'Prędkość', 'Wydajność na godzinę'];
 const headerReports = ['Czas', 'Wyprodukowano', 'Seria', 'Czas Produkcji', 'Prędkość', 'Linia', 'Stanowisko 1', 'Stanowisko 2', 'Stanowisko 3']
