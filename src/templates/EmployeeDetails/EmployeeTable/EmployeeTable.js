@@ -105,9 +105,14 @@ export const EmployeeTable = ({ id, type }) => {
         const dataThirdWorkplace = [];
         const promises = linesToRequest.map(async (line, index) => {
             const options = { line: line.id };
-
-            const all = await getDataTables(options, true);
-            dataAllWorkplaces.push(convertToDataTable(all));
+            if (linesToRequest.length === 1) {
+                const all = await getDataTables(options, true);
+                dataAllWorkplaces.push(convertToDataTable(all));
+                setReports(all.dataReport);
+            } else {
+                const all = await getDataTables(options);
+                dataAllWorkplaces.push(convertToDataTable(all));
+            }
 
             options.firstWorkplace = +id;
             const first = await getDataTables(options);
@@ -125,6 +130,7 @@ export const EmployeeTable = ({ id, type }) => {
             if (index === linesToRequest.length - 1 && linesToRequest.length > 1) {
                 delete options.line;
                 const all = await getDataTables(options, true);
+                setReports(all.dataReport);
                 dataAllWorkplaces.push(convertToDataTable(all));
 
                 options.firstWorkplace = +id;
@@ -156,7 +162,6 @@ export const EmployeeTable = ({ id, type }) => {
     const renderReports = () => {
         if (!reports) return [];
         return reports.map(report => {
-            console.log(getCorrectlyFormatData(report.startProduction))
             return ([
                 `${getCorrectlyFormatData(report.startProduction)}  -  ${getCorrectlyFormatData(report.endProduction)}`, report.totalQuantityProduced, report.series, `${report.performancePerHour} h`, report.speedMachinePerCycle, report.line.name, `${report.firstWorkplace.name} ${report.firstWorkplace.lastName}`, `${report.secondWorkplace.name} ${report.secondWorkplace.lastName}`, `${report.thirdWorkplace.name} ${report.thirdWorkplace.lastName}`
             ])

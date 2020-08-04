@@ -21,7 +21,7 @@ export const EmployeeDetails = ({ match, className }) => {
     const classes = styles();
     let [message, setMessage] = useState({ isOpen: false, text: [] });
     let [employee, setEmployee] = useState('');
-    console.log('employee', employee)
+
     useEffect(() => {
         getEmployee(params.idEmployee)
             .then(data => setEmployee(data))
