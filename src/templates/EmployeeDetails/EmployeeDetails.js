@@ -58,14 +58,14 @@ export const EmployeeDetails = ({ match, className }) => {
 
     const handleCloseMessage = () => setMessage({ isOpen: false, text: [] })
     return (
-        <div>
+        <Grid container>
             <DialogMessage open={message.isOpen} close={handleCloseMessage} messages={message.text} />
             <Card container component={Grid} className={classes.header}>
                 <HeaderDetails content={content} />
                 <HeaderDetailsCircles title='Produkcja' id={params.idEmployee} type='EMPLOYEE' setMessage={setMessage} />
-                <EmployeeTable />
             </Card>
-        </div>
+            <EmployeeTable id={params.idEmployee} type='EMPLOYEE' />
+        </Grid>
     );
 };
 
