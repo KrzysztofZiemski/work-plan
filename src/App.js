@@ -12,7 +12,7 @@ import Loader from './components/Loader';
 import { AuthService } from './services/AuthService';
 import { default as routes } from './utils/routes';
 import Logout from './components/Logout';
-const GraphicPage = lazy(() => import('./templates/GraphicPage/GraphicPage'));
+const GraphicPage = lazy(() => import('./templates/EditGraphicPage/GraphicPage'));
 const HomePage = lazy(() => import('./templates/HomePage/HomePage'));
 const ProductionReportPage = lazy(() => import('./templates/ProductionReportPage'));
 const EmployeeManagement = lazy(() => import('./templates/EmployeeManagement'));
