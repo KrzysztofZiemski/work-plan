@@ -1,7 +1,7 @@
 export default {
     root: '/',
     workPlan: '/workplan',
-    workPlanEdit: '/workplan?edit=1',
+    workPlanEdit: '/workplan-edit',
     login: '/login',
     logout: '/logout',
     settings: '/settings',

@@ -7,13 +7,19 @@ import {
     KeyboardTimePicker,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
+import { makeStyles } from '@material-ui/core/styles';
 
+const useStyles = makeStyles(({
+    root: {
+        flexWrap: 'nowrap'
+    }
+}))
 
 // The first commit of Material-UI
 
 
 export const DateTimePicker = ({ name = '', date, setDate, className }) => {
-
+    const classes = useStyles()
     useEffect(() => {
         if (!date) {
             setDate(new Date(Date.now()))
@@ -28,7 +34,7 @@ export const DateTimePicker = ({ name = '', date, setDate, className }) => {
         <Grid className={className}>
             <legend>{name}</legend>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <Grid container style={{ flexWrap: 'nowrap' }}>
+                <Grid container={className ? false : true} className={className ? className : classes.root}>
                     <KeyboardDatePicker
                         variant="inline"
                         format="dd/MM/yyyy"

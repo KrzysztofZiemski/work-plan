@@ -13,6 +13,7 @@ import { AuthService } from './services/AuthService';
 import { default as routes } from './utils/routes';
 import Logout from './components/Logout';
 const GraphicPage = lazy(() => import('./templates/EditGraphicPage/GraphicPage'));
+const ViewGrafikPage = lazy(() => import('./templates/ViewGrafikPage'));
 const HomePage = lazy(() => import('./templates/HomePage/HomePage'));
 const ProductionReportPage = lazy(() => import('./templates/ProductionReportPage'));
 const EmployeeManagement = lazy(() => import('./templates/EmployeeManagement'));
@@ -66,7 +67,7 @@ const App = () => {
   let [usersList, setUsersList] = useState([]);
   let [roleList, setRoleList] = useState([]);
   let [linesList, setLinesList] = useState([]);
-  console.log(loggedUser)
+
   const classes = useStyles();
 
   useEffect(() => {
@@ -109,7 +110,8 @@ const App = () => {
                           {
                             !loggedUser ? null : (
                               <>
-                                <Route path={routes.workPlan} exact render={(props) => <GraphicPage className='page' {...props} />} />
+                                <Route path={routes.workPlanEdit} exact render={(props) => <GraphicPage className='page' {...props} />} />
+                                <Route path={routes.workPlan} exact render={(props) => <ViewGrafikPage className='page' {...props} />} />
                                 <Route path={routes.employeeManagement} exact render={(props) => <EmployeeManagement className='page' {...props} />} />
                                 <Route path={routes.productionReportList} exact render={(props) => <ReportsList className='page' {...props} />} />
                                 <Route path={routes.productionReport} exact render={(props) => <ProductionReportPage className='page' {...props} />} />
