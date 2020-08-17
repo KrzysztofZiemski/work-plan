@@ -56,6 +56,7 @@ export const LoginPage = ({ className }) => {
                 onSubmit={async ({ username, password }, { setStatus, setSubmitting }) => {
 
                     try {
+
                         await AuthService.authentication(username, password);
                         const loggedUser = await AuthService.getAuthUser();
                         setLoggedUser(loggedUser)

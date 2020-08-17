@@ -12,8 +12,9 @@ import Loader from './components/Loader';
 import { AuthService } from './services/AuthService';
 import { default as routes } from './utils/routes';
 import Logout from './components/Logout';
+
 const GraphicPage = lazy(() => import('./templates/EditGraphicPage/GraphicPage'));
-const ViewGrafikPage = lazy(() => import('./templates/ViewGrafikPage'));
+const ViewGraphicPage = lazy(() => import('./templates/ViewGraphicPage'));
 const HomePage = lazy(() => import('./templates/HomePage/HomePage'));
 const ProductionReportPage = lazy(() => import('./templates/ProductionReportPage'));
 const EmployeeManagement = lazy(() => import('./templates/EmployeeManagement'));
@@ -25,6 +26,7 @@ const LineManagement = lazy(() => import('./templates/LineManagement'));
 const UserManagement = lazy(() => import('./templates/UserManagement'));
 const LineDetails = lazy(() => import('./templates/LineDetails'));
 const EmployeeDetails = lazy(() => import('./templates/EmployeeDetails'));
+
 export const UserContext = createContext({
   loggedUser: null,
   setLoggedUser: null
@@ -61,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 const App = () => {
   let [activeLeftMenu, setActiveLeftMenu] = useState(false);
   //true for test, shuld be null
-  let [loggedUser, setLoggedUser] = useState(null);
+  let [loggedUser, setLoggedUser] = useState({ name: 'ssss' });
   let [employeesList, setEmployeesList] = useState([]);
   let [inActiveEmployeesList, setInActiveEmployeesList] = useState([]);
   let [usersList, setUsersList] = useState([]);
@@ -111,7 +113,7 @@ const App = () => {
                             !loggedUser ? null : (
                               <>
                                 <Route path={routes.workPlanEdit} exact render={(props) => <GraphicPage className='page' {...props} />} />
-                                <Route path={routes.workPlan} exact render={(props) => <ViewGrafikPage className='page' {...props} />} />
+                                <Route path={routes.workPlan} exact render={(props) => <ViewGraphicPage className='page' {...props} />} />
                                 <Route path={routes.employeeManagement} exact render={(props) => <EmployeeManagement className='page' {...props} />} />
                                 <Route path={routes.productionReportList} exact render={(props) => <ReportsList className='page' {...props} />} />
                                 <Route path={routes.productionReport} exact render={(props) => <ProductionReportPage className='page' {...props} />} />

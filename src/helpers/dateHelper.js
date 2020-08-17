@@ -13,3 +13,9 @@ export const subtractionDate = (countDays = 0, date) => {
     const dateStart = date ? new Date(date).getTime() : Date.now();
     return new Date(dateStart - subtractionMilliseconds);
 }
+export const additionDays = (countDays = 0, date) => {
+    const additionMilliseconds = countDays * 24 * 60 * 60 * 1000;
+    const dateStart = date ? new Date(date).getTime() : Date.now();
+    return new Date(dateStart + additionMilliseconds);
+
+}
