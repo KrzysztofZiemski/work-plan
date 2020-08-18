@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
@@ -12,7 +11,7 @@ import { Redirect } from "react-router-dom";
 import Alert from '@material-ui/lab/Alert';
 import Container from '@material-ui/core/Container';
 import ButtonLoader from '../../components/ButtonLoader';
-import { UserContext } from '../../App';
+import { UserContext } from '../../LoggedApp';
 import { AuthService } from '../../services/AuthService';
 
 import routes from '../../utils/routes';

@@ -13,7 +13,7 @@ import LineService from '../../../services/LineService';
 import { getProductsByActive } from '../../../services/ProductService';
 import { getEmployeesByActive } from '../../../services/employeesService';
 import ProductionReportService from '../../../services/ProductionReportService';
-import { UserContext, EmployeesContext, LinesContext } from '../../../App'
+import { UserContext, EmployeesContext, LinesContext } from '../../../LoggedApp'
 
 const useStyles = makeStyles((theme) => ({
     container: {

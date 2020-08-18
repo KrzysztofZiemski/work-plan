@@ -10,7 +10,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../../App';
+import { UserContext } from '../../LoggedApp';
 import routes from '../../utils/routes';
 
 const useStyles = makeStyles((theme) => ({
@@ -49,13 +49,12 @@ export const NavBarTop = () => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
 
-    const { loggedUser, setActiveLeftMenu, activeLeftMenu } = useContext(UserContext);
+    const { loggedUser, setActiveLeftMenu } = useContext(UserContext);
 
     const isMenuOpen = Boolean(anchorEl);
 
     const toggleLeftMenu = () => {
-        if (activeLeftMenu) return setActiveLeftMenu(false);
-        setActiveLeftMenu(true);
+        setActiveLeftMenu(prevState => !prevState);
     }
 
     const handleProfileMenuOpen = (event) => {
@@ -103,7 +102,7 @@ export const NavBarTop = () => {
             <AccountCircle />
         </IconButton>
     }
-
+    console.log('dssd', loggedUser)
     return (
         <div className={classes.grow}>
             <AppBar position="static" className={classes.root}>

@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { LinesContext } from '../../App';
+import { LinesContext } from '../../LoggedApp';
 import LineService from '../../services/LineService';
 import DialogMessage from '../../components/DialogMessage';
 import Loader from '../../components/Loader';

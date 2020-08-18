@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
-import { EmployeesContext, UserContext } from '../../App';
+import { EmployeesContext, UserContext } from '../../LoggedApp';
 
 import { getEmployeesByActive } from '../../services/employeesService';
 import NavGraphic from './NavGraphic/NavGraphic';

@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { UsersContext, RoleContext } from '../../App';
+import { UsersContext, RoleContext } from '../../LoggedApp';
 import DialogMessage from '../../components/DialogMessage';
 import Loader from '../../components/Loader';
 import Grid from '@material-ui/core/Grid';

@@ -15,7 +15,7 @@ const useStyles = makeStyles(({
         }
     }
 }))
-const HomePage = ({ className }) => {
+export const HomePage = ({ className }) => {
     const classes = useStyles()
     let [logs, setLogs] = useState('');
     let [id, setId] = useState('');
@@ -46,5 +46,3 @@ const HomePage = ({ className }) => {
         </>
     )
 }
-
-export default HomePage;

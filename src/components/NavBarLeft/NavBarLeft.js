@@ -7,7 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemCollapse from '../../components/ListItemCollapse';
 import { Link } from 'react-router-dom';
 import { default as routes } from '../../utils/routes';
-import { UserContext } from '../../App';
+import { UserContext } from '../../LoggedApp';
 
 const useStyles = makeStyles(() => ({
     root: {
