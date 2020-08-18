@@ -80,7 +80,7 @@ const App = () => {
 
 
   return (
-    <Router basename='/hextl/#'>
+    <Router basename='#'>
       <div className="App" >
 
         <UserContext.Provider value={{ loggedUser, setLoggedUser, activeLeftMenu, setActiveLeftMenu }}>

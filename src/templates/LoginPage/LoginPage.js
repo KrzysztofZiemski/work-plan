@@ -58,7 +58,7 @@ export const LoginPage = ({ className }) => {
                     try {
                         await AuthService.authentication(username, password);
                         const loggedUser = await AuthService.getAuthUser();
-                        setLoggedUser(loggedUser)
+                        setLoggedUser(loggedUser);
                         setSubmitting(false);
                         setStatus(false);
                     }
