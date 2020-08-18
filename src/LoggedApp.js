@@ -74,7 +74,7 @@ const LoggedApp = ({ loggedUser, setLoggedUser }) => {
                 <EmployeesContext.Provider value={{ employeesList, setEmployeesList, inActiveEmployeesList, setInActiveEmployeesList }}>
                     <LinesContext.Provider value={{ linesList, setLinesList }}>
                         <UsersContext.Provider value={{ usersList, setUsersList }}>
-                            <Grid container className={classes.root}>
+                            <Grid component='section' container className={classes.root}>
                                 <Grid item>
                                     <NavBarLeft />
                                 </Grid>

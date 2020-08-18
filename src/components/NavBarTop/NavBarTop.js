@@ -12,6 +12,7 @@ import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../LoggedApp';
 import routes from '../../utils/routes';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -83,8 +84,7 @@ export const NavBarTop = () => {
     );
 
     const showOptionsPanel = () => {
-        if (loggedUser === null) return null;
-        if (loggedUser === false) {
+        if (!loggedUser) {
             return <Button component={Link} to={routes.login} className={classes.button} variant="contained" >
                 Zaloguj
                     </Button>;
@@ -96,7 +96,6 @@ export const NavBarTop = () => {
             aria-haspopup="true"
             onClick={handleProfileMenuOpen}
             color="inherit"
-
         >
             <span className={classes.nameAvatar}> {`${loggedUser.name} ${loggedUser.surname}`}</span>
             <AccountCircle />
@@ -104,7 +103,7 @@ export const NavBarTop = () => {
     }
     console.log('dssd', loggedUser)
     return (
-        <div className={classes.grow}>
+        <Grid component='nav'>
             <AppBar position="static" className={classes.root}>
                 <Toolbar>
                     {loggedUser ?
@@ -129,6 +128,6 @@ export const NavBarTop = () => {
                 </Toolbar>
             </AppBar>
             {renderMenu}
-        </div>
+        </Grid>
     );
 }
