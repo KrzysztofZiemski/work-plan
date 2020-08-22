@@ -46,7 +46,7 @@ const App = () => {
 
 
   return (
-    <Router basename='/hextl/#'>
+    <Router basename='#'>
       <div className="App" >
         <Suspense fallback={<Loader open={true} size={200} backdor={false} />}>
           {

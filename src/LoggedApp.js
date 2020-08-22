@@ -67,7 +67,6 @@ const LoggedApp = ({ loggedUser, setLoggedUser }) => {
     let [linesList, setLinesList] = useState([]);
 
     const classes = useStyles();
-
     return (
         <UserContext.Provider value={{ loggedUser, setLoggedUser, activeLeftMenu, setActiveLeftMenu }}>
             <RoleContext.Provider value={{ roleList, setRoleList }}>

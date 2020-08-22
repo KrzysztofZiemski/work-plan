@@ -42,7 +42,7 @@ export const LoginPage = ({ className }) => {
     const { loggedUser, setLoggedUser } = useContext(UserContext);
     const usernameMsg = 'Musisz uzupełnić pole login';
     const passwordMsg = 'Musisz podać hasło';
-
+    console.log('setLoggedUser', setLoggedUser)
     if (loggedUser) return <Redirect to={routes.root} />
 
     return (
