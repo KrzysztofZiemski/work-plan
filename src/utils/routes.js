@@ -1,7 +1,7 @@
 export default {
     root: '/',
     workPlan: '/workplan',
-    workPlanEdit: '/workplan?edit=1',
+    workPlanEdit: '/workplan-edit',
     login: '/login',
     logout: '/logout',
     settings: '/settings',
@@ -16,4 +16,5 @@ export default {
     lineDetails: '/line',
     userManagement: '/management-user',
     userDetails: '/user',
+    swagger: 'http://hextl.magfi.pl:8080/swagger-ui.html#',
 }

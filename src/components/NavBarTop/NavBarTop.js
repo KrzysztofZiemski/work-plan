@@ -10,8 +10,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../../App';
+import { UserContext } from '../../Contexts';
 import routes from '../../utils/routes';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -49,13 +50,12 @@ export const NavBarTop = () => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
 
-    const { loggedUser, setActiveLeftMenu, activeLeftMenu } = useContext(UserContext);
+    const { loggedUser, setActiveLeftMenu } = useContext(UserContext);
 
     const isMenuOpen = Boolean(anchorEl);
 
     const toggleLeftMenu = () => {
-        if (activeLeftMenu) return setActiveLeftMenu(false);
-        setActiveLeftMenu(true);
+        setActiveLeftMenu(prevState => !prevState);
     }
 
     const handleProfileMenuOpen = (event) => {
@@ -84,8 +84,7 @@ export const NavBarTop = () => {
     );
 
     const showOptionsPanel = () => {
-        if (loggedUser === null) return null;
-        if (loggedUser === false) {
+        if (!loggedUser) {
             return <Button component={Link} to={routes.login} className={classes.button} variant="contained" >
                 Zaloguj
                     </Button>;
@@ -97,7 +96,6 @@ export const NavBarTop = () => {
             aria-haspopup="true"
             onClick={handleProfileMenuOpen}
             color="inherit"
-
         >
             <span className={classes.nameAvatar}> {`${loggedUser.name} ${loggedUser.surname}`}</span>
             <AccountCircle />
@@ -105,7 +103,7 @@ export const NavBarTop = () => {
     }
 
     return (
-        <div className={classes.grow}>
+        <Grid component='nav'>
             <AppBar position="static" className={classes.root}>
                 <Toolbar>
                     {loggedUser ?
@@ -130,6 +128,6 @@ export const NavBarTop = () => {
                 </Toolbar>
             </AppBar>
             {renderMenu}
-        </div>
+        </Grid>
     );
 }

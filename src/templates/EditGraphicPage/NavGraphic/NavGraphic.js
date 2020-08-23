@@ -29,6 +29,7 @@ const NavGraphic = ({ className, setDateEnd, dateEnd, dateStart, setDateStart })
     useEffect(() => {
         handleChangeDate(new Date());
     }, [])
+
     const additionDays = (date, days) => {
         const dateObject = new Date(date);
         const newDate = new Date(dateObject.setTime(dateObject.getTime() + (days * 24 * 60 * 60 * 1000)));
@@ -49,7 +50,7 @@ const NavGraphic = ({ className, setDateEnd, dateEnd, dateStart, setDateStart })
     const handleChangeDate = (date) => {
         if (date instanceof Date) {
             const day = date.getDay();
-            console.log('day', day)
+
             if (day === 0) {
                 setDateStart(subtractionDays(date, 6));
                 const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();

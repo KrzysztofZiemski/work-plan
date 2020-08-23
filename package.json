@@ -32,6 +32,7 @@
     "react-move": "^6.4.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
+    "react-to-print": "^2.9.0",
     "typescript": "^3.9.5"
   },
   "scripts": {

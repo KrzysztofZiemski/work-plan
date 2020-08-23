@@ -8,7 +8,7 @@ import DialogMessage from '../../components/DialogMessage';
 import { getEmployeesByActive, deleteEmployee, addWEmployee } from '../../services/employeesService';
 import PanelEmployeesList from './PanelEmployeesList';
 import AddFormDialog from '../../components/AddFormDialog';
-import { EmployeesContext } from '../../App';
+import { EmployeesContext } from '../../Contexts';
 const useStyles = makeStyles(theme => ({
     header: {
         backgroundColor: '#222d32',

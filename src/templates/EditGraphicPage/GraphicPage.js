@@ -5,9 +5,8 @@ import Typography from '@material-ui/core/Typography';
 
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
-import { EmployeesContext, UserContext } from '../../App';
+import { EmployeesContext, UserContext } from '../../Contexts';
 
-import queryString from 'query-string';
 import { getEmployeesByActive } from '../../services/employeesService';
 import NavGraphic from './NavGraphic/NavGraphic';
 import WorkPlace from './WorkPlace/WorkPlace';
@@ -85,7 +84,7 @@ const GraphicPage = (props) => {
     const { loggedUser } = useContext(UserContext);
     let [dateStart, setDateStart] = useState('');
     let [dateEnd, setDateEnd] = useState('');
-    let [dragable, setDragable] = useState(0);
+    let [dragable, setDragable] = useState(1);
     let [freeEmployees, setFreeEmployees] = useState([]);
     let [workPlan, setWorkPlan] = useState(false);
 
@@ -109,14 +108,7 @@ const GraphicPage = (props) => {
             setWorkPlan(data);
         }
         if (!workPlan) fetchWorkPlan();
-        const editQuery = queryString.parse(props.location.search).edit;
-        if (editQuery !== dragable) {
-            if (editQuery === undefined) {
-                setDragable(0)
-            } else {
-                setDragable(editQuery)
-            };
-        }
+
         if (employeesList.length === 0) {
             getEmployeesByActive().then(data => {
                 if (data.length > 0 && isSubscribed) setEmployeesList(data);
