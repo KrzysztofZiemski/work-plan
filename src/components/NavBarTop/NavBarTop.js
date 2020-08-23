@@ -10,7 +10,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../../LoggedApp';
+import { UserContext } from '../../Contexts';
 import routes from '../../utils/routes';
 import Grid from '@material-ui/core/Grid';
 
@@ -52,6 +52,7 @@ export const NavBarTop = () => {
 
     const { loggedUser, setActiveLeftMenu } = useContext(UserContext);
 
+    console.log('loggedUser', loggedUser)
     const isMenuOpen = Boolean(anchorEl);
 
     const toggleLeftMenu = () => {

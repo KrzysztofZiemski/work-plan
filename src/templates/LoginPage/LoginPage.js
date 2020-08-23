@@ -11,7 +11,7 @@ import { Redirect } from "react-router-dom";
 import Alert from '@material-ui/lab/Alert';
 import Container from '@material-ui/core/Container';
 import ButtonLoader from '../../components/ButtonLoader';
-import { UserContext } from '../../LoggedApp';
+import { UserContext } from '../../Contexts';
 import { AuthService } from '../../services/AuthService';
 
 import routes from '../../utils/routes';

@@ -16,4 +16,5 @@ export default {
     lineDetails: '/line',
     userManagement: '/management-user',
     userDetails: '/user',
+    swagger: 'http://hextl.magfi.pl:8080/swagger-ui.html#',
 }

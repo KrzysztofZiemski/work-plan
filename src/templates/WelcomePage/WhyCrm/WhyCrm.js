@@ -49,7 +49,7 @@ export const WhyCrm = () => {
                     Bez żadnych pośredników. Zapewniamy pomoc we wdrożeniu.
                 </p>
                 <p className={classes.paragraph}>
-                    Już od <strong>1000 zł</strong>!.
+                    Dzięki temu, że jesteśmy zespołem pasjonatów, możemy zaproponować rozwiązania już od <strong>1000 zł</strong>!.
                 </p>
             </article>
             <div className={classes.button}>

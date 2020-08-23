@@ -1,8 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
-import laptopImg from '../../../assets/laptop.jpg';
-
+import laptopImgMax from '../../../assets/laptop-max.jpg';
+import laptopImgMiddle from '../../../assets/laptop-middle.jpg';
+import laptopImgMin from '../../../assets/laptop-min.jpg';
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
@@ -18,6 +19,9 @@ const useStyles = makeStyles(theme => ({
     article: {
         display: 'flex',
         flexDirection: 'column',
+        [theme.breakpoints.up('md')]: {
+            width: '50%'
+        },
     },
     articleHeader: {
         fontSize: '3em',
@@ -31,6 +35,9 @@ const useStyles = makeStyles(theme => ({
     aside: {
         width: '50%',
         alignSelf: 'center',
+        [theme.breakpoints.up('md')]: {
+            width: '50%'
+        },
     },
     asideImg: {
         width: '100%',
@@ -55,7 +62,12 @@ export const AboutCrm = () => {
                 </p>
             </article>
             <aside>
-                <img className={classes.asideImg} src={laptopImg} alt="crm screen" />
+                <picture >
+                    <source className={classes.asideImg} media="(min-width: 0px)" srcSet={laptopImgMin} />
+                    <source className={classes.asideImg} media="(min-width: 601px)" srcSet={laptopImgMiddle} />
+                    <source className={classes.asideImg} media="(min-width: 1024px)" srcSet={laptopImgMax} />
+                    <img className={classes.asideImg} src={laptopImgMax} alt="crm screen" />
+                </picture>
             </aside>
         </section>
     );

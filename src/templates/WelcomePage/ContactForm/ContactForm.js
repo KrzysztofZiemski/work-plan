@@ -3,6 +3,8 @@ import { Dialog, DialogTitle, TextField, FormGroup } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PrimaryButton from '../../../components/PrimaryButton';
 
+import { sendMessage } from '../../../services/contactApi';
+
 const useStyles = makeStyles(() => ({
     title: {
         textAlign: 'center'
@@ -41,7 +43,9 @@ export const ContactForm = ({ setClose, open }) => {
         e.preventDefault();
         const isError = validate();
         if (isError) return;
-        setIsSubmited(true);
+        sendMessage(form)
+            .then(resp => setIsSubmited(true))
+            .catch(resp => alert('Mamy chwilowe problemy techniczne, skontaktuj się proszę z nami trochę później'))
     };
 
     const validate = () => {
@@ -54,10 +58,10 @@ export const ContactForm = ({ setClose, open }) => {
             setErrors(state => ({ ...state, firstName: true }));
             error = true
         };
-        if (form.description) {
-            setErrors(state => ({ ...state, description: false }));
+        if (form.message) {
+            setErrors(state => ({ ...state, message: false }));
         } else {
-            setErrors(state => ({ ...state, description: true }));
+            setErrors(state => ({ ...state, message: true }));
             error = true
         };
         if (regExpMail.test(form.mail)) {
@@ -119,12 +123,12 @@ export const ContactForm = ({ setClose, open }) => {
                                 label="Opis"
                                 variant="outlined"
                                 className={classes.input}
-                                name='description'
+                                name='message'
                                 type='textarea'
                                 onChange={handleChange}
-                                value={form['description']}
-                                error={errors['description']}
-                                helperText={errors['description'] ? 'napisz coś do nas' : ''} />
+                                value={form['message']}
+                                error={errors['message']}
+                                helperText={errors['message'] ? 'napisz coś do nas' : ''} />
                             <PrimaryButton onClick={handleSendMessage} >wyślij</PrimaryButton>
                         </FormGroup>
                     </>

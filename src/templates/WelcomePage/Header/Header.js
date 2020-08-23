@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 import HeaderButton from '../HeaderButton';
-import headerBackground from '../../../assets/header.jpg';
+import headerBackgroundMax from '../../../assets/header-max.jpg';
+import headerBackgroundMin from '../../../assets/header-min.jpg';
+import headerBackgroundMiddle from '../../../assets/header-middle.jpg';
 import { AuthService } from '../../../services/AuthService';
+import { UserContext } from '../../../Contexts';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -12,11 +15,19 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '50vh',
-        backgroundImage: `url(${headerBackground})`,
+        minHeight: '50vh',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         padding: '1%',
+        [theme.breakpoints.up('xs')]: {
+            backgroundImage: `url(${headerBackgroundMin})`,
+        },
+        [theme.breakpoints.up('sm')]: {
+            backgroundImage: `url(${headerBackgroundMiddle})`,
+        },
+        [theme.breakpoints.up('md')]: {
+            backgroundImage: `url(${headerBackgroundMax})`,
+        },
         '&::before': {
             content: '""',
             display: 'block',
@@ -61,11 +72,18 @@ const useStyles = makeStyles(theme => ({
 
 export const Header = () => {
     const classes = useStyles();
+    const { setLoggedUser } = useContext(UserContext);
 
-    const handleLogDemo = () => {
-        AuthService.authentication('demoUser', 'demoUser1!')
-            .then(user => console.log('autentykacja'))
-    }
+    const handleLogDemo = async () => {
+        try {
+            await AuthService.authentication('demouser', 'DemoUser1!');
+            const user = await AuthService.getAuthUser();
+            setLoggedUser(user);
+        } catch (err) {
+            console.log(err);
+        };
+    };
+
     return (
         <Grid component='section' className={classes.root}>
             <h1 className={classes.title}>HEXTL</h1>

@@ -1,40 +1,18 @@
-import React, { useState, createContext, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useContext, useEffect, lazy, Suspense } from 'react';
 import {
   BrowserRouter as Router,
 } from 'react-router-dom';
+import { UserContext } from './Contexts';
 import { AuthService } from './services/AuthService';
 import Loader from './components/Loader';
 
 import UnloggedApp from './UnloggedApp';
 const LoggedApp = lazy(() => import('./LoggedApp'));
 
-export const UserContext = createContext({
-  loggedUser: null,
-  setLoggedUser: null
-});
-export const RoleContext = createContext({
-  roleList: null,
-  setRoleList: null
-});
-export const UsersContext = createContext({
-  usersList: null,
-  setUsersList: null
-});
-export const EmployeesContext = createContext({
-  employeesList: [],
-  setEmployeesList: '',
-  inActiveEmployeesList: [],
-  setInActiveEmployeesList: ''
-});
-export const LinesContext = createContext({
-  linesList: [],
-  setLinesList: '',
-});
-
-
 
 const App = () => {
-  let [loggedUser, setLoggedUser] = useState(null);
+
+  const { loggedUser, setLoggedUser } = useContext(UserContext);
 
   useEffect(() => {
     if (loggedUser === null) {

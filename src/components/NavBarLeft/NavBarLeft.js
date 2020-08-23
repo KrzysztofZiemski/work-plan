@@ -7,7 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemCollapse from '../../components/ListItemCollapse';
 import { Link } from 'react-router-dom';
 import { default as routes } from '../../utils/routes';
-import { UserContext } from '../../LoggedApp';
+import { UserContext } from '../../Contexts';
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -132,7 +132,7 @@ export const NavBarLeft = ({ isActive }) => {
                         </ListItem>
                     </List>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={'a'} target="_blank" href='https://193.59.72.159:8080/swagger-ui.html' selected={selected === 12 ? true : false} onClick={() => setSelected(12)}>
+                        <ListItem button className={classes.subListItem} component={'a'} target="_blank" href={routes.swagger} selected={selected === 12 ? true : false} onClick={() => setSelected(12)}>
                             <ListItemText primary="Swagger" />
                         </ListItem>
                     </List>

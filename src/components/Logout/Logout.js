@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { AuthService } from '../../services/AuthService';
-import { UserContext } from '../../App';
+import { UserContext } from '../../Contexts';
 import { Redirect } from "react-router-dom";
 import routes from '../../utils/routes';
 
@@ -18,7 +18,7 @@ export const Logout = () => {
     }, [loggedUser, setLoggedUser])
     return (
         <span>
-            {loggedUser ? null : <Redirect to={routes.root} />}
+            {loggedUser ? <Redirect to={routes.root} /> : null}
         </span>
     )
 }
