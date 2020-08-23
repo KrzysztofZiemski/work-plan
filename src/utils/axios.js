@@ -6,6 +6,6 @@ export default axios.create({
     mode: 'cors',
     baseURL: SERVER,
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
     }
 });

@@ -33,24 +33,29 @@ const styles = {
     cell: {
         backgroundColor: 'rgba(197,248,255,.4)',
         fontSize: 12,
-        padding: 4
+        padding: 4,
+        width: 100
     },
     cellsOther: {
         backgroundColor: '#85acbd',
         fontSize: 12,
-        padding: 1
+        padding: 3
     },
 }
-
+const renderWorkersCells = (workplacesArr) => {
+    console.log('workplacesArr', workplacesArr)
+    return workplacesArr.map(({ employeeListWorkplaces }) => (
+        <TableCell style={styles.cell}>{employeeListWorkplaces.map(employee => ` ${employee.name} ${employee.lastName} `).toString()}</TableCell>
+    ))
+}
 export class GraphicToPrint extends React.Component {
-
-    renderTables() {
+    renderTables(shift) {
         return (
             <Grid style={styles.containerTables} container>
                 <Grid component='table'>
                     <TableHead >
                         <TableRow style={styles.title}>
-                            <TableCell style={styles.title}>Zmiana pierwsza</TableCell>
+                            <TableCell style={styles.title}>{`Zmiana ${shift.shiftNumber}`}</TableCell>
                             <TableCell style={styles.head}>Maszyna 1</TableCell>
                             <TableCell style={styles.head}>Maszyna 2</TableCell>
                             <TableCell style={styles.head}>Maszyna 3</TableCell>
@@ -58,22 +63,25 @@ export class GraphicToPrint extends React.Component {
                     </TableHead >
                     <tbody>
                         <TableRow >
-                            <TableCell style={styles.head}>Linia 1</TableCell>
+                            <TableCell style={styles.head}>{`Linia ${shift.lines[0].lineNumber}`}</TableCell>
+                            {renderWorkersCells(shift.lines[0].workplaces)}
+                            {/* <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska</TableCell>
                             <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska</TableCell>
-                            <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska</TableCell>
-                            <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliskam, Bernardetta Śliska</TableCell>
+                            <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliskam, Bernardetta Śliska</TableCell> */}
                         </TableRow >
                         <TableRow >
-                            <TableCell style={styles.head}>Linia 1</TableCell>
+                            <TableCell style={styles.head}>{`Linia ${shift.lines[1].lineNumber}`}</TableCell>
+                            {renderWorkersCells(shift.lines[2].workplaces)}
+                            {/* <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska</TableCell>
                             <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska</TableCell>
-                            <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska</TableCell>
-                            <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska , Bernardetta Śliska</TableCell>
+                            <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska , Bernardetta Śliska</TableCell> */}
                         </TableRow >
                         <TableRow >
-                            <TableCell style={styles.head}>Linia 1</TableCell>
+                            <TableCell style={styles.head}>{`Linia ${shift.lines[2].lineNumber}`}</TableCell>
+                            {renderWorkersCells(shift.lines[2].workplaces)}
+                            {/* <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska</TableCell>
                             <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska</TableCell>
-                            <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska</TableCell>
-                            <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska</TableCell>
+                            <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska</TableCell> */}
                         </TableRow >
                     </tbody>
                 </Grid >
@@ -89,11 +97,11 @@ export class GraphicToPrint extends React.Component {
                     </TableHead >
                     <tbody>
                         <TableRow >
-                            <TableCell style={styles.head}>Staś Kowalski</TableCell>
-                            <TableCell style={styles.head}>Celina Pyszniak</TableCell>
-                            <TableCell style={styles.head}>Anna Ona</TableCell>
-                            <TableCell style={styles.head}>Kamil Marszałek</TableCell>
-                            <TableCell style={styles.head}>dsfsd fdsf dsf dfs dfsdf sdsfdsfsd  dsfdsfsdf dsf dsfdsf  dsfdsfdsfdsfdsfds</TableCell>
+                            <TableCell style={styles.head}>{shift.shiftsLeader.map(employee => `${employee.name} ${employee.lastName}`)}</TableCell>
+                            <TableCell style={styles.head}>{shift.supervision.map(employee => `${employee.name} ${employee.lastName}`)}</TableCell>
+                            <TableCell style={styles.head}>{shift.unskilledWorker.map(employee => `${employee.name} ${employee.lastName}`)}</TableCell>
+                            <TableCell style={styles.head}>{shift.other.map(employee => `${employee.name} ${employee.lastName}`)}</TableCell>
+                            <TableCell style={styles.head}>{shift.comments}</TableCell>
                         </TableRow>
                     </tbody>
                 </Grid>
@@ -102,13 +110,15 @@ export class GraphicToPrint extends React.Component {
     }
 
     render() {
-        return (
+        const shifts = this.props.data ? this.props.data.workShifts : null;
 
+        return shifts ? (
             <Grid container justify='center' style={styles.container}>
-                {this.renderTables()}
-                {this.renderTables()}
-                {this.renderTables()}
+                {this.renderTables(shifts[0])}
+                {this.renderTables(shifts[1])}
+                {this.renderTables(shifts[2])}
             </Grid>
-        );
+        ) :
+            null;
     }
 }

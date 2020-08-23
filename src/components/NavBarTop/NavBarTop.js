@@ -52,7 +52,6 @@ export const NavBarTop = () => {
 
     const { loggedUser, setActiveLeftMenu } = useContext(UserContext);
 
-    console.log('loggedUser', loggedUser)
     const isMenuOpen = Boolean(anchorEl);
 
     const toggleLeftMenu = () => {
@@ -102,7 +101,7 @@ export const NavBarTop = () => {
             <AccountCircle />
         </IconButton>
     }
-    console.log('dssd', loggedUser)
+
     return (
         <Grid component='nav'>
             <AppBar position="static" className={classes.root}>
