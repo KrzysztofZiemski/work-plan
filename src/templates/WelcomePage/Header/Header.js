@@ -80,7 +80,7 @@ export const Header = () => {
             const user = await AuthService.getAuthUser();
             setLoggedUser(user);
         } catch (err) {
-            console.log(err);
+            alert('wybacz, mamy obecnie krótkie problemy techniczne');
         };
     };
 

@@ -42,7 +42,7 @@ export const LoginPage = ({ className }) => {
     const { loggedUser, setLoggedUser } = useContext(UserContext);
     const usernameMsg = 'Musisz uzupełnić pole login';
     const passwordMsg = 'Musisz podać hasło';
-    console.log('setLoggedUser', setLoggedUser)
+
     if (loggedUser) return <Redirect to={routes.root} />
 
     return (
@@ -63,7 +63,6 @@ export const LoginPage = ({ className }) => {
                         setStatus(false);
                     }
                     catch (err) {
-                        console.log('rrr', err)
                         setSubmitting(false);
                         if (loggedUser !== false) setLoggedUser(false)
                         const status = err.response.status;
@@ -73,7 +72,6 @@ export const LoginPage = ({ className }) => {
                     };
                 }}
                 onChange={({ username, password }, { setStatus, setSubmitting }) => {
-                    // console.log(username, password)
                 }}
                 validate={(values) => {
                     let errors = {};

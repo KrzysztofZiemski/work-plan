@@ -195,10 +195,9 @@ const GraphicPage = (props) => {
         const preparationWorkPlan = getWorkplanToSend(workPlan);
         updateWorkPlane(1, preparationWorkPlan)
             .then(res => {
-                console.log(res)
                 if (res.status === 200) return setDragable(false);
             })
-            .catch(err => console.log('err', err))
+            .catch(err => alert(`nie udało się zapisać planu - ${err}`))
     }
 
     return (

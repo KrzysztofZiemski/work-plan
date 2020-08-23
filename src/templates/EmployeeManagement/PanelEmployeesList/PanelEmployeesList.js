@@ -28,11 +28,7 @@ export const PanelEmployeesList = ({ value, options, setFilter }) => {
         return output;
     }
     const classes = useStyles();
-    const handleFiltrEmployees = (e) => {
-        console.log(e.target.value)
-
-        setFilter(e.target.value);
-    };
+    const handleFiltrEmployees = (e) => setFilter(e.target.value);
 
     return (
         <>

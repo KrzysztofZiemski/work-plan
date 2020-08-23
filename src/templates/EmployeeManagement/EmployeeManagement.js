@@ -71,12 +71,8 @@ export const EmployeeManagement = ({ className }) => {
     useEffect(() => {
         try {
             if (filterEmployees === options.active.value) {
-                console.log('weszlo')
                 if (employeesList.length < 1) {
-                    getEmployeesByActive().then(data => {
-                        console.log('data', data)
-                        setEmployeesList(data)
-                    });
+                    getEmployeesByActive().then(data => setEmployeesList(data));
                 }
 
             } else if (filterEmployees === options.inActive.value) {

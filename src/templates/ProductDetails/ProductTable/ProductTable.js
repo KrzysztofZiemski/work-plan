@@ -128,7 +128,6 @@ export const ProductTable = ({ id, type }) => {
     const renderReports = () => {
         if (!reports) return [];
         return reports.map(report => {
-            console.log(getCorrectlyFormatData(report.startProduction))
             return ([
                 `${getCorrectlyFormatData(report.startProduction)}  -  ${getCorrectlyFormatData(report.endProduction)}`, report.totalQuantityProduced, report.series, `${report.performancePerHour} h`, report.speedMachinePerCycle, report.line.name, `${report.firstWorkplace.name} ${report.firstWorkplace.lastName}`, `${report.secondWorkplace.name} ${report.secondWorkplace.lastName}`, `${report.thirdWorkplace.name} ${report.thirdWorkplace.lastName}`
             ])

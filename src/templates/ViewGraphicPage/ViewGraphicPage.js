@@ -1,17 +1,11 @@
 import React, { useRef, useEffect, useState } from 'react';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from "react-router-dom";
 
 import { useReactToPrint } from 'react-to-print';
 import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { getWorkPlanByDate } from '../../services/workPlanRequest';
-import { getCorrectlyFormatData, additionDays, subtractionDate } from '../../helpers/dateHelper';
+import { getCorrectlyFormatData } from '../../helpers/dateHelper';
 
 import DateTimePicker from '../../components/DateTimePicker';
 import ButtonLoader from '../../components/ButtonLoader';

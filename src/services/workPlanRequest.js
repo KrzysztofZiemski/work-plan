@@ -5,7 +5,6 @@ const WORK_PLAN_URL = `${SERVER}/api/v1/work-plan`
 
 
 const createWorkPlan = (startDate, endDate, userId) => {
-    console.log(startDate, endDate)
     const data = {
         createByIdUser: 1,
         endDay: endDate,
@@ -38,7 +37,6 @@ const getWorkPlanByDate = (startDate, endDate) => {
     })
 }
 const updateWorkPlane = (idUser, workPlan) => {
-    console.log(workPlan)
     return fetch(`${WORK_PLAN_URL}/${workPlan.id}/user/${idUser}`, {
         method: 'PUT',
         mode: 'cors',

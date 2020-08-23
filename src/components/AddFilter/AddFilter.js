@@ -16,8 +16,6 @@ export const AddFilter = ({ list, render }) => {
     let [inputValue, setInputValue] = useState("");
 
     if (!list) return null
-    console.log('inputValue', inputValue)
-
 
     const onChange = ({ target }) => setInputValue(target.value);
 

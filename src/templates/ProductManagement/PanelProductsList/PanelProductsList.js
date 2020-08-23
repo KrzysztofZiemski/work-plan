@@ -28,11 +28,7 @@ export const PanelProductsList = ({ value, options, setFilter }) => {
         return output;
     }
     const classes = useStyles();
-    const handleFiltrProducts = (e) => {
-        console.log(e.target.value)
-
-        setFilter(e.target.value);
-    };
+    const handleFiltrProducts = (e) => setFilter(e.target.value);
 
     return (
         <FormControl className={classes.formControl}>

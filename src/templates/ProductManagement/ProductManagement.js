@@ -213,7 +213,6 @@ export const ProductManagement = ({ className }) => {
 
     const handleAddProduct = (data) => {
         setIsLoaded(true);
-        console.log('submit', data)
         addProduct(data).then(data => {
             setIsLoaded(false);
             updateProducts();
