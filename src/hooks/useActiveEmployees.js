@@ -9,6 +9,7 @@ const useActiveEmployees = () => {
 
     useEffect(() => {
         getEmployees();
+        setFetched(true);
     }, []);
 
     return [{ list: employees, fetched }, getEmployees];

@@ -102,7 +102,7 @@ export const EmployeeManagement = ({ className }) => {
         return () => {
             setIsLoaded(false);
         };
-    }, [employeesList, setEmployeesList, inActiveEmployeesList, setInActiveEmployeesList, filterEmployees]);
+    }, [employeesList, setEmployeesList, inActiveEmployeesList, setInActiveEmployeesList, filterEmployees, employeesActive.fetched, getEmployeesActive, employeesInActive.fetched, getEmployeesInActive]);
 
     const updateEmployees = () => {
         try {
