@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -11,9 +11,9 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import ButtonLoader from '../../../components/ButtonLoader';
 import LineService from '../../../services/LineService';
 import { getProductsByActive } from '../../../services/ProductService';
-import { getEmployeesByActive } from '../../../services/employeesService';
 import ProductionReportService from '../../../services/ProductionReportService';
-import { UserContext, EmployeesContext, LinesContext } from '../../../Contexts'
+import { UserContext, LinesContext } from '../../../Contexts';
+import useActiveEmployees from '../../../hooks/useActiveEmployees';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -119,9 +119,8 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
     const classes = useStyles();
 
     const { loggedUser } = useContext(UserContext);
-    const { employeesList, setEmployeesList } = useContext(EmployeesContext);
     const { linesList, setLinesList } = useContext(LinesContext);
-
+    const [employees] = useActiveEmployees();
     let [formData, setFormData] = useState(blankForm);
     let [errors, setErrors] = useState(blankErrors);
     let [errorLabels, setErrorLabels] = useState(blankErrorLabels);
@@ -134,16 +133,19 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                 .then(data => setLinesList(data));
             const productsPromise = getProductsByActive()
                 .then(data => setProducts(data));
-            const employeePromise = getEmployeesByActive()
-                .then(data => setEmployeesList(data.sort((a, b) => (a.lastName < b.lastName) ? -1 : (a.lastName > b.lastName) ? 1 : 0)));
-            Promise.all([linesPromise, productsPromise, employeePromise])
+
+            Promise.all([linesPromise, productsPromise])
                 .catch(err => {
                     setMessages(['Błąd łączności z serwerem', 'spróbuj odświerzyć stronę', `status ${err}`]);
                     setOpenMessage(true);
                 })
         })();
-    }, [setMessages, setOpenMessage, setEmployeesList])
+    }, [setLinesList, setMessages, setOpenMessage])
 
+    const sorterEmployees = useCallback(() => {
+        return employees.list.sort((a, b) => (a.lastName < b.lastName) ? -1 : (a.lastName > b.lastName) ? 1 : 0)
+    }, [employees])
+    console.log('sorterEmployees', sorterEmployees)
     const handleSubmit = (e) => {
         e.preventDefault();
         const isOk = validation();
@@ -458,7 +460,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                             value={formData.firstWorkplaceIdEmployee}
                             onChange={(e, newValue) => handleChangeAutoCompleteFields('firstWorkplaceIdEmployee', newValue)}
                             name='firstWorkplaceIdEmployee'
-                            options={employeesList}
+                            options={sorterEmployees()}
                             getOptionLabel={(option) => option ? `${option.lastName} ${option.name}` : ''}
                             style={{ width: 250 }}
                             renderInput={(params) => {
@@ -479,7 +481,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                             error={errors.secondWorkplaceIdEmployee}
                             onChange={(e, newValue) => handleChangeAutoCompleteFields('secondWorkplaceIdEmployee', newValue)}
                             name='secondWorkplaceIdEmployee'
-                            options={employeesList}
+                            options={sorterEmployees()}
                             getOptionLabel={(option) => option ? `${option.lastName} ${option.name}` : ''}
                             style={{ width: 250 }}
                             renderInput={(params) => {
@@ -499,7 +501,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                             value={formData.thirdWorkplaceIdEmployee}
                             onChange={(e, newValue) => handleChangeAutoCompleteFields('thirdWorkplaceIdEmployee', newValue)}
                             name='thirdWorkplaceIdEmployee'
-                            options={employeesList}
+                            options={sorterEmployees()}
                             getOptionLabel={(option) => option ? `${option.lastName} ${option.name}` : ''}
                             style={{ width: 250 }}
                             renderInput={(params) => {

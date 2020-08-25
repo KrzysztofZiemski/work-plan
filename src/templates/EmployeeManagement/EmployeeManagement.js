@@ -9,6 +9,9 @@ import { getEmployeesByActive, deleteEmployee, addWEmployee } from '../../servic
 import PanelEmployeesList from './PanelEmployeesList';
 import AddFormDialog from '../../components/AddFormDialog';
 import { EmployeesContext } from '../../Contexts';
+import useActiveEmployees from '../../hooks/useActiveEmployees';
+import useInActiveEmployees from '../../hooks/useInActiveEmployees';
+
 const useStyles = makeStyles(theme => ({
     header: {
         backgroundColor: '#222d32',
@@ -61,7 +64,8 @@ export const EmployeeManagement = ({ className }) => {
     const classes = useStyles();
 
     const { employeesList, setEmployeesList, inActiveEmployeesList, setInActiveEmployeesList } = useContext(EmployeesContext);
-
+    const [employeesActive, getEmployeesActive] = useActiveEmployees();
+    const [employeesInActive, getEmployeesInActive] = useInActiveEmployees();
 
     let [filterEmployees, setFiletrEmployees] = useState(options.active.value);
     let [isLoaded, setIsLoaded] = useState(false);
@@ -70,14 +74,14 @@ export const EmployeeManagement = ({ className }) => {
 
     useEffect(() => {
         try {
-            if (filterEmployees === options.active.value) {
-                if (employeesList.length < 1) {
-                    getEmployeesByActive().then(data => setEmployeesList(data));
-                }
+            if (filterEmployees !== options.inActive.value) {
+                if (!employeesActive.fetched) {
+                    getEmployeesActive();
+                };
 
-            } else if (filterEmployees === options.inActive.value) {
-                if (inActiveEmployeesList.length < 1) {
-                    getEmployeesByActive(false).then(data => setInActiveEmployeesList(data));
+            } else if (filterEmployees !== options.active.value) {
+                if (!employeesInActive.fetched) {
+                    getEmployeesInActive();
                 }
 
             } else {
@@ -102,8 +106,8 @@ export const EmployeeManagement = ({ className }) => {
 
     const updateEmployees = () => {
         try {
-            if (filterEmployees !== options.inActive.value) getEmployeesByActive().then(data => setEmployeesList(data));
-            if (filterEmployees !== options.active.value) getEmployeesByActive(false).then(data => setInActiveEmployeesList(data));
+            if (filterEmployees !== options.inActive.value) getEmployeesActive();
+            if (filterEmployees !== options.active.value) getEmployeesInActive();
 
         } catch (err) {
             setAlertMessage([`wystapił błąd podczas pobierania pracowników ${err.status}`]);
@@ -152,9 +156,9 @@ export const EmployeeManagement = ({ className }) => {
 
     const renderList = () => {
         if (filterEmployees === options.all.value) {
-            return [...employeesList, ...inActiveEmployeesList]
+            return [...employeesActive.list, ...employeesInActive.list]
         }
-        return filterEmployees === options.active.value ? employeesList : inActiveEmployeesList;
+        return filterEmployees === options.active.value ? employeesActive.list : employeesInActive.list;
     }
     return (
         <>

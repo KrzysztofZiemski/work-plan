@@ -5,14 +5,16 @@ import Typography from '@material-ui/core/Typography';
 
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
-import { EmployeesContext, UserContext } from '../../Contexts';
+import { UserContext } from '../../Contexts';
 
-import { getEmployeesByActive } from '../../services/employeesService';
 import NavGraphic from './NavGraphic/NavGraphic';
 import WorkPlace from './WorkPlace/WorkPlace';
 import Employee from './Employee/Employee';
-import { createWorkPlan, getWorkPlanByDate, updateWorkPlane } from '../../services/workPlanRequest';
+import DialogMessage from '../../components/DialogMessage';
+
+import { updateWorkPlane, createOrGetWorkPlan } from '../../services/workPlanRequest';
 import { workPlaceNames, initFreeEmployee, getWorkplanToSend } from './handlers';
+import useActiveEmployees from '../../hooks/useActiveEmployees';
 
 export const WorkPlanContext = createContext({
     setWorkplaceEmployee: null,
@@ -78,52 +80,34 @@ const useStyles = makeStyles(theme => ({
         height: 300
     }
 }))
-
+//zmienic wszystkie listy pracownika na hooki i stworzyć hook dla nieaktywnych
 const GraphicPage = (props) => {
-    const { employeesList, setEmployeesList } = useContext(EmployeesContext);
+
+    const [employees] = useActiveEmployees();
     const { loggedUser } = useContext(UserContext);
     let [dateStart, setDateStart] = useState('');
     let [dateEnd, setDateEnd] = useState('');
     let [dragable, setDragable] = useState(1);
     let [freeEmployees, setFreeEmployees] = useState([]);
     let [workPlan, setWorkPlan] = useState(false);
-
+    let [errorMessage, setErrorMessage] = useState({ message: [], isOpen: false })
     const classes = useStyles();
 
     useEffect(() => {
         if (!loggedUser) return;
         if (!dateStart || !dateEnd) return;
-        let isSubscribed = true;
 
-        const fetchWorkPlan = async () => {
-            if (workPlan) return;
-            let workPlanRequest = await getWorkPlanByDate(dateStart, dateEnd);
-            if (workPlanRequest.status === 404 && isSubscribed) {
-                const confirmMessage = 'Plan pracy w podanym terminie, nie został jeszcze stworzony. Czy chcesz go utworzyć?'
-                const confirm = window.confirm(confirmMessage);
-                if (confirm === true) workPlanRequest = await createWorkPlan(dateStart, dateEnd, loggedUser.id);
-            }
-            if (workPlanRequest.status !== 200 && !isSubscribed) return;
-            const data = await workPlanRequest.json();
-            setWorkPlan(data);
-        }
-        if (!workPlan) fetchWorkPlan();
-
-        if (employeesList.length === 0) {
-            getEmployeesByActive().then(data => {
-                if (data.length > 0 && isSubscribed) setEmployeesList(data);
+        createOrGetWorkPlan(dateStart, dateEnd, loggedUser.id)
+            .then(wrokPlanResponse => {
+                setWorkPlan(wrokPlanResponse);
+                if (employees.fetched) initFreeEmployee(employees.list, wrokPlanResponse, setFreeEmployees)
             })
-        }
-        if (workPlan) initFreeEmployee(employeesList, workPlan, setFreeEmployees)
-        // po odmontowaniu elementu zresetuj wartości startowe
+            .catch(err => setErrorMessage({ message: [`Nie udało się pobrać planu pracy ${err}`], isOpen: true }))
 
-        return () => {
-            isSubscribed = false;
-        };
-
-    }, [dateStart, dateEnd, props.location.search, dragable, employeesList, setEmployeesList, loggedUser, workPlan]);
+    }, [dateStart, dateEnd, loggedUser, employees.fetched, employees.list]);
 
 
+    const closeMessage = () => setErrorMessage({ message: '', isOpen: false });
 
     //przt upuszczaniu pracownika pobieramy parametry workplace i dodajemy obiekt pracownika w odpowiednim miejscu
     const setWorkplaceEmployee = ({ shift, line, workPlace }, employee) => {
@@ -191,7 +175,6 @@ const GraphicPage = (props) => {
 
     //zapisujemy plan
     const submitWorkPlan = () => {
-        if (!dragable || !workPlan) return;
         const preparationWorkPlan = getWorkplanToSend(workPlan);
         updateWorkPlane(1, preparationWorkPlan)
             .then(res => {
@@ -202,6 +185,7 @@ const GraphicPage = (props) => {
 
     return (
         <section className={props.className}>
+            <DialogMessage open={errorMessage.isOpen} close={closeMessage} messages={errorMessage.message} />
             <DndProvider backend={Backend}>
                 <section className={`${props.className} graphicPage`}>
                     <WorkPlanContext.Provider value={{ setWorkplaceEmployee, removeEmployee, workPlan, dragable, setDragable, submitWorkPlan }}>
@@ -253,24 +237,24 @@ const GraphicPage = (props) => {
                                         </Grid>
                                         <Grid className={classes.lines}>
                                             {workPlan.workShifts[indexShift].lines.map((line, indexLine) => (
-                                                <>
-                                                    <Grid constainer={true} key={`line${indexLine}`} className={classes.line}>
-                                                        <Grid item component='h3' className={classes.lineTitle}>{`Linia ${line.lineNumber}`}</Grid>
 
-                                                        {workPlan.workShifts[indexShift].lines[indexLine].workplaces.map((workplace, indexWorkplace, workplacesArr) => {
-                                                            return <Grid className={classes.workPlaceShift} key={`workplace${indexWorkplace}`}>
-                                                                <WorkPlace className={classes.workPlace} shift={indexShift} line={indexLine} workPlace={indexWorkplace} title={workplace.nameWorkplace}>
-                                                                    {workPlan.workShifts[indexShift].lines[indexLine].workplaces[indexWorkplace].employeeListWorkplaces.map(employee => (
-                                                                        <Employee key={`employee${employee.id}`} id={employee.id} line={indexLine} shift={indexShift} workPlace={indexWorkplace} label={`${employee.name} ${employee.lastName}`}>
-                                                                        </Employee>
-                                                                    ))}
+                                                <Grid constainer={true} key={`line${indexLine}`} className={classes.line}>
+                                                    <Grid item component='h3' className={classes.lineTitle}>{`Linia ${line.lineNumber}`}</Grid>
 
-                                                                </WorkPlace>
-                                                            </Grid>
-                                                        })}
+                                                    {workPlan.workShifts[indexShift].lines[indexLine].workplaces.map((workplace, indexWorkplace, workplacesArr) => {
+                                                        return <Grid className={classes.workPlaceShift} key={`workplace${indexWorkplace}`}>
+                                                            <WorkPlace className={classes.workPlace} shift={indexShift} line={indexLine} workPlace={indexWorkplace} title={workplace.nameWorkplace}>
+                                                                {workPlan.workShifts[indexShift].lines[indexLine].workplaces[indexWorkplace].employeeListWorkplaces.map(employee => (
+                                                                    <Employee key={`employee${employee.id}`} id={employee.id} line={indexLine} shift={indexShift} workPlace={indexWorkplace} label={`${employee.name} ${employee.lastName}`}>
+                                                                    </Employee>
+                                                                ))}
 
-                                                    </Grid>
-                                                </>
+                                                            </WorkPlace>
+                                                        </Grid>
+                                                    })}
+
+                                                </Grid>
+
                                             )
                                             )}
                                         </Grid>

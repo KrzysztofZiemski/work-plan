@@ -23,7 +23,7 @@ export const PanelEmployeesList = ({ value, options, setFilter }) => {
         if (!options) return null
         const output = [];
         for (let option in options) {
-            output.push(<MenuItem value={options[option].value}>{options[option].name}</MenuItem>);
+            output.push(<MenuItem key={options[option].name} value={options[option].value}>{options[option].name}</MenuItem>);
         };
         return output;
     }

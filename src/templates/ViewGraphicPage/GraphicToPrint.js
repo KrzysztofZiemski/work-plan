@@ -42,8 +42,8 @@ const styles = {
         padding: 3
     },
 }
-const renderWorkersCells = (workplacesArr) => workplacesArr.map(({ employeeListWorkplaces }) => (
-    <TableCell style={styles.cell}>{employeeListWorkplaces.map(employee => ` ${employee.name} ${employee.lastName} `).toString()}</TableCell>
+const renderWorkersCells = (workplacesArr) => workplacesArr.map(({ employeeListWorkplaces }, index) => (
+    <TableCell key={index} style={styles.cell}>{employeeListWorkplaces.map(employee => ` ${employee.name} ${employee.lastName} `).toString()}</TableCell>
 ));
 
 export class GraphicToPrint extends React.Component {

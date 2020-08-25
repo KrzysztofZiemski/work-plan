@@ -11,7 +11,7 @@ import DateTimePicker from '../../components/DateTimePicker';
 import ButtonLoader from '../../components/ButtonLoader';
 import { GraphicToPrint } from './GraphicToPrint';
 import DialogMessage from '../../components/DialogMessage';
-
+import useActiveEmployees from '../../hooks/useActiveEmployees';
 import { useDateWeek } from '../../hooks/useDateWeek';
 
 const useStyles = makeStyles(({
@@ -31,12 +31,12 @@ export const ViewGraphicPage = () => {
     let [dates, setDates] = useDateWeek();
     let [workPlan, setWorkPlan] = useState();
     let [isError, setIsError] = useState(false);
+    let [emp] = useActiveEmployees()
 
     useEffect(() => {
         const start = getCorrectlyFormatData(dates.start).slice(0, 10);
         const end = getCorrectlyFormatData(dates.end).slice(0, 10);
         getWorkPlanByDate(start, end)
-            .then(res => res.ok ? res.json() : Promise.reject(res))
             .then(data => setWorkPlan(data))
             .catch(err => setIsError(true))
     }, [dates])
