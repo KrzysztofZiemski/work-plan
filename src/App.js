@@ -20,7 +20,7 @@ const App = () => {
         .then(user => setLoggedUser(user))
         .catch(err => setLoggedUser(false));
     }
-  }, [loggedUser]);
+  }, [loggedUser, setLoggedUser]);
 
 
   return (
