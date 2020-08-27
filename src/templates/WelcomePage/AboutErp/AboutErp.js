@@ -45,20 +45,19 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export const AboutCrm = () => {
+export const AboutErp = () => {
 
     const classes = useStyles()
 
     return (
         <section className={classes.root}>
             <article className={classes.article}>
-                <h2 className={classes.articleHeader}>Co to jest CRM?</h2>
-                <p className={classes.articleParagraph}>CRM oznacza zarządzanie relacjami z klientem.
-                Dzisiejsze systemy CRM, jednak mocno wykraczają poza tą definicję.
-                Dzisiaj za pomocą systemów CRM, można monitorować wszystkie procesy w swojej firmie.
-                Zarówno odpowiadające za sprzedaż oraz kontakt z klientem, jak i za efektywność pracowników.
-                Systemy CRM analizują dane dotyczące każdego aspektu zarządzania firmą.
-                Mozna otrzymać potrzebne informację za pomocą kilku kliknięć myszką, zamiast godzin w oczekiwaniu na raporty od pracowników.
+                <h2 className={classes.articleHeader}>Co to jest ERP?</h2>
+                <p className={classes.articleParagraph}>ERP oznacza system do zarządzania przedsiebiorstwem.
+                Monitorowanie kosztów, weryfikacja wydajności, uzyskanie przewagi konkurencyjnej - to główne założenia systemów ERP.
+                Systemy ERP różnią się między sobą zakresem usług.
+                Mogą stanowić świetną bazę kadrową, pomagać w księgowości, zarządzać kontaktami z klientem, weryfikować działania marketingowe, czy monitorować pracę magazynu.
+                Dzieki ERP można otrzymać potrzebne informację za pomocą kilku kliknięć myszką, zamiast godzin w oczekiwaniu na raporty od pracowników.
                 </p>
             </article>
             <aside>

@@ -27,13 +27,13 @@ const useStyles = makeStyles(({
 }))
 
 
-export const WhyCrm = () => {
+export const WhyErp = () => {
     const classes = useStyles();
     const [isFormContactOpen, setIsFormContactOpen] = useState(false);
 
     const handleCloseFormContact = () => setIsFormContactOpen(false);
     const handleOpenFormContact = () => setIsFormContactOpen(true);
-
+    //TODO do przepisania z crm na erp
     return (
         <section className={classes.root}>
             <article className={classes.article}>
@@ -42,11 +42,14 @@ export const WhyCrm = () => {
                     Uważasz, że Twoją firmę stać na więcej? Chcesz uporządkować procesy? Obiektywnie oceniać pracowników? Monitorować efektywność i szybko reagować na zmiany na rynku?
                 </p>
                 <p className={classes.paragraph}>
-                    Jeżeli na którekolwiek pytanie odpowiesz tak, to na pewno potrzebujesz dostosowanego do Ciebie systemu CRM. Obecnie nie istnieje żadna większa firma, która by nie korzystała z systemów CRM.
+                    Jeżeli na którekolwiek pytanie odpowiesz tak, to na pewno potrzebujesz dostosowanego do Ciebie systemu CRM. Obecnie nie istnieje żadna większa firma, która by nie korzystała z systemów ERP.
                 </p>
                 <p className={classes.paragraph}>
-                    Profesjonalne systemy CRM często wiążą się z dużymi wydatkami, jednak naszą ofertę stworzył niezależny zespół deweloperów.
-                    Bez żadnych pośredników. Zapewniamy pomoc we wdrożeniu.
+                    Profesjonalne systemy ERP często wiążą się z dużymi wydatkami, jednak naszą ofertę stworzył niezależny zespół deweloperów.
+                    Bez żadnych pośredników.
+                </p>
+                <p className={classes.paragraph}>
+                    Zapewniamy pomoc we wdrożeniu!
                 </p>
                 <p className={classes.paragraph}>
                     Dzięki temu, że jesteśmy zespołem pasjonatów, możemy zaproponować rozwiązania już od <strong>1000 zł</strong>!.

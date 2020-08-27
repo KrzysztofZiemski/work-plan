@@ -17,8 +17,9 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
         minHeight: '50vh',
         backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundPosition: 'left bottom',
         padding: '1%',
+        color: '#f0f0f0',
         [theme.breakpoints.up('xs')]: {
             backgroundImage: `url(${headerBackgroundMin})`,
         },
@@ -37,14 +38,14 @@ const useStyles = makeStyles(theme => ({
             top: 0,
             left: 0,
             zIndex: 0,
-            backgroundColor: 'red',
-            opacity: .2,
+            backgroundColor: '#000',
+            opacity: .6,
         },
     },
     title: {
         // mixBlendMode: 'difference',
         zIndex: 1,
-        textShadow: '0px 0px 14px #CE5937',
+        textShadow: '0px 0px 14px #000',
         [theme.breakpoints.up('xs')]: {
             letterSpacing: 2,
             fontSize: '2em',
@@ -87,7 +88,7 @@ export const Header = () => {
     return (
         <Grid component='section' className={classes.root}>
             <h1 className={classes.title}>HEXTL</h1>
-            <p className={classes.paragraph}><strong>CRM</strong> - nowe narzedzia do Twojej pracy</p>
+            <p className={classes.paragraph}><strong>CRM</strong> - nowe narzedzia do Twojej firmy</p>
             <HeaderButton onClick={handleLogDemo}>SPRAWDŹ DEMO</HeaderButton>
         </Grid>
     );

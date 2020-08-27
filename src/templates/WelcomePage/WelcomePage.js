@@ -1,16 +1,16 @@
 import React from 'react';
 
 import { Header } from './Header/Header';
-import AboutCrm from './AboutCrm';
-import WhyCrm from './WhyCrm';
+import AboutErp from './AboutErp';
+import WhyErp from './WhyErp';
 
 export const WelcomePage = () => {
 
     return (
         <section className='welcome-page'>
             <Header />
-            <AboutCrm />
-            <WhyCrm />
+            <AboutErp />
+            <WhyErp />
         </section >
 
     );
