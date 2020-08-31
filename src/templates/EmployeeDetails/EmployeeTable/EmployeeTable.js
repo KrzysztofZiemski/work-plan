@@ -93,7 +93,8 @@ export const EmployeeTable = ({ id, type }) => {
         return isGetReports ? statistics.create(dataRequest) : statistics.createCircle(dataRequest);
     };
 
-    const convertToDataTable = (report) => [report.options.line ? report.options.line : 'Podsumowanie', report.options.totalProduced, report.options.percentage, report.options.averageSpeed, report.options.averagePerHour];
+    const convertToDataTable = ({ line, totalProduced, percentage, averageSpeed, averagePerHour }) => [line ? line : 'Podsumowanie', totalProduced, percentage, averageSpeed, averagePerHour];
+
     const getReportEmployee = async () => {
         setFetching(true);
 
@@ -104,48 +105,48 @@ export const EmployeeTable = ({ id, type }) => {
         const dataSecondWorkplace = [];
         const dataThirdWorkplace = [];
         const promises = linesToRequest.map(async (line, index) => {
-            const options = { line: line.id };
+            const requestOptions = { line: line.id };
             if (linesToRequest.length === 1) {
-                const all = await getDataTables(options, true);
-                dataAllWorkplaces.push(convertToDataTable(all));
-                setReports(all.dataReport);
+                const { options, dataReport } = await getDataTables(requestOptions, true);
+                dataAllWorkplaces.push(convertToDataTable(options));
+                setReports(dataReport);
             } else {
-                const all = await getDataTables(options);
-                dataAllWorkplaces.push(convertToDataTable(all));
+                const { options } = await getDataTables(requestOptions);
+                dataAllWorkplaces.push(convertToDataTable(options));
             }
 
-            options.firstWorkplace = +id;
-            const first = await getDataTables(options);
-            dataFirstWorkplace.push(convertToDataTable(first));
+            requestOptions.firstWorkplace = +id;
+            const first = await getDataTables(requestOptions);
+            dataFirstWorkplace.push(convertToDataTable(first.options));
 
-            delete options.firstWorkplace;
-            options.secondWorkplace = +id;
-            const second = await getDataTables(options);
-            dataSecondWorkplace.push(convertToDataTable(second));
+            delete requestOptions.firstWorkplace;
+            requestOptions.secondWorkplace = +id;
+            const second = await getDataTables(requestOptions);
+            dataSecondWorkplace.push(convertToDataTable(second.options));
 
-            delete options.secondWorkplace;
-            options.thirdWorkplace = +id;
-            const third = await getDataTables(options);
-            dataThirdWorkplace.push(convertToDataTable(third));
+            delete requestOptions.secondWorkplace;
+            requestOptions.thirdWorkplace = +id;
+            const third = await getDataTables(requestOptions);
+            dataThirdWorkplace.push(convertToDataTable(third.options));
             if (index === linesToRequest.length - 1 && linesToRequest.length > 1) {
-                delete options.line;
-                const all = await getDataTables(options, true);
+                delete requestOptions.line;
+                const all = await getDataTables(requestOptions, true);
                 setReports(all.dataReport);
-                dataAllWorkplaces.push(convertToDataTable(all));
+                dataAllWorkplaces.push(convertToDataTable(all.options));
 
-                options.firstWorkplace = +id;
-                const first = await getDataTables(options);
-                dataFirstWorkplace.push(convertToDataTable(first));
+                requestOptions.firstWorkplace = +id;
+                const first = await getDataTables(requestOptions);
+                dataFirstWorkplace.push(convertToDataTable(first.options));
 
-                delete options.firstWorkplace;
-                options.secondWorkplace = +id;
-                const second = await getDataTables(options);
-                dataSecondWorkplace.push(convertToDataTable(second));
+                delete requestOptions.firstWorkplace;
+                requestOptions.secondWorkplace = +id;
+                const second = await getDataTables(requestOptions);
+                dataSecondWorkplace.push(convertToDataTable(second.options));
 
-                delete options.secondWorkplace;
-                options.thirdWorkplace = +id;
-                const third = await getDataTables(options);
-                dataThirdWorkplace.push(convertToDataTable(third));
+                delete requestOptions.secondWorkplace;
+                requestOptions.thirdWorkplace = +id;
+                const third = await getDataTables(requestOptions);
+                dataThirdWorkplace.push(convertToDataTable(third.options));
             }
             return Promise.resolve();
         })

@@ -88,7 +88,7 @@ export const Header = () => {
     return (
         <Grid component='section' className={classes.root}>
             <h1 className={classes.title}>HEXTL</h1>
-            <p className={classes.paragraph}><strong>CRM</strong> - nowe narzedzia do Twojej firmy</p>
+            <p className={classes.paragraph}><strong>ERP</strong> - nowe narzedzia do Twojej firmy</p>
             <HeaderButton onClick={handleLogDemo}>SPRAWDŹ DEMO</HeaderButton>
         </Grid>
     );

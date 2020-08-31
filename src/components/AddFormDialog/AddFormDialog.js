@@ -116,7 +116,7 @@ export const AddFormDialog = ({ onSubmit, fields, button, title }) => {
                             error={errors && errors[field.name]}
                         >
                             {field.options.map(option => (
-                                <MenuItem value={option.value}>{option.label}</MenuItem>
+                                <MenuItem value={option.value} key={option.value}>{option.label}</MenuItem>
                             ))}
 
                         </Select>

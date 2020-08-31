@@ -1,4 +1,5 @@
 import { SERVER } from '../config';
+import axios from '../utils/axios'
 const USER_SERVER = `${SERVER}/api/v1/user`
 export class UserService {
     static getUser(id) {
@@ -10,11 +11,7 @@ export class UserService {
     }
 
     static getAll() {
-        return fetch(USER_SERVER)
-            .then(res => {
-                if (res.ok) return res.json();
-                Promise.reject(res.status)
-            })
+        return axios('/api/v1/user')
     }
     static add = (data) => {
         const options = {

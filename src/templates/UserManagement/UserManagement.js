@@ -86,13 +86,12 @@ export const UserManagement = ({ className }) => {
     const fields = renderFields(roleList)
     useEffect(() => {
         if (usersList.length < 1) {
-            UserService.getAll().then(data => {
-                if (data.length > 0) setUsersList(data);
+            UserService.getAll().then(res => {
+                setUsersList(res.data);
+            }).catch(err => {
+                setMessage(['Nie udało się połączyc z serwerem', `status ${err}`])
+                setOpenMessage(true);
             })
-                .catch(err => {
-                    setMessage(['Nie udało się połączyc z serwerem', `status ${err}`])
-                    setOpenMessage(true);
-                })
         }
         if (usersList.length < 1) {
             RoleService.getAll().then(data => {
@@ -105,7 +104,7 @@ export const UserManagement = ({ className }) => {
         }
     }, [setRoleList, setUsersList, usersList])
     const refresh = () => {
-        UserService.getAll().then(data => setUsersList(data))
+        UserService.getAll().then(data => console.log(data))
             .catch(err => {
                 setMessage(['Nie udało się połączyc z serwerem', `status ${err}`])
                 setOpenMessage(true);

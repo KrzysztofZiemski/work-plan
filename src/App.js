@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, lazy, Suspense } from 'react';
+import React, { useContext, useEffect, lazy, Suspense } from 'react';
 import {
   BrowserRouter as Router,
 } from 'react-router-dom';

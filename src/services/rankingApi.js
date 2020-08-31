@@ -1,25 +1,47 @@
-import axios from '../utils/axios';
-const RANKING = '/api/v1/ranking';
+import { SERVER } from '../config';
+import { getWeekNumber, getQuarterNumber, getHalfYearNumber } from '../helpers/dateHelper';
 
-const createWeek = (date) => {
-    const URL =
-        axios.post(MESSAGE_URL, JSON.stringify({ mail, message, firstName }))
-}
+const RANKING = `${SERVER}/api/v1/ranking`;
 
-const createMonth = () => null
+const fetchCreate = (URL, year, period) => {
+    const data = {
+        dateRangeNumber: period,
+        year: year,
+    }
+    return fetch.post(`${RANKING}/${URL}`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }).then(res => {
+        if (res.ok) return res.json();
+        return Promise.reject(res.status);
+    })
+};
 
-const createQuater = () => null
+const fetchGet = (URL) => fetch(`${RANKING}/${URL}`).then(res => {
+    if (res.ok) return res.json();
+    return Promise.reject(res.status);
+});
 
-const createHalfYear = () => null
 
-const createYear = () => null
+export const createWeek = (date) => fetchCreate('week', date.getFullYear(), getWeekNumber(date));
 
-const getWeek = () => null
+export const createMonth = (date) => fetchCreate('month', date.getFullYear(), date.getMonth() + 1);
 
-const getMonth = () => null
+export const createQuater = (date) => fetchCreate('quarter', date.getFullYear(), getQuarterNumber(date));
 
-const gerQuater = () => null
+export const createHalfYear = (date) => fetchCreate('halfYear', date.getFullYear(), getHalfYearNumber(date));
 
-const getHalfYear = () => null
+export const createYear = () => (date) => fetchCreate('year', date.getFullYear(), date.getFullYear());
 
-const getYear = () => null
+export const getWeek = (date) => fetchGet(`year/${date.getFullYear()}/week/${getWeekNumber(date)}`);
+
+export const getMonth = (date) => fetchGet(`year/${date.getFullYear()}/month/${date.getMonth() + 1}`);
+
+export const gerQuater = (date) => fetchGet(`year/${date.getFullYear()}/quarter/${getQuarterNumber(date)}`);
+
+export const getHalfYear = (date) => fetchGet(`year/${date.getFullYear()}/halfYear/${getHalfYearNumber(date)}`);
+
+export const getYear = (date) => fetchGet(`year/${date.getFullYear()}`);
