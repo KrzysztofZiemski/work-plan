@@ -1,56 +1,78 @@
 import { useState, useEffect, useRef } from 'react';
 import * as rankingApi from '../services/rankingApi'
-import { rankingTypes } from '../conts';
+import { rankingTypes } from '../utils/conts';
 
 const useRanking = () => {
     const ref = useRef()
-    const [ranking, setRanking] = useState({
-        [rankingTypes.YEAR]: [],
-        [rankingTypes.HALF_YEAR]: [],
-        [rankingTypes.QUARTER]: [],
-        [rankingTypes.MONTH]: [],
-        [rankingTypes.WEEK]: [],
-    });
-    const [date, setDate] = useState(null);
-    const [error, setError] = useState({
-        isError: false,
-        errorStatus: null
-    });
+
+    const [yearRanking, setYearRanking] = useState([]);
+    const [halfYearRanking, setHalfYearRanking] = useState([]);
+    const [quarterRanking, setQuarterYearRanking] = useState([]);
+    const [monthRanking, setMonthRanking] = useState([]);
+    const [weekRanking, setWeekRanking] = useState([]);
+
+    const [isError, setIsError] = useState(false);
+
     useEffect(() => {
         ref.current = true;
         return () => ref.current = false;
     }, []);
 
-    const closeError = () => setError({ isError: false, errorStatus: null });
+    const closeError = () => setIsError(false);
 
-    const getReport = (date, type) => {
+    const setRankingByTypes = (ranking, type) => {
         switch (type) {
             case rankingTypes.YEAR:
-                return rankingApi.getYear(date);
+                return setYearRanking(ranking);
             case rankingTypes.HALF_YEAR:
-                return rankingApi.getHalfYear(date)
+                return setHalfYearRanking(ranking);
             case rankingTypes.QUARTER:
-                return rankingApi.gerQuater(date)
+                return setQuarterYearRanking(ranking);
             case rankingTypes.MONTH:
-                return rankingApi.getMonth(date)
+                return setMonthRanking(ranking);
             case rankingTypes.WEEK:
-                return rankingApi.getWeek(date)
+                return setWeekRanking(ranking);
             default:
-                return rankingApi.getYear(date);
+                setYearRanking(ranking);
         }
     }
+    const getReport = async (date, type) => {
+        try {
+            switch (type) {
+                case rankingTypes.YEAR:
+                    return rankingApi.getYear(date);
+                case rankingTypes.HALF_YEAR:
+                    return rankingApi.getHalfYear(date)
+                case rankingTypes.QUARTER:
+                    return rankingApi.gerQuater(date)
+                case rankingTypes.MONTH:
+                    return rankingApi.getMonth(date)
+                case rankingTypes.WEEK:
+                    return rankingApi.getWeek(date)
+                default:
+                    return rankingApi.getYear(date);
+            }
+        } catch (err) {
+
+        };
+    };
 
     const handleGetRanking = (date, type) => {
         getReport(date, type).then(ranking => {
-            if (ref.current) setRanking(state => ({ ...state, [type]: ranking }));
+            if (ref.current) setRankingByTypes(ranking, type)
         })
             .catch(status => {
-                if (ref.current) setError({ isError: true, errorStatus: status })
+                if (ref.current) setIsError(true);
             })
     };
-
-
-    return [ranking, { get: handleGetRanking, types: rankingTypes }]
+    return [{
+        year: yearRanking,
+        halfYear: halfYearRanking,
+        quarter: quarterRanking,
+        month: monthRanking,
+        week: weekRanking,
+    }, handleGetRanking, { isError, close: closeError }]
 };
 
+export { rankingTypes };
 export default useRanking;

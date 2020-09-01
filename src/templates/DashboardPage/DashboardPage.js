@@ -1,13 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import MUIDataTable from 'mui-datatables';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import SettingsIcon from '@material-ui/icons/Settings';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 
 import useRanking from '../../hooks/useRanking';
 import routes from '../../utils/routes';
-
+import { rankingTypes } from '../../utils/conts';
 const headerProduct = [
     {
         name: 'miejsce',
@@ -17,108 +15,85 @@ const headerProduct = [
     },
     {
         name: 'pracownik',
-        label: 'ranking pierwsze stanowisko',
+        label: 'pracownik',
+        download: true,
+        print: true,
+    },
+    {
+        name: 'percentage',
+        label: 'procent',
+        download: true,
+        print: true,
+    },
+    {
+        name: 'averagePerHour',
+        label: 'wydajność',
+        download: true,
+        print: true,
+    },
+    {
+        name: 'totalProduced',
+        label: 'Wyprodukowano',
         download: true,
         print: true,
     },
 ];
 
 const columns = [
-    // {
-    //     name: 'id',
-    //     label: 'id',
-    //     options: {
-    //         filter: false,
-    //         sort: false,
-    //         display: false,
-    //         customBodyRender: () => <AccountBoxIcon />
-    //     }
-    // },
     {
         name: 'place',
         label: 'miejsce',
         options: {
             filter: true,
             sort: true,
-            customFilterListOptions: {
-                render: v => v.map(l => l.employee.toUpperCase())
-            },
         },
     },
     {
-        name: 'generalRanking',
-        label: 'ranking generalny',
+        name: 'employee',
+        label: 'Pracownik',
         options: {
             filter: true,
             sort: true,
             customFilterListOptions: {
                 render: v => v.map(l => l.employee.toUpperCase())
             },
+            customBodyRender: ({ id, name, lastName }) => <Link key={id} to={`${routes.employeeDetails}/${id}`}>{`${name} ${lastName}`}</Link>
         },
     },
     {
-        name: 'firstWorkplaceRanking',
-        label: 'pierwsze stanowisko',
+        name: 'percentage',
+        label: 'procent',
         options: {
             filter: true,
             sort: true
         }
     },
     {
-        name: 'secondWorkplaceRanking',
-        label: 'drugie stanowisko',
+        name: 'averagePerHour',
+        label: 'wydajność',
         options: {
             filter: true,
             sort: true
         }
     },
     {
-        name: 'thirdWorkplaceRanking',
-        label: 'trzecie stanowisko',
+        name: 'totalProduced',
+        label: 'Wyprodukowano',
         options: {
             filter: true,
             sort: true
         }
     },
-    // {
-    //     name: 'settings',
-    //     label: 'ustawienia',
-    //     options: {
-    //         filter: false,
-    //         sort: false,
-    //         print: false,
-    //         download: false,
-    //         expandableRowsHeader: true,
-    //         customBodyRender: (value, tableMeta, updateValue) => {
-    //             const id = tableMeta.rowData[0];
-    //             return <Link to={`${routes.employeeDetails}/${id}`}><SettingsIcon color="primary" /></Link>
-    //         }
-    //     }
-    // },
 ]
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: 400
-    }
+        width: 800
+    },
 }));
 
-// const getRankingListItem = ({ employee, ...ranking }) => ({ ...employee, ...ranking })
-const getCell = (rankingTypeArr) => rankingTypeArr.map(({ employee, totalProduced }) => <Link to={`${routes.employeeDetails}/${employee.id}`}>{`${employee.name} ${employee.lastName}`}</Link>)
 
-const convertDataTable = (ranking) => {
-    const generalRanking = getCell(ranking.YEAR.generalRanking)
-    const firstWorkplaceRanking = getCell(ranking.YEAR.firstWorkplaceRanking);
-    const secondWorkplaceRanking = getCell(ranking.YEAR.secondWorkplaceRanking);
-    const thirdWorkplaceRanking = getCell(ranking.YEAR.thirdWorkplaceRanking);
 
-    const rows = []
-    for (let i = 0; i < firstWorkplaceRanking.length; i++) {
-        rows.push([i + 1, generalRanking[i], firstWorkplaceRanking[i], secondWorkplaceRanking[i], thirdWorkplaceRanking[i]]);
-    }
-
-    return rows
-}
 export const DashboardPage = () => {
     const options = {
         rowsPerPageOptions: [10, 20, 50],
@@ -126,13 +101,15 @@ export const DashboardPage = () => {
         responsive: 'standard',
         filterType: "dropdown",
         fixedSelectColumn: true,
-        // onRowsDelete: handleRemoveProductsBtn,
-        // isRowSelectable: (index) => list[index].isActive,
         rowsSelected: [],
         onDownload: (buildHead, buildBody, columns, data) => {
+            for (let i = 0; i < data.length; i++) {
+                data[i].data[1] = `${data[i].data[1].name} ${data[i].data[1].lastName}`
+            }
             return "\uFEFF" + buildHead(headerProduct) + buildBody(data);
         },
-    
+        selectableRows: 'none',
+        onRowsSelect: false,
         downloadOptions: {
             filename: 'excel-format.csv',
             separator: ';',
@@ -143,14 +120,21 @@ export const DashboardPage = () => {
 
         }
     };
-    const [ranking, handler] = useRanking();
-    const classes = useStyles()
+    const [ranking, getRanking, error] = useRanking();
+    const classes = useStyles();
+
     useEffect(() => {
-        handler.get(new Date(), handler.types.YEAR)
+        getRanking(new Date(), rankingTypes.YEAR)
     }, [])
-    // const x = ranking.YEAR.generalRanking - map
+
+    const renderDataRanking = (arrRanking) => arrRanking.map(({ averagePerHour, percentage, totalProduced, employee }, index) => (
+        [index + 1, employee, `${percentage}%`, averagePerHour, totalProduced]
+    ));
+
+    console.log('sss')
+
     let x = []
-    if (ranking.YEAR.generalRanking) x = convertDataTable(ranking)
+    if (ranking.year.generalRanking) x = renderDataRanking(ranking.year.generalRanking)
 
     return (
         <div className={classes.root}>
