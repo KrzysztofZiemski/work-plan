@@ -104,7 +104,7 @@ export const EmployeeManagement = ({ className }) => {
         };
     }, [employeesList, setEmployeesList, inActiveEmployeesList, setInActiveEmployeesList, filterEmployees, employeesActive.fetched, getEmployeesActive, employeesInActive.fetched, getEmployeesInActive]);
 
-    const updateEmployees = () => {
+    const refreshEmployees = () => {
         try {
             if (filterEmployees !== options.inActive.value) getEmployeesActive();
             if (filterEmployees !== options.active.value) getEmployeesInActive();
@@ -131,7 +131,7 @@ export const EmployeeManagement = ({ className }) => {
                 setIsLoaded(false);
                 setAlertMessage(messages);
                 setAlert(true);
-                updateEmployees();
+                refreshEmployees();
             })
             .catch(err => {
                 const messages = [
@@ -148,7 +148,7 @@ export const EmployeeManagement = ({ className }) => {
         const dataLowerCase = { ...data, name: data.name.toLowerCase(), lastName: data.lastName.toLowerCase() };
         addWEmployee(dataLowerCase).then(data => {
             setIsLoaded(false);
-            updateEmployees();
+            refreshEmployees();
             setAlertMessage(['Dodano pracownika', `${dataLowerCase.name} ${dataLowerCase.lastName}`]);
             setAlert(true);
         })

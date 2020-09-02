@@ -7,6 +7,7 @@ export default {
     settings: '/settings',
     employeeManagement: '/management-employee',
     employeeDetails: '/employee',
+    ranking: '/ranking',
     productManagement: '/management-product',
     productDetails: '/product',
     productionReport: '/report/production',

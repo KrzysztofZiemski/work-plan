@@ -37,10 +37,10 @@ export const TabBars = ({ headers, components, className }) => {
 
     return (
         <Card className={classes.root}>
-            <Tabs value={value} onChange={handleChange} indicatorColor='inherit' centered>
-                {Array.isArray(headers) && headers.map((header, index) => <Tab value={index} label={header} className={index === value ? classes.tabsActive : classes.tabs}></Tab>)}
+            <Tabs value={value} onChange={handleChange} centered>
+                {Array.isArray(headers) && headers.map((header, index) => <Tab key={index} value={index} label={header} className={index === value ? classes.tabsActive : classes.tabs}></Tab>)}
             </Tabs>
-            {components.map((component, index) => <TabItem value={value} index={index}>{component}</TabItem>)}
+            {components.map((component, index) => <TabItem key={index} value={value} index={index}>{component}</TabItem>)}
         </Card>
     );
 }

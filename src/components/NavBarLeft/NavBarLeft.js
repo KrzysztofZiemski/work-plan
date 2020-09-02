@@ -88,16 +88,13 @@ export const NavBarLeft = ({ isActive }) => {
                         </ListItem>
                     </List>
                 </ListItemCollapse>
-                <ListItem button to={routes.root} className={classes.disable}>
-                    <ListItemText primary="Statystyki" />
-                </ListItem>
-                {/* <ListItemCollapse label='Statystyki' disableStrictModeCompat={true}>
+                <ListItemCollapse label='Statystyki' disableStrictModeCompat={true}>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 5 ? true : false} onClick={() => setSelected(5)}>
-                            <ListItemText primary="Pracownicy" />
+                        <ListItem button className={classes.subListItem} component={Link} to={routes.ranking} selected={selected === 5 ? true : false} onClick={() => setSelected(5)}>
+                            <ListItemText primary="Ranking" />
                         </ListItem>
                     </List>
-                    <List component="div" disablePadding>
+                    {/* <List component="div" disablePadding>
                         <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 6 ? true : false} onClick={() => setSelected(6)}>
                             <ListItemText primary="Linie" />
                         </ListItem>
@@ -106,8 +103,8 @@ export const NavBarLeft = ({ isActive }) => {
                         <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 7 ? true : false} onClick={() => setSelected(7)}>
                             <ListItemText primary="Wpisy" />
                         </ListItem>
-                    </List>
-                </ListItemCollapse> */}
+                    </List> */}
+                </ListItemCollapse>
                 <ListItemCollapse label='Zarządzanie' disableStrictModeCompat={true}>
                     <List component="div" disablePadding>
                         <ListItem button className={classes.subListItem} component={Link} to={routes.employeeManagement} selected={selected === 8 ? true : false} onClick={() => setSelected(8)}>

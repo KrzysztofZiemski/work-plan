@@ -5,11 +5,11 @@ import { rankingTypes } from '../utils/conts';
 const useRanking = () => {
     const ref = useRef()
 
-    const [yearRanking, setYearRanking] = useState([]);
-    const [halfYearRanking, setHalfYearRanking] = useState([]);
-    const [quarterRanking, setQuarterYearRanking] = useState([]);
-    const [monthRanking, setMonthRanking] = useState([]);
-    const [weekRanking, setWeekRanking] = useState([]);
+    const [yearRanking, setYearRanking] = useState();
+    const [halfYearRanking, setHalfYearRanking] = useState();
+    const [quarterRanking, setQuarterYearRanking] = useState();
+    const [monthRanking, setMonthRanking] = useState();
+    const [weekRanking, setWeekRanking] = useState();
 
     const [isError, setIsError] = useState(false);
 
@@ -42,6 +42,7 @@ const useRanking = () => {
                 case rankingTypes.YEAR:
                     return rankingApi.getYear(date);
                 case rankingTypes.HALF_YEAR:
+                    console.log('weszło')
                     return rankingApi.getHalfYear(date)
                 case rankingTypes.QUARTER:
                     return rankingApi.gerQuater(date)
