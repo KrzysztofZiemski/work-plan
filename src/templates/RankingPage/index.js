@@ -1,3 +1,3 @@
-import { RankingTabs } from './RankingPage';
+import { RankingPage } from './RankingPage';
 
-export default RankingTabs;
+export default RankingPage;

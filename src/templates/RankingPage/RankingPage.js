@@ -53,9 +53,9 @@ export const RankingPage = () => {
                 </FormControl>
             </Grid>
             {rankingType === rankingTypes.YEAR && <RankingTabs ranking={ranking.year} title='ranking roczny' />}
-            {rankingType === rankingTypes.QUARTER && <RankingTabs ranking={ranking.quarter} title='ranking roczny' />}
+            {/* {rankingType === rankingTypes.QUARTER && <RankingTabs ranking={ranking.quarter} title='ranking roczny' />}
             {rankingType === rankingTypes.MONTH && <RankingTabs ranking={ranking.month} title='ranking roczny' />}
-            {rankingType === rankingTypes.WEEK && <RankingTabs ranking={ranking.week} title='ranking roczny' />}
+            {rankingType === rankingTypes.WEEK && <RankingTabs ranking={ranking.week} title='ranking roczny' />} */}
 
         </Grid>
     );

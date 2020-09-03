@@ -114,18 +114,20 @@ const renderDataRanking = (arrRanking) => arrRanking.map(({ averagePerHour, perc
 
 
 
-const RankingTable = ({ ranking, name }) => {
+const RankingTable = ({ ranking, name, className }) => {
     const tableData = useMemo(() => {
         return renderDataRanking(ranking)
     }, [ranking])
 
     return (
-        <MUIDataTable
-            title={name.toUpperCase}
-            data={tableData}
-            columns={columns}
-            options={options}
-        />
+        <>
+            <MUIDataTable
+                title={name.toUpperCase}
+                data={tableData}
+                columns={columns}
+                options={options}
+            />
+        </>
     );
 };
 

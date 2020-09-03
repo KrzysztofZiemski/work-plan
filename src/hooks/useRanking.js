@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import * as rankingApi from '../services/rankingApi'
+import * as rankingApi from '../services/rankingApi';
 import { rankingTypes } from '../utils/conts';
 
 const useRanking = () => {
@@ -36,26 +36,21 @@ const useRanking = () => {
                 setYearRanking(ranking);
         }
     }
-    const getReport = async (date, type) => {
-        try {
-            switch (type) {
-                case rankingTypes.YEAR:
-                    return rankingApi.getYear(date);
-                case rankingTypes.HALF_YEAR:
-                    console.log('weszło')
-                    return rankingApi.getHalfYear(date)
-                case rankingTypes.QUARTER:
-                    return rankingApi.gerQuater(date)
-                case rankingTypes.MONTH:
-                    return rankingApi.getMonth(date)
-                case rankingTypes.WEEK:
-                    return rankingApi.getWeek(date)
-                default:
-                    return rankingApi.getYear(date);
-            }
-        } catch (err) {
-
-        };
+    const getReport = (date, type) => {
+        switch (type) {
+            case rankingTypes.YEAR:
+                return rankingApi.createYear(date);
+            case rankingTypes.HALF_YEAR:
+                return rankingApi.createHalfYear(date)
+            case rankingTypes.QUARTER:
+                return rankingApi.createQuater(date)
+            case rankingTypes.MONTH:
+                return rankingApi.createMonth(date)
+            case rankingTypes.WEEK:
+                return rankingApi.createWeek(date)
+            default:
+                return rankingApi.getYear(date);
+        }
     };
 
     const handleGetRanking = (date, type) => {
@@ -63,6 +58,7 @@ const useRanking = () => {
             if (ref.current) setRankingByTypes(ranking, type)
         })
             .catch(status => {
+                console.log('status', status)
                 if (ref.current) setIsError(true);
             })
     };

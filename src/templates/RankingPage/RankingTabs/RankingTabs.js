@@ -4,7 +4,7 @@ import TabBars from '../../../components/TabBars';
 
 const headersTab = ['generalny', 'pierwsze stanowisko', 'drugie stanowisko', 'trzecie stanowisko'];
 
-const RankingTabs = ({ ranking, title }) => {
+export const RankingTabs = ({ ranking, title }) => {
     const components = useMemo(() => {
         return [
             <RankingTable ranking={ranking.generalRanking} name='Ranking generalny' />,
@@ -33,4 +33,3 @@ RankingTabs.defaultProps = {
     }
 }
 
-export { RankingTabs }

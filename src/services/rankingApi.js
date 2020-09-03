@@ -8,7 +8,8 @@ const fetchCreate = (URL, year, period) => {
         dateRangeNumber: period,
         year: year,
     }
-    return fetch.post(`${RANKING}/${URL}`, {
+    console.log('sssss', year, period)
+    return fetch(`${RANKING}/${URL}`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -34,7 +35,8 @@ export const createQuater = (date) => fetchCreate('quarter', date.getFullYear(),
 
 export const createHalfYear = (date) => fetchCreate('halfYear', date.getFullYear(), getHalfYearNumber(date));
 
-export const createYear = () => (date) => fetchCreate('year', date.getFullYear(), date.getFullYear());
+export const createYear = (date) => fetchCreate('year', date.getFullYear(), date.getFullYear());
+
 
 export const getWeek = (date) => fetchGet(`year/${date.getFullYear()}/week/${getWeekNumber(date)}`);
 

@@ -1,3 +1,3 @@
-import { RankinkTabs } from './RankinkTabs';
+import { RankingTabs } from './RankingTabs';
 
-export default RankinkTabs;
+export default RankingTabs;
