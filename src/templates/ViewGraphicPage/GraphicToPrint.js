@@ -9,7 +9,7 @@ const styles = {
         display: 'flex',
         flexWrap: 'wrap',
         flexDirection: 'column',
-        margin: '15px'
+        margin: '15px',
     },
 
     table: {

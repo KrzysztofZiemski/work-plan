@@ -36,6 +36,7 @@ export const DateTimePicker = ({ name = '', date, setDate, className }) => {
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Grid container={className ? false : true} className={className ? className : classes.root}>
                     <KeyboardDatePicker
+                        autoOk={true}
                         variant="inline"
                         format="dd/MM/yyyy"
                         margin="normal"
@@ -46,6 +47,7 @@ export const DateTimePicker = ({ name = '', date, setDate, className }) => {
                         }}
                     />
                     <KeyboardTimePicker
+                        autoOk={true}
                         ampm={false}
                         margin="normal"
                         format="HH:mm"

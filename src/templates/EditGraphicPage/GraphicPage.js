@@ -12,16 +12,15 @@ import WorkPlace from './WorkPlace/WorkPlace';
 import Employee from './Employee/Employee';
 import DialogMessage from '../../components/DialogMessage';
 
-import { updateWorkPlane, createOrGetWorkPlan } from '../../services/workPlanRequest';
+import { updateWorkPlane, createOrGetWorkPlan } from '../../services/workPlanApi';
 import { workPlaceNames, initFreeEmployee, getWorkplanToSend } from './handlers';
 import useActiveEmployees from '../../hooks/useActiveEmployees';
+import { useDateWeek } from '../../hooks/useDateWeek';
 
 export const WorkPlanContext = createContext({
     setWorkplaceEmployee: null,
     removeEmployee: null,
     workPlan: null,
-    dragable: null,
-    setDragable: null,
     submitWorkPlan: null
 });
 
@@ -85,27 +84,31 @@ const GraphicPage = (props) => {
 
     const [employees] = useActiveEmployees();
     const { loggedUser } = useContext(UserContext);
-    let [dateStart, setDateStart] = useState('');
-    let [dateEnd, setDateEnd] = useState('');
-    let [dragable, setDragable] = useState(1);
+    // let [dateStart, setDateStart] = useState('');
+    // let [dateEnd, setDateEnd] = useState('');
     let [freeEmployees, setFreeEmployees] = useState([]);
     let [workPlan, setWorkPlan] = useState(false);
-    let [errorMessage, setErrorMessage] = useState({ message: [], isOpen: false })
+    let [isSubmiting, setIsSubmiting] = useState(false);
+    let [errorMessage, setErrorMessage] = useState({ message: [], isOpen: false });
+    const [date, setDate] = useDateWeek();
+
     const classes = useStyles();
 
     useEffect(() => {
         if (!loggedUser) return;
-        if (!dateStart || !dateEnd) return;
-
-        createOrGetWorkPlan(dateStart, dateEnd, loggedUser.id)
+        setIsSubmiting(true)
+        createOrGetWorkPlan(date.start, date.end, loggedUser.id)
             .then(wrokPlanResponse => {
                 setWorkPlan(wrokPlanResponse);
+                setIsSubmiting(false);
                 if (employees.fetched) initFreeEmployee(employees.list, wrokPlanResponse, setFreeEmployees)
             })
-            .catch(err => setErrorMessage({ message: [`Nie udało się pobrać planu pracy ${err}`], isOpen: true }))
+            .catch(err => {
+                setErrorMessage({ message: [`Nie udało się pobrać planu pracy ${err}`], isOpen: true });
+                setIsSubmiting(false);
+            })
 
-    }, [dateStart, dateEnd, loggedUser, employees.fetched, employees.list]);
-
+    }, [date, loggedUser, employees.fetched, employees.list]);
 
     const closeMessage = () => setErrorMessage({ message: '', isOpen: false });
 
@@ -164,7 +167,6 @@ const GraphicPage = (props) => {
         }
         //for workplaces
         else {
-
             const employeeIndex = copyWorkPlan.workShifts[shift].lines[line].workplaces[workPlace].employeeListWorkplaces.findIndex(empoyee => empoyee.id === id);
             const removerEmployee = copyWorkPlan.workShifts[shift].lines[line].workplaces[workPlace].employeeListWorkplaces.splice(employeeIndex, 1);
 
@@ -176,11 +178,13 @@ const GraphicPage = (props) => {
     //zapisujemy plan
     const submitWorkPlan = () => {
         const preparationWorkPlan = getWorkplanToSend(workPlan);
+        setIsSubmiting(true);
         updateWorkPlane(1, preparationWorkPlan)
-            .then(res => {
-                if (res.status === 200) return setDragable(false);
+            .then(res => setIsSubmiting(false))
+            .catch(err => {
+                setIsSubmiting(false);
+                alert(`nie udało się zapisać planu - ${err}`);
             })
-            .catch(err => alert(`nie udało się zapisać planu - ${err}`))
     }
 
     return (
@@ -188,8 +192,8 @@ const GraphicPage = (props) => {
             <DialogMessage open={errorMessage.isOpen} close={closeMessage} messages={errorMessage.message} />
             <DndProvider backend={Backend}>
                 <section className={`${props.className} graphicPage`}>
-                    <WorkPlanContext.Provider value={{ setWorkplaceEmployee, removeEmployee, workPlan, dragable, setDragable, submitWorkPlan }}>
-                        <NavGraphic className='GraphicNav' dateStart={dateStart} setDateStart={setDateStart} dateEnd={dateEnd} setDateEnd={setDateEnd}></NavGraphic>
+                    <WorkPlanContext.Provider value={{ setWorkplaceEmployee, removeEmployee, workPlan, submitWorkPlan }}>
+                        <NavGraphic className='GraphicNav' dateStart={date.start} dateEnd={date.end} setDate={setDate}></NavGraphic>
 
                         <Grid container className={classes.root} >
                             <Grid item className={classes.shiftsContainer} >

@@ -30,14 +30,13 @@ const useStyles = makeStyles(theme => ({
 }))
 const WorkPlace = ({ line, shift, workPlace, children, title }) => {
 
-    const { setWorkplaceEmployee, removeEmployee, dragable } = useContext(WorkPlanContext);
+    const { setWorkplaceEmployee, removeEmployee } = useContext(WorkPlanContext);
 
     const classes = useStyles()
 
     const [{ isOver }, drop] = useDrop({
         accept: ItemTypes.EMPLOYEE,
         drop: (item, mointor) => {
-            if (!dragable) return;
             const deletedItem = removeEmployee({ shift: item.shift, line: item.line, workPlace: item.workPlace }, item.id);
             setWorkplaceEmployee({ shift, line, workPlace }, deletedItem)
         },
@@ -50,7 +49,7 @@ const WorkPlace = ({ line, shift, workPlace, children, title }) => {
         <>
             <List
                 className={classes.card}
-                ref={dragable ? drop : null}
+                ref={drop}
                 content
             >
                 <Paper elevation={3} className={classes.title}>

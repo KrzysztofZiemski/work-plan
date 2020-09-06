@@ -7,17 +7,18 @@ const handleChangeDate = (date) => {
     let end;
 
     if (day === 0) {
-        start = subtractionDate(6, date);
-        end = date
-    } else if (day === 1) {
         start = date;
         end = additionDays(6, date);
-    } else {
+    } else if (day === 1) {
         start = subtractionDate(day - 1, date);
-        end = additionDays(7 - day, date);
+        end = additionDays(5, date);
+    } else {
+        start = subtractionDate(day, date);
+        end = additionDays(6 - day, date);
     }
     return [start, end];
 }
+
 export const useDateWeek = () => {
 
     let [date, setDate] = useState(() => {

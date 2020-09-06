@@ -4,7 +4,7 @@ import { useReactToPrint } from 'react-to-print';
 import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { getWorkPlanByDate } from '../../services/workPlanRequest';
+import { getWorkPlanByDate } from '../../services/workPlanApi';
 import { getCorrectlyFormatData } from '../../helpers/dateHelper';
 
 import DateTimePicker from '../../components/DateTimePicker';

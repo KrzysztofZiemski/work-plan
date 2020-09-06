@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const NavGraphic = ({ className, setDateEnd, dateEnd, dateStart, setDateStart }) => {
+const NavGraphic = ({ className, dateEnd, dateStart, setDate }) => {
     const classes = useStyles()
     const { dragable, submitWorkPlan, setDragable } = useContext(WorkPlanContext);
 
@@ -48,29 +48,30 @@ const NavGraphic = ({ className, setDateEnd, dateEnd, dateStart, setDateStart })
     }
 
     const handleChangeDate = (date) => {
-        if (date instanceof Date) {
-            const day = date.getDay();
+        console.log('test', date)
+        // if (date instanceof Date) {
+        //     const day = date.getDay();
 
-            if (day === 0) {
-                setDateStart(subtractionDays(date, 6));
-                const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
-                const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
-                const year = date.getFullYear();
-                setDateEnd(`${year}-${month}-${day}`);
-                return;
-            }
-            if (day === 1) {
-                const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
-                const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
-                const year = date.getFullYear();
-                setDateStart(`${year}-${month}-${day}`);
-                setDateEnd(additionDays(date, 6));
-                return;
-            }
-            setDateStart(subtractionDays(date, day - 1));
-            setDateEnd(additionDays(date, 7 - day))
-        }
-
+        //     if (day === 0) {
+        //         setDateStart(subtractionDays(date, 6));
+        //         const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+        //         const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+        //         const year = date.getFullYear();
+        //         setDateEnd(`${year}-${month}-${day}`);
+        //         return;
+        //     }
+        //     if (day === 1) {
+        //         const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+        //         const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+        //         const year = date.getFullYear();
+        //         setDateStart(`${year}-${month}-${day}`);
+        //         setDateEnd(additionDays(date, 6));
+        //         return;
+        //     }
+        //     setDateStart(subtractionDays(date, day - 1));
+        //     setDateEnd(additionDays(date, 7 - day))
+        // }
+        setDate(date);
     }
 
     return (
@@ -96,7 +97,7 @@ const NavGraphic = ({ className, setDateEnd, dateEnd, dateStart, setDateStart })
                         value={dateEnd}
                         onChange={handleChangeDate}
                     />
-                    {dragable ? <Button variant="contained" color="primary" className={classes.btn} onClick={submitWorkPlan}>Zapisz</Button> : null}
+                    <Button variant="contained" color="primary" className={classes.btn} onClick={submitWorkPlan}>Zapisz</Button>
                 </Grid>
 
             </MuiPickersUtilsProvider>

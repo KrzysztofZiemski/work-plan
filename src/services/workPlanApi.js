@@ -1,15 +1,16 @@
 import { SERVER } from '../config';
-import { RootRef } from '@material-ui/core';
+import { getCorrectlyFormatData } from './../helpers/dateHelper';
 
 const WORK_PLAN_URL = `${SERVER}/api/v1/work-plan`
-// hextl / api / v1 / work - plan / param ? end = 2020.05.31 & start=2020.05.25
 
 
 const createWorkPlan = (startDate, endDate, userId) => {
+    const start = getCorrectlyFormatData(startDate).slice(0, 10);
+    const end = getCorrectlyFormatData(endDate).slice(0, 10);
     const data = {
         createByIdUser: 1,
-        endDay: endDate,
-        startDay: startDate
+        endDay: end,
+        startDay: start
     }
 
     return fetch(WORK_PLAN_URL, {
@@ -27,7 +28,10 @@ const createWorkPlan = (startDate, endDate, userId) => {
 };
 
 const getWorkPlanByDate = (startDate, endDate) => {
-    return fetch(`${WORK_PLAN_URL}/param?start=${startDate}&end=${endDate}`, {
+    const start = getCorrectlyFormatData(startDate).slice(0, 10);
+    const end = getCorrectlyFormatData(endDate).slice(0, 10);
+
+    return fetch(`${WORK_PLAN_URL}/param?start=${start}&end=${end}`, {
         method: 'GET',
         mode: 'cors',
         credentials: 'include',
@@ -43,7 +47,10 @@ const getWorkPlanByDate = (startDate, endDate) => {
 
 const createOrGetWorkPlan = (startDate, endDate, userId) => {
 
-    return fetch(`${WORK_PLAN_URL}/param?start=${startDate}&end=${endDate}`, {
+    const start = getCorrectlyFormatData(startDate).slice(0, 10);
+    const end = getCorrectlyFormatData(endDate).slice(0, 10);
+
+    return fetch(`${WORK_PLAN_URL}/param?start=${start}&end=${end}`, {
         method: 'GET',
         mode: 'cors',
         credentials: 'include',
