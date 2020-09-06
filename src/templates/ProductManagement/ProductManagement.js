@@ -146,7 +146,7 @@ export const ProductManagement = ({ className }) => {
             })
         }
         return () => {
-            setIsLoaded();
+            setIsLoaded(false);
         };
     }, [filterProducts, products]);
 

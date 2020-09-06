@@ -150,7 +150,7 @@ const RankingTable = ({ ranking, name, className }) => {
     }, [ranking])
 
     return (
-        <Grid className={className}>
+        <Grid className={className ? className : ''}>
             <MUIDataTable
                 title={name.toUpperCase}
                 data={tableData}

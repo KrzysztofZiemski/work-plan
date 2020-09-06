@@ -76,7 +76,7 @@ const columns = [
             expandableRowsHeader: true,
             customBodyRender: (value, tableMeta, updateValue) => {
                 const id = tableMeta.rowData[0];
-                return <Link to={`${routes.productDetails}/${id}`}><SettingsIcon color="primary" /></Link>
+                return <Link kay={value} to={`${routes.productDetails}/${id}`}><SettingsIcon color="primary" /></Link>
             }
         }
     },

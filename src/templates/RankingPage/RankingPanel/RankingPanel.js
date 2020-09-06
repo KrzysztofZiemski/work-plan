@@ -54,7 +54,6 @@ export const RankingPanel = ({ isSubmiting, submit }) => {
 
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
-                            okLabel={'na dzień'}
                             autoOk={true}
                             variant="inline"
                             format="dd/MM/yyyy"
