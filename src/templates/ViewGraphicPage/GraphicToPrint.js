@@ -13,7 +13,7 @@ const styles = {
     },
 
     table: {
-        margin: 10
+        minWidth: 1000
     },
     title: {
         fontSize: 15,
@@ -21,20 +21,21 @@ const styles = {
         backgroundColor: '#85acbd',
         color: '#222D32',
         border: '2px solid #222D32',
-        padding: 4
+        padding: 4,
     },
     head: {
         fontSize: 13,
         borderRight: '1px solid grey',
         backgroundColor: '#222D32',
         color: '#f3f3f3',
-        padding: 4
+        padding: 4,
+        minWidth: 130
     },
     cell: {
         backgroundColor: 'rgba(197,248,255,.4)',
         fontSize: 12,
         padding: 4,
-        width: 100
+        minWidth: 140
     },
     cellsOther: {
         backgroundColor: '#85acbd',
@@ -50,7 +51,7 @@ export class GraphicToPrint extends React.Component {
     renderTables(shift) {
         return (
             <Grid style={styles.containerTables} container>
-                <Grid component='table'>
+                <Grid component='table' style={styles.table}>
                     <TableHead >
                         <TableRow style={styles.title}>
                             <TableCell style={styles.title}>{`Zmiana ${shift.shiftNumber}`}</TableCell>
@@ -63,23 +64,14 @@ export class GraphicToPrint extends React.Component {
                         <TableRow >
                             <TableCell style={styles.head}>{`Linia ${shift.lines[0].lineNumber}`}</TableCell>
                             {renderWorkersCells(shift.lines[0].workplaces)}
-                            {/* <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska</TableCell>
-                            <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska</TableCell>
-                            <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliskam, Bernardetta Śliska</TableCell> */}
                         </TableRow >
                         <TableRow >
                             <TableCell style={styles.head}>{`Linia ${shift.lines[1].lineNumber}`}</TableCell>
                             {renderWorkersCells(shift.lines[2].workplaces)}
-                            {/* <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska</TableCell>
-                            <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska</TableCell>
-                            <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska , Bernardetta Śliska</TableCell> */}
                         </TableRow >
                         <TableRow >
                             <TableCell style={styles.head}>{`Linia ${shift.lines[2].lineNumber}`}</TableCell>
                             {renderWorkersCells(shift.lines[2].workplaces)}
-                            {/* <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska</TableCell>
-                            <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska</TableCell>
-                            <TableCell style={styles.cell}>Staś kowalski, Bernardetta Śliska</TableCell> */}
                         </TableRow >
                     </tbody>
                 </Grid >
@@ -95,7 +87,7 @@ export class GraphicToPrint extends React.Component {
                     </TableHead >
                     <tbody>
                         <TableRow >
-                            <TableCell style={styles.head}>{shift.shiftsLeader.map(employee => `${employee.name} ${employee.lastName}`)}</TableCell>
+                            <TableCell style={styles.head}>{shift.shiftsLeader.length > 0 ? shift.shiftsLeader.map(employee => `${employee.name} ${employee.lastName}`) : '\xa0'}</TableCell>
                             <TableCell style={styles.head}>{shift.supervision.map(employee => `${employee.name} ${employee.lastName}`)}</TableCell>
                             <TableCell style={styles.head}>{shift.unskilledWorker.map(employee => `${employee.name} ${employee.lastName}`)}</TableCell>
                             <TableCell style={styles.head}>{shift.other.map(employee => `${employee.name} ${employee.lastName}`)}</TableCell>
