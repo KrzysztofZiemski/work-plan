@@ -11,14 +11,10 @@ const useRanking = () => {
     const [monthRanking, setMonthRanking] = useState();
     const [weekRanking, setWeekRanking] = useState();
 
-    const [isError, setIsError] = useState(false);
-
     useEffect(() => {
         ref.current = true;
         return () => ref.current = false;
     }, []);
-
-    const closeError = () => setIsError(false);
 
     const setRankingByTypes = (ranking, type) => {
         switch (type) {
@@ -54,13 +50,12 @@ const useRanking = () => {
     };
 
     const handleGetRanking = (date, type) => {
-        getReport(date, type).then(ranking => {
-            if (ref.current) setRankingByTypes(ranking, type)
+        return getReport(date, type).then(ranking => {
+            if (ref.current) {
+                setRankingByTypes(ranking, type);
+                return Promise.resolve();
+            }
         })
-            .catch(status => {
-                console.log('status', status)
-                if (ref.current) setIsError(true);
-            })
     };
     return [{
         year: yearRanking,
@@ -68,7 +63,7 @@ const useRanking = () => {
         quarter: quarterRanking,
         month: monthRanking,
         week: weekRanking,
-    }, handleGetRanking, { isError, close: closeError }]
+    }, handleGetRanking]
 };
 
 export { rankingTypes };

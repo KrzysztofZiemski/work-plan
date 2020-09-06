@@ -22,7 +22,7 @@ export const additionDays = (countDays = 0, date) => {
 
 export const getWeekNumber = (date) => {
     const startYear = new Date(date.getFullYear(), 0, 1);
-    return console.log(Math.ceil((((date - startYear) / 86400000) + startYear.getDay()) / 7))
+    return Math.ceil((((date - startYear) / 86400000) + startYear.getDay()) / 7)
 };
 
 export const getQuarterNumber = (date) => Math.ceil((date.getMonth() + 1) / 3);

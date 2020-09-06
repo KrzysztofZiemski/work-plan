@@ -1,62 +1,50 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import useRanking from '../../hooks/useRanking';
-import { rankingTypes } from '../../utils/conts';
 import RankingTabs from './RankingTabs';
-import DateTimePicker from '../../components/DateTimePicker';
-
+import RankingPanel from './RankingPanel';
+import DialogMessage from '../../components/DialogMessage';
 
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        padding: '10px 20px'
     },
-    datePicer: {
-        width: '100%'
-    }
+    tables: {
+        justifyContent: 'space-around'
+    },
 }));
 
 export const RankingPage = () => {
-    const [ranking, getRanking, error] = useRanking();
-    const [date, setDate] = useState();
-    const [rankingType, setRankingTyle] = React.useState(rankingTypes.YEAR);
+    const [ranking, getRanking] = useRanking();
+    const [isSubmiting, setIsSubmiting] = useState(false);
+    const [error, setError] = useState(false);
+    const closeErrorMessage = () => {
+        setError(false);
+    }
     const classes = useStyles();
 
-    console.log(ranking)
-    const handleChangeType = (event) => {
-        setRankingTyle(event.target.value);
-    };
-
-    useEffect(() => {
-        getRanking(new Date(), rankingType);
-    }, [rankingType])
-    // name = '', date, setDate, className
+    const handleGetRanking = (date, type) => {
+        setIsSubmiting(true);
+        getRanking(date, type)
+            .then(() => setIsSubmiting(false))
+            .catch(err => setError(true));
+    }
     return (
         <Grid className={classes.root}>
             <Grid>
-                <DateTimePicker date={date} setDate={setDate} className={classes.datePicer} />
-                <FormControl className={classes.formControl}>
-                    <InputLabel>Typ rankingU</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={rankingType}
-                        onChange={handleChangeType}
-                    >
-                        <MenuItem value={rankingTypes.YEAR}>ranking roczny</MenuItem>
-                        <MenuItem value={rankingTypes.HALF_YEAR}>ranking półroczny</MenuItem>
-                        <MenuItem value={rankingTypes.QUARTER}>ranking kwartalny</MenuItem>
-                        <MenuItem value={rankingTypes.MONTH}>ranking miesięczny</MenuItem>
-                        <MenuItem value={rankingTypes.WEEK}>ranking tygodniowy</MenuItem>
-                    </Select>
-                </FormControl>
+                <RankingPanel isSubmiting={isSubmiting} submit={handleGetRanking} />
             </Grid>
-            {rankingType === rankingTypes.YEAR && <RankingTabs ranking={ranking.year} title='ranking roczny' />}
-            {/* {rankingType === rankingTypes.QUARTER && <RankingTabs ranking={ranking.quarter} title='ranking roczny' />}
-            {rankingType === rankingTypes.MONTH && <RankingTabs ranking={ranking.month} title='ranking roczny' />}
-            {rankingType === rankingTypes.WEEK && <RankingTabs ranking={ranking.week} title='ranking roczny' />} */}
-
-        </Grid>
+            <Grid container className={classes.tables}>
+                {ranking.year && <RankingTabs ranking={ranking.year} title='ranking roczny' />}
+                {ranking.halfYear && <RankingTabs ranking={ranking.halfYear} title='ranking półroczny' />}
+                {ranking.quarter && <RankingTabs ranking={ranking.quarter} title='ranking kwartalny' />}
+                {ranking.month && <RankingTabs ranking={ranking.month} title='ranking miesięczny' />}
+                {ranking.week && <RankingTabs ranking={ranking.week} title='ranking tygodniowy' />}
+            </Grid>
+            <DialogMessage open={error} close={closeErrorMessage} messages={['Wystąpił błąd podczas pobierania rankingu']} />
+        </Grid >
     );
 };

@@ -3,6 +3,7 @@ import MUIDataTable from 'mui-datatables';
 import { Link } from 'react-router-dom';
 
 import routes from '../../../../utils/routes';
+import { Grid } from '@material-ui/core';
 
 const headerProduct = [
     {
@@ -55,7 +56,13 @@ const columns = [
             customFilterListOptions: {
                 render: v => v.map(l => l.employee.toUpperCase())
             },
-            customBodyRender: ({ id, name, lastName }) => <Link key={id} to={`${routes.employeeDetails}/${id}`}>{`${name} ${lastName}`}</Link>
+            customBodyRender: ({ id, name, lastName }) => <Link key={id} style={{
+                textDecoration: 'none',
+                color: 'black',
+                ":hover": {
+                    color: 'red'
+                }
+            }} to={`${routes.employeeDetails}/${id}`}>{`${name} ${lastName}`}</Link>
         },
     },
     {
@@ -90,6 +97,29 @@ const options = {
     filterType: "dropdown",
     fixedSelectColumn: true,
     rowsSelected: [],
+    textLabels: {
+        body: {
+            noMatch: "Brak wyników",
+        },
+        pagination: {
+            next: "Następna strona",
+            previous: "Poprzednia strona",
+            rowsPerPage: "Ilość pozycji na stronie:",
+            displayRows: "z",
+        },
+        toolbar: {
+            search: "Szukaj",
+            downloadCsv: "Pobierz CSV",
+            print: "Drukuj",
+            viewColumns: "Widok kolumn",
+            filterTable: "Filtruj tabele",
+        },
+        filter: {
+            all: "Wszystko",
+            title: "Filtry",
+            reset: "zresetuj",
+        },
+    },
     onDownload: (buildHead, buildBody, columns, data) => {
         for (let i = 0; i < data.length; i++) {
             data[i].data[1] = `${data[i].data[1].name} ${data[i].data[1].lastName}`
@@ -120,14 +150,14 @@ const RankingTable = ({ ranking, name, className }) => {
     }, [ranking])
 
     return (
-        <>
+        <Grid className={className}>
             <MUIDataTable
                 title={name.toUpperCase}
                 data={tableData}
                 columns={columns}
                 options={options}
             />
-        </>
+        </Grid>
     );
 };
 

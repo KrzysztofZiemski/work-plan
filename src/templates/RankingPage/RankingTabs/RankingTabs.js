@@ -2,9 +2,30 @@ import React, { useMemo } from 'react';
 import RankingTable from './RankingTable';
 import TabBars from '../../../components/TabBars';
 
+import { makeStyles } from '@material-ui/core/styles';
+import { Grid } from '@material-ui/core';
+
+const useStyles = makeStyles(({
+    root: {
+        width: 685,
+        margin: 20
+    },
+    title: {
+        textAlign: 'center',
+        color: '#f3f3f3',
+        backgroundColor: '#222D32',
+        padding: 10,
+    },
+    rankingTables: {
+        margin: 0
+    }
+}))
+
 const headersTab = ['generalny', 'pierwsze stanowisko', 'drugie stanowisko', 'trzecie stanowisko'];
 
 export const RankingTabs = ({ ranking, title }) => {
+
+    const classes = useStyles()
     const components = useMemo(() => {
         return [
             <RankingTable ranking={ranking.generalRanking} name='Ranking generalny' />,
@@ -15,10 +36,10 @@ export const RankingTabs = ({ ranking, title }) => {
     }, [ranking]);
 
     return (
-        <div>
-            <h1>{title.toUpperCase()}</h1>
-            <TabBars headers={headersTab} components={components} />
-        </div>
+        <Grid className={classes.root}>
+            <h1 className={classes.title}>{title.toUpperCase()}</h1>
+            <TabBars className={classes.rankingTables} headers={headersTab} components={components} />
+        </Grid>
     );
 };
 

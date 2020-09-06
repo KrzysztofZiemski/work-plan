@@ -8,7 +8,6 @@ const fetchCreate = (URL, year, period) => {
         dateRangeNumber: period,
         year: year,
     }
-    console.log('sssss', year, period)
     return fetch(`${RANKING}/${URL}`, {
         method: 'POST',
         body: JSON.stringify(data),
