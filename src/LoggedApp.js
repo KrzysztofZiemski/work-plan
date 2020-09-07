@@ -1,4 +1,4 @@
-import React, { useState, createContext, lazy, Suspense } from 'react';
+import React, { lazy, Suspense } from 'react';
 import {
     Switch,
     Route
@@ -22,7 +22,7 @@ const LoginPage = lazy(() => import('./templates/LoginPage'));
 const ProductDetails = lazy(() => import('./templates/ProductDetails'));
 const LineManagement = lazy(() => import('./templates/LineManagement'));
 const UserManagement = lazy(() => import('./templates/UserManagement'));
-const LineDetails = lazy(() => import('./templates/LineDetails'));
+const LineDetailsPage = lazy(() => import('./templates/LineDetailsPage'));
 const EmployeeDetails = lazy(() => import('./templates/EmployeeDetails'));
 const RankingPage = lazy(() => import('./templates/RankingPage'));
 
@@ -66,7 +66,7 @@ const LoggedApp = ({ loggedUser, setLoggedUser }) => {
                         <Route path={routes.productManagement} exact render={(props) => <ProductManagement className='page' {...props} />} />
                         <Route path={routes.lineManagement} exact render={(props) => <LineManagement className='page' {...props} />} />
                         <Route path={routes.userManagement} exact render={(props) => <UserManagement className='page' {...props} />} />
-                        <Route path={`${routes.lineDetails}/:idLine`} render={(props) => <LineDetails className='page' {...props} />} />
+                        <Route path={`${routes.lineDetails}/:idLine`} render={(props) => <LineDetailsPage className='page' {...props} />} />
                         <Route path={`${routes.productDetails}/:idProduct`} render={(props) => <ProductDetails className='page' {...props} />} />
                         <Route path={`${routes.employeeDetails}/:idEmployee`} render={(props) => <EmployeeDetails className='page' {...props} />} />
                         <Route path={`${routes.ranking}`} render={(props) => <RankingPage className='page' {...props} />} />

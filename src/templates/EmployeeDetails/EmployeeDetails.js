@@ -38,17 +38,17 @@ export const EmployeeDetails = ({ match, className }) => {
 
     const content = [
         {
-            name: 'Imię',
+            label: 'Imię',
             value: employee.name,
             type: 'h1'
         },
         {
-            name: 'Nazwisko',
+            label: 'Nazwisko',
             value: employee.lastName,
             type: 'p'
         },
         {
-            name: 'informacje',
+            label: 'informacje',
             value: employee.information,
             type: 'p'
         },

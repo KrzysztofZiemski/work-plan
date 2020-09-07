@@ -7,27 +7,26 @@ import { makeStyles } from '@material-ui/core/styles';
 import LineTable from './LineTable';
 import { Grid, Card } from '@material-ui/core';
 import HeaderDetailsCircles from '../../components/HeaderDetailsCircles';
-import HeaderDetails from './../../components/HeaderDetails';
+import HeaderDetails from '../../components/HeaderDetails';
 
-const styles = makeStyles(({
 
-}))
-
-export const LineDetails = props => {
+export const LineDetailsPage = props => {
     const { match: { params } } = props;
-
     let [line, setLine] = useState('');
     let [message, setMessage] = useState({ isOpen: false, text: [] });
 
     const content = [
         {
-            name: 'Linia',
+            label: 'Linia',
+            name: 'name',
             value: line.name,
-            type: 'h1'
+            type: 'h1',
+            edit: true
         },
         {
-            name: 'Numer linii',
+            label: 'Numer linii',
             value: line.numberLine,
+            name: 'numberLine',
             type: 'p'
         }
     ]
@@ -54,7 +53,7 @@ export const LineDetails = props => {
                 <HeaderDetails content={content} />
                 <HeaderDetailsCircles title='Produkcja' id={params.idLine} type='LINE' setMessage={setMessage} />
             </Card>
-            <LineTable id={params.idLine} type='LINE' />
+            {/* <LineTable id={params.idLine} type='LINE' /> */}
         </section >
     );
 };

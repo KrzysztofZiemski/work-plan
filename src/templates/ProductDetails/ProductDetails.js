@@ -25,22 +25,22 @@ export const ProductDetails = ({ className, match }) => {
 
     const content = [
         {
-            name: 'Produkt',
+            label: 'Produkt',
             value: product.name,
             type: 'h1'
         },
         {
-            name: 'Seria',
+            label: 'Seria',
             value: product.instructionId,
             type: 'p'
         },
         {
-            name: 'itemsPerCycle',
+            label: 'itemsPerCycle',
             value: product.itemsPerCycle,
             type: 'p'
         },
         {
-            name: 'Opis',
+            label: 'Opis',
             value: product.description,
             type: 'p'
         }
