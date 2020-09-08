@@ -42,6 +42,21 @@ class LineService {
             })
             .catch(err => Promise.reject(err))
     }
+    static update = (id, data) => {
+        const options = {
+            method: 'PUT',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+        return fetch(`${SERVER_LINES}/${id}`, options)
+            .then(res => {
+                if (res.status === 200) return res.json();
+                return Promise.reject(res.status);
+            })
+
+    }
 }
 
 export default LineService;

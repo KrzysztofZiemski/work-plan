@@ -1,110 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Paper, Typography, Grid, TextField, Table, TableRow, TableCell, TableBody } from '@material-ui/core';
+import { Paper, Grid, Table, TableRow, TableCell, TableBody } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import ButtonLoader from './../ButtonLoader';
-// const styles = makeStyles(({
-//     root: {
-//         display: 'flex',
-//         flexDirection: 'column',
-//         width: '100%'
-//     },
-//     dataContainer: {
-//         display: 'flex',
-//         flexGrow: 1,
-//         height: '100%',
-//     },
-//     about: {
-//         display: 'flex',
-//         minWidth: 380,
-//         borderRadius: 20,
-//         margin: '0px 40px 00px 0px',
-//         backgroundColor: 'rgba(60,141,188,.1)',
-//         boxShadow: 'inset 39px 0px 78px -28px rgba(60,141,188,0.74)'
-//     },
-//     about__titles: {
-//         padding: '0 40px 0 30px',
-//         minWidth: 170,
-//         position: 'relative',
-//         overflow: 'hidden',
-//         '& *': {
-//             margin: 20
-//         }
-//     },
-//     about__separator: {
-//         position: 'absolute',
-//         top: 0,
-//         right: 0,
-//         width: 2,
-//         height: '100%',
-//         backgroundColor: '#5485a2'
-//     },
-//     about__values: {
-//         height: '100%',
-//         flexGrow: 1,
-//         padding: '0 0px 0 0px',
-//         '& *': {
-//             margin: 20
-//         },
-//     },
-//     button: {
-//         height: 40,
-//         marginBottom: 5,
-//         marginRight: 17,
-//         alignSelf: 'flex-end'
-//     },
-//     inputField: {
-//         width: 'auto'
-//     }
-// }))
-
-// export const HeaderDetails = ({ content, className }) => {
-
-//     const [editable, setEditable] = useState(false);
-
-//     const classes = styles();
-//     console.log()
-//     if (!content) return null;
-//     const renderDetails = () => {
-//         const titles = [];
-//         const values = [];
-//         content.forEach((element, index) => {
-//             titles.push(<Typography key={`${element.name}${index}`} component={'p'}>{element.name}</Typography>)
-//             if (editable) {
-//                 console.log('weszłooooo')
-//                 values.push(<TextField className={classes.inputField} key={`${element.value}${index}`} component={element.type ? element.type : 'p'}>{element.value}</TextField>)
-//             } else {
-//                 values.push(<Typography key={`${element.value}${index}`} component={element.type ? element.type : 'p'}>{element.value}</Typography>)
-//             }
-
-//         })
-
-//         const handleSetEditable = () => setEditable(true)
-
-//         return (
-//             <Grid className={className ? className : classes.root}>
-//                 <Grid className={classes.dataContainer}>
-//                     <Grid className={classes.about__titles}>
-//                         {titles}
-//                         <span className={classes.about__separator}></span>
-//                     </Grid>
-//                     <Grid className={classes.about__values}>
-//                         {values}
-//                     </Grid>
-
-//                 </Grid>
-//                 <ButtonLoader value='edytuj' className={classes.button} fullWidth={false} onClick={handleSetEditable} />
-//             </Grid >
-//         )
-//     }
-
-//     return (
-//         <Paper className={classes.about}>
-//             {renderDetails()}
-//         </Paper>
-//     );
-// };
-
 
 const styles = makeStyles(({
     paper: {
@@ -124,14 +22,15 @@ const styles = makeStyles(({
         flexDirection: 'column',
         height: '100%',
     },
+    buttonsContainer: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        padding: 10
+    },
     button: {
-        height: 40,
-        marginBottom: 5,
-        marginRight: 17,
-        alignSelf: 'flex-end'
+        marginRight: 15,
     },
     input: {
-        backgroundColor: 'inherit',
         border: '1px solid grey',
         margin: 1,
         padding: 4,
@@ -146,10 +45,10 @@ const styles = makeStyles(({
             margin: 0,
         },
 
-    }
+    },
 }))
 
-export const HeaderDetails = ({ content, className, onSubmit, isSubmiting }) => {
+export const HeaderDetails = ({ content, className, onChange, isSubmiting, onRemove }) => {
 
     const [editable, setEditable] = useState(false);
     const [form, setForm] = useState({});
@@ -166,7 +65,7 @@ export const HeaderDetails = ({ content, className, onSubmit, isSubmiting }) => 
     if (!content) return null;
     const handleToggleEditable = () => setEditable(prevState => !prevState)
     const handleUpdate = () => {
-        onSubmit(form);
+        onChange(form);
     };
 
     const handleChange = (e) => {
@@ -184,21 +83,38 @@ export const HeaderDetails = ({ content, className, onSubmit, isSubmiting }) => 
                 <Grid className={classes.dataContainer}>
                     <Table>
                         <TableBody>
-                            {content.map(element => {
-                                console.log(element)
-                                return (
-                                    <TableRow key={element.name} className={classes.row}>
-                                        <TableCell>{element.label}</TableCell >
-                                        <TableCell name={element.name}>
-                                            {editable ? <input className={classes.input} name={element.name} onChange={handleChange} value={form[element.name]}></input> : element.value}
-                                        </TableCell >
-                                    </TableRow >
-                                )
-                            })}
+                            {content.map(element => (
+                                <TableRow key={element.name} className={classes.row}>
+                                    <TableCell>{element.label}</TableCell >
+                                    <TableCell name={element.name}>
+                                        {editable ?
+                                            <input
+                                                type={element.type}
+                                                className={classes.input}
+                                                name={element.name}
+                                                onChange={element.edit ? handleChange : null}
+                                                value={form[element.name]}
+                                                disabled={!element.edit}>
+                                            </input> :
+                                            element.value}
+                                    </TableCell >
+                                </TableRow >
+                            ))}
                         </TableBody>
                     </Table >
                 </Grid>
-                <ButtonLoader value={editable ? 'zapisz' : 'edytuj'} className={classes.button} fullWidth={false} onClick={editable ? handleUpdate : handleToggleEditable} isSubmiting={isSubmiting} />
+                <Grid className={classes.buttonsContainer}>
+                    {
+                        onRemove && editable ?
+                            <ButtonLoader value={'USUŃ LINIE'} className={classes.button} fullWidth={false} onClick={onRemove} isSubmiting={isSubmiting} /> :
+                            null
+                    }
+                    {
+                        onChange ?
+                            <ButtonLoader value={editable ? 'zapisz' : 'edytuj'} className={classes.button} fullWidth={false} onClick={editable ? handleUpdate : handleToggleEditable} isSubmiting={isSubmiting} /> :
+                            null
+                    }
+                </Grid>
             </Grid >
         </Paper>
     )
