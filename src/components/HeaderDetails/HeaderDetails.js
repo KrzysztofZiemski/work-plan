@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Paper, Grid, Table, TableRow, TableCell, TableBody } from '@material-ui/core';
+import { Paper, Grid, Table, TableRow, TableCell, TableBody, TextField, MenuItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import ButtonLoader from './../ButtonLoader';
-
+import { YES, NO } from '../../utils/conts';
 const styles = makeStyles(({
     paper: {
         display: 'flex',
@@ -31,20 +31,8 @@ const styles = makeStyles(({
         marginRight: 15,
     },
     input: {
-        border: '1px solid grey',
-        margin: 1,
-        padding: 4,
-        paddingLeft: 16,
-        borderRadius: 5,
-        '&:hover': {
-            border: '2px solid grey',
-            margin: 0,
-        },
-        '&:focus': {
-            border: '2px solid #3C8DBC',
-            margin: 0,
-        },
-
+        width: '100%',
+        textAlign: 'center'
     },
 }))
 
@@ -52,21 +40,53 @@ export const HeaderDetails = ({ content, className, onChange, isSubmiting, onRem
 
     const [editable, setEditable] = useState(false);
     const [form, setForm] = useState({});
-
+    const [errors, setErrors] = useState({});
     const classes = styles();
 
     useEffect(() => {
-        content.forEach(item => setForm(prevState => ({
-            ...prevState,
-            [item.name]: item.value
-        })))
+        content.forEach(item => {
+            setForm(prevState => ({
+                ...prevState,
+                [item.name]: item.value
+            }));
+            setErrors(prevState => ({
+                ...prevState,
+                [item.name]: false
+            }));
+        });
     }, [content]);
 
     if (!content) return null;
+    const validateFields = () => {
+        let isOk = true;
+        content.forEach(fieldData => {
+            if (!fieldData.pattern) return;
+            const regExp = new RegExp(fieldData.pattern);
+            const result = regExp.test(form[fieldData.name]);
+            if (!result) {
+                setErrors(prevState => ({
+                    ...prevState,
+                    [fieldData.name]: true
+                }));
+                return isOk = false;
+            }
+            if (form[fieldData.name]) setErrors(prevState => ({
+                ...prevState,
+                [fieldData.name]: false
+            }));
+        });
+        return isOk;
+    }
+
     const handleToggleEditable = () => setEditable(prevState => !prevState)
     const handleUpdate = () => {
+        const isOk = validateFields();
+
+        if (!isOk) return;
         onChange(form);
+        setEditable(false);
     };
+
 
     const handleChange = (e) => {
         const name = e.target.name;
@@ -77,26 +97,36 @@ export const HeaderDetails = ({ content, className, onChange, isSubmiting, onRem
         }));
     };
 
+    //TODO option select
     return (
         <Paper className={classes.paper}>
             <Grid className={className ? className : classes.root}>
                 <Grid className={classes.dataContainer}>
                     <Table>
                         <TableBody>
-                            {content.map(element => (
-                                <TableRow key={element.name} className={classes.row}>
-                                    <TableCell>{element.label}</TableCell >
-                                    <TableCell name={element.name}>
+                            {content.map(({ name, label, type, edit, options, value, errorMessage }) => (
+                                <TableRow key={name} className={classes.row}>
+                                    <TableCell>{label}</TableCell >
+                                    <TableCell name={name}>
                                         {editable ?
-                                            <input
-                                                type={element.type}
+                                            <TextField
+                                                type={type}
                                                 className={classes.input}
-                                                name={element.name}
-                                                onChange={element.edit ? handleChange : null}
-                                                value={form[element.name]}
-                                                disabled={!element.edit}>
-                                            </input> :
-                                            element.value}
+                                                name={name}
+                                                onChange={edit ? handleChange : null}
+                                                value={form[name]}
+                                                disabled={!edit}
+                                                select={type === 'select'}
+                                                error={errors[name]}
+                                                helperText={errors[name] && errorMessage ? errorMessage : null}
+                                            >
+                                                {type === 'select' &&
+                                                    options.map(({ label, value }) => <MenuItem key={value} className={classes.input} value={value}>{label}</MenuItem >)
+                                                }
+                                            </TextField > :
+                                            typeof value !== 'boolean' ? value :
+                                                value ? YES : NO
+                                        }
                                     </TableCell >
                                 </TableRow >
                             ))}
@@ -106,7 +136,7 @@ export const HeaderDetails = ({ content, className, onChange, isSubmiting, onRem
                 <Grid className={classes.buttonsContainer}>
                     {
                         onRemove && editable ?
-                            <ButtonLoader value={'USUŃ LINIE'} className={classes.button} fullWidth={false} onClick={onRemove} isSubmiting={isSubmiting} /> :
+                            <ButtonLoader value={'USUŃ'} className={classes.button} fullWidth={false} onClick={onRemove} isSubmiting={isSubmiting} /> :
                             null
                     }
                     {
@@ -119,3 +149,4 @@ export const HeaderDetails = ({ content, className, onChange, isSubmiting, onRem
         </Paper>
     )
 };
+

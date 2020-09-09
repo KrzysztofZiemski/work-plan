@@ -55,7 +55,6 @@ class LineService {
                 if (res.status === 200) return res.json();
                 return Promise.reject(res.status);
             })
-
     }
 }
 

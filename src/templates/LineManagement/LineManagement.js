@@ -14,8 +14,8 @@ const fieldsAddLine = [
         name: 'name',
         type: 'text',
         label: 'nazwa linii',
-        pattern: '.{3,30}',
-        errorMessage: 'Nazwa linii musi zawierać od 1 do 30 znaków'
+        pattern: '.{4,30}',
+        errorMessage: 'Nazwa linii musi zawierać od 4 do 30 znaków'
     },
     {
         name: 'numberLine',

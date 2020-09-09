@@ -5,3 +5,6 @@ export const rankingTypes = {
     MONTH: 'MONTH',
     WEEK: 'WEEK',
 }
+
+export const YES = 'TAK'
+export const NO = 'NIE'

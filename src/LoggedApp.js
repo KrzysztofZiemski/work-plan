@@ -19,7 +19,7 @@ const EmployeeManagement = lazy(() => import('./templates/EmployeeManagement'));
 const ReportsList = lazy(() => import('./templates/ProductionReportPage/ReportsList'));
 const ProductManagement = lazy(() => import('./templates/ProductManagement'));
 const LoginPage = lazy(() => import('./templates/LoginPage'));
-const ProductDetails = lazy(() => import('./templates/ProductDetails'));
+const ProductDetailsPage = lazy(() => import('./templates/ProductDetailsPage'));
 const LineManagement = lazy(() => import('./templates/LineManagement'));
 const UserManagement = lazy(() => import('./templates/UserManagement'));
 const LineDetailsPage = lazy(() => import('./templates/LineDetailsPage'));
@@ -67,7 +67,7 @@ const LoggedApp = ({ loggedUser, setLoggedUser }) => {
                         <Route path={routes.lineManagement} exact render={(props) => <LineManagement className='page' {...props} />} />
                         <Route path={routes.userManagement} exact render={(props) => <UserManagement className='page' {...props} />} />
                         <Route path={`${routes.lineDetails}/:idLine`} render={(props) => <LineDetailsPage className='page' {...props} />} />
-                        <Route path={`${routes.productDetails}/:idProduct`} render={(props) => <ProductDetails className='page' {...props} />} />
+                        <Route path={`${routes.productDetails}/:idProduct`} render={(props) => <ProductDetailsPage className='page' {...props} />} />
                         <Route path={`${routes.employeeDetails}/:idEmployee`} render={(props) => <EmployeeDetails className='page' {...props} />} />
                         <Route path={`${routes.ranking}`} render={(props) => <RankingPage className='page' {...props} />} />
                     </Switch>
