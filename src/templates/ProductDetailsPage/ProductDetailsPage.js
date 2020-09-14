@@ -108,7 +108,7 @@ export const ProductDetailsPage = ({ className, match }) => {
     }
 
     useEffect(() => {
-        setIsSubmiting(true)
+        setIsSubmiting(true);
         getProduct(params.idProduct)
             .then(data => {
                 setIsSubmiting(false);

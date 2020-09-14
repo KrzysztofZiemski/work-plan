@@ -15,7 +15,7 @@ const GraphicPage = lazy(() => import('./templates/EditGraphicPage/GraphicPage')
 const ViewGraphicPage = lazy(() => import('./templates/ViewGraphicPage'));
 const DashboardPage = lazy(() => import('./templates/DashboardPage'));
 const ProductionReportPage = lazy(() => import('./templates/ProductionReportPage'));
-const EmployeeManagement = lazy(() => import('./templates/EmployeeManagement'));
+const EmployeeManagementPage = lazy(() => import('./templates/EmployeeManagementPage'));
 const ReportsList = lazy(() => import('./templates/ProductionReportPage/ReportsList'));
 const ProductManagement = lazy(() => import('./templates/ProductManagement'));
 const LoginPage = lazy(() => import('./templates/LoginPage'));
@@ -23,7 +23,7 @@ const ProductDetailsPage = lazy(() => import('./templates/ProductDetailsPage'));
 const LineManagement = lazy(() => import('./templates/LineManagement'));
 const UserManagement = lazy(() => import('./templates/UserManagement'));
 const LineDetailsPage = lazy(() => import('./templates/LineDetailsPage'));
-const EmployeeDetails = lazy(() => import('./templates/EmployeeDetails'));
+const EmployeeDetailsPage = lazy(() => import('./templates/EmployeeDetailsPage'));
 const RankingPage = lazy(() => import('./templates/RankingPage'));
 
 const useStyles = makeStyles((theme) => ({
@@ -60,7 +60,7 @@ const LoggedApp = ({ loggedUser, setLoggedUser }) => {
                         </Route>
                         <Route path={routes.workPlanEdit} exact render={(props) => <GraphicPage className='page' {...props} />} />
                         <Route path={routes.workPlan} exact render={(props) => <ViewGraphicPage className='page' {...props} />} />
-                        <Route path={routes.employeeManagement} exact render={(props) => <EmployeeManagement className='page' {...props} />} />
+                        <Route path={routes.employeeManagement} exact render={(props) => <EmployeeManagementPage className='page' {...props} />} />
                         <Route path={routes.productionReportList} exact render={(props) => <ReportsList className='page' {...props} />} />
                         <Route path={routes.productionReport} exact render={(props) => <ProductionReportPage className='page' {...props} />} />
                         <Route path={routes.productManagement} exact render={(props) => <ProductManagement className='page' {...props} />} />
@@ -68,7 +68,7 @@ const LoggedApp = ({ loggedUser, setLoggedUser }) => {
                         <Route path={routes.userManagement} exact render={(props) => <UserManagement className='page' {...props} />} />
                         <Route path={`${routes.lineDetails}/:idLine`} render={(props) => <LineDetailsPage className='page' {...props} />} />
                         <Route path={`${routes.productDetails}/:idProduct`} render={(props) => <ProductDetailsPage className='page' {...props} />} />
-                        <Route path={`${routes.employeeDetails}/:idEmployee`} render={(props) => <EmployeeDetails className='page' {...props} />} />
+                        <Route path={`${routes.employeeDetails}/:idEmployee`} render={(props) => <EmployeeDetailsPage className='page' {...props} />} />
                         <Route path={`${routes.ranking}`} render={(props) => <RankingPage className='page' {...props} />} />
                     </Switch>
                 </Suspense>

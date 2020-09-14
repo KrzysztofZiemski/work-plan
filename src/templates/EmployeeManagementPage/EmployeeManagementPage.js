@@ -43,14 +43,14 @@ const fieldsAddEmployee = [
         type: 'text',
         label: 'imie',
         pattern: '.{3,20}',
-        errorMessage: 'Imię musi zawierać od 3 do 10 znaków'
+        errorMessage: 'Imię musi zawierać od 3 do 20 znaków'
     },
     {
         name: 'lastName',
         label: 'nazwisko',
         type: 'text',
         pattern: '.{3,20}',
-        errorMessage: 'Nazwisko musi zawierać od 3 do 10 znaków'
+        errorMessage: 'Nazwisko musi zawierać od 3 do 20 znaków'
     },
     {
         name: 'desc',
@@ -60,7 +60,7 @@ const fieldsAddEmployee = [
     },
 ];
 
-export const EmployeeManagement = ({ className }) => {
+export const EmployeeManagementPage = ({ className }) => {
     const classes = useStyles();
 
     const { employeesList, setEmployeesList, inActiveEmployeesList, setInActiveEmployeesList } = useContext(EmployeesContext);

@@ -10,6 +10,12 @@ export const getEmployeesByActive = (active = true) => {
         .catch(err => Promise.reject(err));
 };
 
+export const updateEmployee = (id, data) => {
+    return axios.put(`${WORKERS_URL}/${id}`, JSON.stringify(data))
+        .then(res => res.data)
+        .catch(err => Promise.reject(err))
+};
+
 export const getAllEmployee = async () => {
     try {
         const activeEmployees = await axios.get(WORKERS_URL)

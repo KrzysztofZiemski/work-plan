@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import { subtractionDate } from '../../../helpers/dateHelper';
 import { Select, InputLabel, FormControl, MenuItem, Typography } from '@material-ui/core';
-import { getCorrectlyFormatData } from './../../../helpers/dateHelper';
+import { getCorrectlyFormatData } from '../../../helpers/dateHelper';
 import DateTimePicker from '../../../components/DateTimePicker';
 import DialogMessage from '../../../components/DialogMessage';
 import statistics from '../../../services/statisticsService';
