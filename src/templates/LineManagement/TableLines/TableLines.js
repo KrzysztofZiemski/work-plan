@@ -41,7 +41,7 @@ const columns = [
     },
     {
         name: 'name',
-        label: 'nazwa linii',
+        label: 'Nazwa linii',
         options: {
             filter: true,
             sort: true,
@@ -52,7 +52,7 @@ const columns = [
     },
     {
         name: 'numberLine',
-        label: 'numer linii',
+        label: 'Numer linii',
         options: {
             filter: true,
             sort: true,
@@ -63,7 +63,7 @@ const columns = [
     },
     {
         name: 'settings',
-        label: 'ustawienia',
+        label: 'Ustawienia',
         options: {
             filter: false,
             sort: false,

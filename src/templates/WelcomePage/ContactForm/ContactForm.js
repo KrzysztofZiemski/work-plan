@@ -120,6 +120,16 @@ export const ContactForm = ({ setClose, open }) => {
                         <FormGroup className={classes.form}>
                             <TextField
                                 multiline
+                                label="Tytuł wiadomości"
+                                variant="outlined"
+                                className={classes.input}
+                                name='title'
+                                onChange={handleChange}
+                                value={form['title']}
+                                error={errors['title']}
+                                helperText={errors['title'] ? 'wpisz tytuł wysyłanej wiadomości' : ''} />
+                            <TextField
+                                multiline
                                 label="Imie"
                                 variant="outlined"
                                 className={classes.input}
@@ -140,18 +150,8 @@ export const ContactForm = ({ setClose, open }) => {
                                 helperText={errors['mail'] ? 'podaj adres mailowy do kontaktu z Tobą' : ''} />
                             <TextField
                                 multiline
-                                label="Tytuł wiadomości"
-                                variant="outlined"
-                                className={classes.input}
-                                name='title'
-                                onChange={handleChange}
-                                value={form['title']}
-                                error={errors['title']}
-                                helperText={errors['title'] ? 'wpisz tytuł wysyłanej wiadomości' : ''} />
-                            <TextField
-                                multiline
                                 rows={8}
-                                label="Opis"
+                                label="Treść wiadomości"
                                 variant="outlined"
                                 className={classes.input}
                                 name='message'

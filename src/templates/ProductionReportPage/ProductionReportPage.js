@@ -10,11 +10,9 @@ import DialogMessage from '../../components/DialogMessage';
 import ReportsList from './ReportsList';
 import ProductionReportService from '../../services/ProductionReportService';
 import { UserContext } from '../../Contexts';
+import HeaderPage from '../../components/HeaderPage';
 
 const styles = makeStyles({
-    cardHeader: {
-        textAlign: 'center'
-    },
     card: {
         margin: '0 auto',
         width: '99%'
@@ -59,7 +57,7 @@ export const ProductionReportPage = ({ className }) => {
             <Loader open={isSubmiting} />
             <DialogMessage open={openMessage} close={handleCloseMessage} messages={messages} />
             <Card className={classes.card}>
-                <CardHeader component='h1' title=' Wprowadź raport' className={classes.cardHeader} />
+                <HeaderPage title='Wprowadź raport' />
                 <AddReportForm setMessage={handleOpenMessage} isSubmiting={isSubmiting} onSubmit={handleSubmit} />
             </Card>
             <ReportsList pagination={5} />

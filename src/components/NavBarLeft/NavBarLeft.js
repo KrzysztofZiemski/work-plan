@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
         maxWidth: 360,
         transition: '.5s',
         height: '100vh',
-        backgroundColor: '#222d32',
+        backgroundColor: '#0a2164',
         color: '#fff',
         position: 'sticky',
         top: 0,
@@ -28,7 +28,7 @@ const useStyles = makeStyles(() => ({
         transition: '.5s',
         height: '100%',
         flexGrow: 1,
-        backgroundColor: '#222d32',
+        backgroundColor: '#fff',
         position: 'sticky',
         top: 0,
         overflow: 'auto'
@@ -42,7 +42,7 @@ const useStyles = makeStyles(() => ({
     disable: {
         backgroundColor: '#aaa',
         '&:hover': {
-            backgroundColor: '#aaa',
+            backgroundColor: '#fff',
         }
     }
 }));

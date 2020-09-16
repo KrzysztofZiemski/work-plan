@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 
 import { useReactToPrint } from 'react-to-print';
-import { Grid } from '@material-ui/core';
+import { CardHeader, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { getWorkPlanByDate } from '../../services/workPlanApi';
@@ -13,6 +13,7 @@ import { GraphicToPrint } from './GraphicToPrint';
 import DialogMessage from '../../components/DialogMessage';
 import useActiveEmployees from '../../hooks/useActiveEmployees';
 import { useDateWeek } from '../../hooks/useDateWeek';
+import HeaderPage from '../../components/HeaderPage';
 
 const useStyles = makeStyles(({
     settings: {
@@ -23,7 +24,7 @@ const useStyles = makeStyles(({
     printButton: {
         alignSelf: 'center',
         margin: 20
-    }
+    },
 }));
 
 export const ViewGraphicPage = () => {
@@ -31,31 +32,29 @@ export const ViewGraphicPage = () => {
     let [dates, setDates] = useDateWeek();
     let [workPlan, setWorkPlan] = useState();
     let [isError, setIsError] = useState(false);
-    let [emp] = useActiveEmployees()
-
-    useEffect(() => {
-        const start = getCorrectlyFormatData(dates.start).slice(0, 10);
-        const end = getCorrectlyFormatData(dates.end).slice(0, 10);
-        getWorkPlanByDate(start, end)
-            .then(data => setWorkPlan(data))
-            .catch(err => setIsError(true))
-    }, [dates])
 
     const closeMessage = () => setIsError(false)
     const handlerPrint = useReactToPrint({
         content: () => componentRef.current
     });
 
-
+    const getPlan = () => {
+        const start = getCorrectlyFormatData(dates.start).slice(0, 10);
+        const end = getCorrectlyFormatData(dates.end).slice(0, 10);
+        getWorkPlanByDate(start, end)
+            .then(data => setWorkPlan(data))
+            .catch(err => setIsError(true))
+    }
 
     const classes = useStyles();
 
     return (
         <div>
+            <HeaderPage title='Plan pracy' />
             <Grid container className={classes.settings}>
                 <Grid>
-                    <DateTimePicker name='wybierz tydzień' date={dates.start} setDate={setDates} />
-                    <ButtonLoader value='Pokaż' />
+                    <DateTimePicker name='Wybierz tydzień' date={dates.start} setDate={setDates} onlyDate arrows />
+                    <ButtonLoader value='Pokaż tydzień' onClick={getPlan} />
                 </Grid>
                 <ButtonLoader onClick={handlerPrint} fullWidth={false} value='Drukuj' className={classes.printButton} />
             </Grid>

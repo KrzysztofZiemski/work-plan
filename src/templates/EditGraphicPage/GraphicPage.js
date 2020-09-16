@@ -16,6 +16,8 @@ import { updateWorkPlane, createOrGetWorkPlan } from '../../services/workPlanApi
 import { workPlaceNames, initFreeEmployee, getWorkplanToSend } from './handlers';
 import useActiveEmployees from '../../hooks/useActiveEmployees';
 import { useDateWeek } from '../../hooks/useDateWeek';
+import { CardHeader } from '@material-ui/core';
+import HeaderPage from '../../components/HeaderPage';
 
 export const WorkPlanContext = createContext({
     setWorkplaceEmployee: null,
@@ -35,7 +37,7 @@ const useStyles = makeStyles(theme => ({
     otherEmployees: {
         width: 240,
         minWidth: 240,
-        height: '100%',
+        // height: '100%',
         position: 'sticky',
         top: 0,
         maxHeight: '80vh',
@@ -77,15 +79,13 @@ const useStyles = makeStyles(theme => ({
     },
     workPlace: {
         height: 300
-    }
-}))
-//zmienic wszystkie listy pracownika na hooki i stworzyć hook dla nieaktywnych
+    },
+}));
+
 const GraphicPage = (props) => {
 
     const [employees] = useActiveEmployees();
     const { loggedUser } = useContext(UserContext);
-    // let [dateStart, setDateStart] = useState('');
-    // let [dateEnd, setDateEnd] = useState('');
     let [freeEmployees, setFreeEmployees] = useState([]);
     let [workPlan, setWorkPlan] = useState(false);
     let [isSubmiting, setIsSubmiting] = useState(false);
@@ -189,6 +189,7 @@ const GraphicPage = (props) => {
 
     return (
         <section className={props.className}>
+            <HeaderPage title='Edycja Planu Pracy' />
             <DialogMessage open={errorMessage.isOpen} close={closeMessage} messages={errorMessage.message} />
             <DndProvider backend={Backend}>
                 <section className={`${props.className} graphicPage`}>
