@@ -24,6 +24,10 @@ export const LinesContext = createContext({
     linesList: [],
     setLinesList: '',
 });
+export const ProductsContext = createContext({
+    productsList: [],
+    setProductsList: '',
+});
 
 const Contexts = ({ children }) => {
     let [activeLeftMenu, setActiveLeftMenu] = useState(false);
@@ -33,6 +37,7 @@ const Contexts = ({ children }) => {
     let [usersList, setUsersList] = useState([]);
     let [roleList, setRoleList] = useState([]);
     let [linesList, setLinesList] = useState([]);
+    let [productsList, setProductsList] = useState([]);
 
     return (
         <UserContext.Provider value={{ loggedUser, setLoggedUser, activeLeftMenu, setActiveLeftMenu }}>
@@ -40,7 +45,9 @@ const Contexts = ({ children }) => {
                 <EmployeesContext.Provider value={{ employeesList, setEmployeesList, inActiveEmployeesList, setInActiveEmployeesList }}>
                     <LinesContext.Provider value={{ linesList, setLinesList }}>
                         <UsersContext.Provider value={{ usersList, setUsersList }}>
-                            {children}
+                            <ProductsContext.Provider value={{ productsList, setProductsList }}>
+                                {children}
+                            </ProductsContext.Provider>
                         </UsersContext.Provider>
                     </LinesContext.Provider>
                 </EmployeesContext.Provider>

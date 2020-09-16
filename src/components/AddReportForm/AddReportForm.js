@@ -8,12 +8,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import ButtonLoader from '../../../components/ButtonLoader';
-import LineService from '../../../services/LineService';
-import { getProductsByActive } from '../../../services/ProductService';
-import ProductionReportService from '../../../services/ProductionReportService';
-import { UserContext, LinesContext } from '../../../Contexts';
-import useActiveEmployees from '../../../hooks/useActiveEmployees';
+import ButtonLoader from '../ButtonLoader';
+import LineService from '../../services/LineService';
+import { getProductsByActive } from '../../services/ProductService';
+import { LinesContext, ProductsContext } from '../../Contexts';
+import useActiveEmployees from '../../hooks/useActiveEmployees';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -64,113 +63,102 @@ const errorsMessage = {
     workTime: 'wskaż czas pracy',
     wrongDates: 'czas końca pracy musi być późniejszy niż początku',
 }
-export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
-    const blankForm = {
-        productionStart: today(),
-        productionEnd: today(),
-        lineId: '',
-        productionHours: 0,
-        productionMinutes: 0,
-        productId: '',
-        series: '',
-        speedMachinePerMinute: '',
-        firstWorkplaceIdEmployee: '',
-        secondWorkplaceIdEmployee: '',
-        thirdWorkplaceIdEmployee: '',
-        description: '',
-        totalQuantityProduced: ''
-    }
-    const blankErrors = {
-        productionStart: false,
-        productionEnd: false,
-        lineId: false,
-        productionHours: false,
-        productionMinutes: false,
-        productId: false,
-        series: false,
-        speedMachinePerMinute: false,
-        firstWorkplaceIdEmployee: false,
-        secondWorkplaceIdEmployee: false,
-        thirdWorkplaceIdEmployee: false,
-        totalQuantityProduced: false
-    }
-    //series: '.{3,20}|^$',
-    let patterns = {
-        lineId: '.{1,20}',
-        productId: '.{1,20}',
-        series: '.{3,20}',
-        speedMachinePerMinute: `^[1-9][0-9]*$`,
-        totalQuantityProduced: '(.{1,20})'
-    }
-    const blankErrorLabels = {
-        productionStart: '',
-        productionEnd: '',
-        lineId: '',
-        productionHours: '',
-        productionMinutes: '',
-        productId: '',
-        series: '',
-        speedMachinePerMinute: '',
-        firstWorkplaceIdEmployee: '',
-        secondWorkplaceIdEmployee: '',
-        thirdWorkplaceIdEmployee: '',
-        totalQuantityProduced: ''
-    }
+const blankForm = {
+    productionStart: today(),
+    productionEnd: today(),
+    lineId: '',
+    productionHours: 0,
+    productionMinutes: 0,
+    productId: '',
+    series: '',
+    speedMachinePerMinute: '',
+    firstWorkplaceIdEmployee: '',
+    secondWorkplaceIdEmployee: '',
+    thirdWorkplaceIdEmployee: '',
+    description: '',
+    totalQuantityProduced: '',
+}
+
+const blankErrors = {
+    productionStart: false,
+    productionEnd: false,
+    lineId: false,
+    productionHours: false,
+    productionMinutes: false,
+    productId: false,
+    series: false,
+    speedMachinePerMinute: false,
+    firstWorkplaceIdEmployee: false,
+    secondWorkplaceIdEmployee: false,
+    thirdWorkplaceIdEmployee: false,
+    totalQuantityProduced: false,
+}
+//series: '.{3,20}|^$',
+let patterns = {
+    lineId: '.{1,20}',
+    productId: '.{1,20}',
+    series: '.{3,20}',
+    speedMachinePerMinute: `^[1-9][0-9]*$`,
+    totalQuantityProduced: '(.{1,20})',
+}
+const blankErrorLabels = {
+    productionStart: '',
+    productionEnd: '',
+    lineId: '',
+    productionHours: '',
+    productionMinutes: '',
+    productId: '',
+    series: '',
+    speedMachinePerMinute: '',
+    firstWorkplaceIdEmployee: '',
+    secondWorkplaceIdEmployee: '',
+    thirdWorkplaceIdEmployee: '',
+    totalQuantityProduced: '',
+}
+
+export const AddReportForm = ({ setMessage, isSubmiting, initValue, onSubmit }) => {
+
     const classes = useStyles();
 
-    const { loggedUser } = useContext(UserContext);
     const { linesList, setLinesList } = useContext(LinesContext);
+    const { productsList, setProductsList } = useContext(ProductsContext);
+
     const [employees] = useActiveEmployees();
-    let [formData, setFormData] = useState(blankForm);
+    let [formData, setFormData] = useState(initValue || blankForm);
     let [errors, setErrors] = useState(blankErrors);
     let [errorLabels, setErrorLabels] = useState(blankErrorLabels);
-    let [products, setProducts] = useState([]);
-    let [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         (async () => {
-            const linesPromise = LineService.getAllLines()
-                .then(data => setLinesList(data));
-            const productsPromise = getProductsByActive()
-                .then(data => setProducts(data));
+            try {
+                const lines = await LineService.getAllLines();
+                setLinesList(lines);
+                const products = await getProductsByActive();
+                setProductsList(products);
+            } catch (err) {
+                setMessage(['Błąd łączności z serwerem', 'spróbuj odświerzyć stronę', `status ${err}`]);
+            }
 
-            Promise.all([linesPromise, productsPromise])
-                .catch(err => {
-                    setMessages(['Błąd łączności z serwerem', 'spróbuj odświerzyć stronę', `status ${err}`]);
-                    setOpenMessage(true);
-                })
         })();
-    }, [setLinesList, setMessages, setOpenMessage])
+    }, []);
 
     const sorterEmployees = useCallback(() => {
         return employees.list.sort((a, b) => (a.lastName < b.lastName) ? -1 : (a.lastName > b.lastName) ? 1 : 0)
     }, [employees])
-    console.log('sorterEmployees', sorterEmployees)
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const isOk = validation();
         if (!isOk) return;
         const data = { ...formData };
-        data.productionStart = data.productionStart.replace('T', '-');
-        data.productionEnd = data.productionEnd.replace('T', '-');
+
 
         data.firstWorkplaceIdEmployee = data.firstWorkplaceIdEmployee.id;
         data.secondWorkplaceIdEmployee = data.secondWorkplaceIdEmployee.id;
         data.thirdWorkplaceIdEmployee = data.thirdWorkplaceIdEmployee.id;
         if (!data.series) delete data.series;
-        setIsSubmitting(true);
-        ProductionReportService.save(data, loggedUser.id)
-            .then(data => {
-                setIsSubmitting(false);
-                setMessages(['Dodano raport']);
-                setOpenMessage(true);
-                setFormData(blankForm);
-            })
-            .catch(err => {
-                setIsSubmitting(false);
-                setMessages(['Nie udało się zapisać raportu', 'wystąpił błąd łączności', `status ${err}`]);
-                setOpenMessage(true);
-            })
+        const isSubmited = await onSubmit(data);
+        if (isSubmited) setFormData(blankForm);
     }
 
     const handleChange = (e) => {
@@ -178,10 +166,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
         const value = e.target.value;
         setFormData(prevState => ({ ...prevState, [name]: value }))
     };
-    const handleChangeAutoCompleteFields = (name, newValue) => {
-
-        setFormData(prevState => ({ ...prevState, [name]: newValue }))
-    };
+    const handleChangeAutoCompleteFields = (name, newValue) => setFormData(prevState => ({ ...prevState, [name]: newValue }));
 
     const validation = () => {
         let isOk = true;
@@ -297,7 +282,6 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                             if (isOk) isOk = false;
                         }
                     };
-
                 }
             }
         }
@@ -417,7 +401,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                             label="Produkt"
                             error={errors.productId}
                         >
-                            {products.map(product => (
+                            {productsList.map(product => (
                                 <MenuItem key={`product${product.id}`} value={product.id}>{product.name}</MenuItem>
                             ))}
 
@@ -478,7 +462,6 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                     <Grid className={classes.autoComplete}>
                         <Autocomplete
                             value={formData.secondWorkplaceIdEmployee}
-                            error={errors.secondWorkplaceIdEmployee}
                             onChange={(e, newValue) => handleChangeAutoCompleteFields('secondWorkplaceIdEmployee', newValue)}
                             name='secondWorkplaceIdEmployee'
                             options={sorterEmployees()}
@@ -519,6 +502,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                 </Grid>
                 <Grid>
                     <TextField
+                        value={formData.description}
                         placeholder="Opis"
                         multiline={true}
                         id='description'
@@ -535,7 +519,7 @@ export const AddReportForm = ({ setOpenMessage, setMessages, setLoader }) => {
                 </Grid>
                 <Grid justify='flex-end' container>
 
-                    <ButtonLoader isSubmitting={isSubmitting} value='ZAPISZ' onClick={handleSubmit} />
+                    <ButtonLoader isSubmitting={isSubmiting} value='ZAPISZ' onClick={handleSubmit} />
                 </Grid>
             </Grid>
         </Grid >

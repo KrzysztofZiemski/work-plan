@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import MUIDataTable from "mui-datatables";
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -111,7 +111,6 @@ export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20 })
     let [message, setMessage] = useState([]);
     let [messageIsOpen, setMessageIsOpen] = useState(false);
     let [lines, setLines] = useState([]);
-    //add loader//message?
 
     const handleCloseMessage = () => {
         setMessageIsOpen(false);
@@ -141,6 +140,23 @@ export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20 })
         }
     }, [startDate, endDate]);
 
+    const remove = async (id) => {
+        const confirm = window.confirm("Czy na pewno chcesz usunąc raport?");
+        if (!confirm) return;
+        setFetching(true);
+        try {
+            await ProductionReportService.remove(id);
+            setFetching(false);
+            setReportsList(prevState => prevState.filter(report => report.id !== id));
+            setMessage(['Usunieto raport']);
+            setMessageIsOpen(true);
+        } catch (status) {
+            setMessage(['Wystąpił problem z usunieciem raportu', `status ${status}`]);
+            setMessageIsOpen(true);
+            setFetching(false);
+        };
+    };
+
     const options = {
         rowsPerPageOptions: [5, 20, 50],
         rowsPerPage: pagination,
@@ -165,230 +181,211 @@ export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20 })
             return "\uFEFF" + buildHead(headerNames) + buildBody(data);
         },
     };
-
-    const columns = [
-        {
-            name: 'lineId',
-            label: 'linia',
-            options: {
-                filter: true,
-                sort: true,
-                print: true,
-                download: true,
-                expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => {
-                    const lineName = lines.filter(line => line.id === value);
-                    return lineName.length === 1 ? lineName[0].name : `id ${value}`
+    const columns = useMemo(() => {
+        return (
+            [
+                {
+                    name: 'lineId',
+                    label: 'linia',
+                    options: {
+                        filter: true,
+                        sort: true,
+                        print: true,
+                        download: true,
+                        expandableRowsHeader: true,
+                        customBodyRender: (value, tableMeta, updateValue) => {
+                            const lineName = lines.filter(line => line.id === value);
+                            return lineName.length === 1 ? lineName[0].name : `id ${value}`
+                        },
+                    },
                 },
-                // setCellProps: () => {
-                //     return {
-                //         style: {
-
-                //         }
-                //     }
-                // },
-                // setCellHeaderProps: (value) => {
-                //     return {
-                //         style: {
-
-                //         }
-                //     }
-                // }
-            }
-        },
-        {
-            name: 'totalQuantityProduced',
-            label: 'wyprodukowano',
-            options: {
-                filter: true,
-                sort: true,
-                print: true,
-                download: true,
-                expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => `${value} / ${tableMeta.rowData[2]}`
-            }
-        },
-        {
-            name: 'maxPossibleItems',
-            label: 'maksymalna ilość',
-            options: {
-                filter: true,
-                sort: true,
-                print: true,
-                download: true,
-                display: false
-            }
-        },
-        {
-            name: 'percentagePerformance',
-            label: 'procent',
-            options: {
-                filter: true,
-                sort: true,
-                print: true,
-                download: true,
-                expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => `${value}%`
-            }
-        },
-        {
-            name: 'performancePerHour',
-            label: 'wydajność',
-            options: {
-                filter: true,
-                sort: true,
-                print: true,
-                download: true,
-                expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => `${value} / h`
-            }
-        },
-        {
-            name: 'product',
-            label: 'produkt',
-            options: {
-                filter: true,
-                sort: true,
-                print: true,
-                download: true,
-                expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => value.name
-            }
-        },
-        {
-            name: 'series',
-            label: 'seria',
-            options: {
-                filter: true,
-                sort: false,
-            }
-        },
-        {
-            name: 'speedMachinePerCycle',
-            label: 'szybkość',
-            options: {
-                filter: true,
-                sort: false,
-            }
-        },
-        {
-            name: 'productionTimeToHour',
-            label: 'czas pracy',
-            options: {
-                filter: true,
-                sort: false,
-                expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => {
-                    const hours = Math.floor(value);
-                    const minutes = Math.floor(60 * (value - hours))
-                    return `${hours} h ${minutes} min`
-                }
-            }
-        },
-        {
-            name: 'firstWorkplace',
-            label: 'stanowisko 1',
-            options: {
-                filter: true,
-                sort: true,
-                print: true,
-                download: true,
-                expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => `${value.name} ${value.lastName}`
-            }
-        },
-        {
-            name: 'secondWorkplace',
-            label: 'stanowisko 2',
-            options: {
-                filter: true,
-                sort: true,
-                print: true,
-                download: true,
-                expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => `${value.name} ${value.lastName}`
-            }
-        },
-        {
-            name: 'thirdWorkplace',
-            label: 'stanowisko 3',
-            options: {
-                filter: true,
-                sort: true,
-                print: true,
-                download: true,
-                expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => `${value.name} ${value.lastName}`
-            }
-        },
-        {
-            name: 'productionStart',
-            label: 'początek produkcji',
-            options: {
-                filter: true,
-                sort: true,
-                print: true,
-                download: true,
-                expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => value.substring(0, 16).replace('T', ' ')
-            }
-        },
-        {
-            name: 'productionEnd',
-            label: 'koniec produkcji',
-            options: {
-                filter: true,
-                sort: true,
-                print: true,
-                download: true,
-                expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => value.substring(0, 16).replace('T', ' ')
-            }
-        },
-        // {
-        //     name: 'id',
-        //     label: ' ',
-        //     options: {
-        //         filter: false,
-        //         sort: false,
-        //         print: false,
-        //         download: false,
-        //         expandableRowsHeader: true,
-        //         customBodyRender: (value, tableMeta, updateValue) => <span> <Link to={`${routes.productionReportList}/report/${value}`}><EditIcon /></Link></span>
-        //     }
-        // },
-        {
-            name: 'description',
-            download: false,
-            options: {
-                filter: false,
-                sort: false,
-                print: false,
-                download: false,
-                expandableRowsHeader: true,
-                display: false
-            }
-        },
-        {
-            name: 'id',
-            label: ' ',
-            options: {
-                filter: false,
-                sort: false,
-                print: false,
-                download: false,
-                expandableRowsHeader: true,
-                customBodyRender: (value, tableMeta, updateValue) => {
-                    return (
-                        <SettingsMenu>
-                            <Poper content={tableMeta.rowData[14]}>Pokarz opis</Poper>
-                            <Poper content='przeloguj'><Typography className={classes.optionLink} component={Link} to={`${routes.productionReportDetail}/${value}`}>Szczegóły</Typography></Poper>
-                        </SettingsMenu>
-                    )
-                }
-            }
-        },
-    ]
+                {
+                    name: 'totalQuantityProduced',
+                    label: 'wyprodukowano',
+                    options: {
+                        filter: true,
+                        sort: true,
+                        print: true,
+                        download: true,
+                        expandableRowsHeader: true,
+                        customBodyRender: (value, tableMeta, updateValue) => `${value} / ${tableMeta.rowData[2]}`
+                    },
+                },
+                {
+                    name: 'maxPossibleItems',
+                    label: 'maksymalna ilość',
+                    options: {
+                        filter: true,
+                        sort: true,
+                        print: true,
+                        download: true,
+                        display: false
+                    },
+                },
+                {
+                    name: 'percentagePerformance',
+                    label: 'procent',
+                    options: {
+                        filter: true,
+                        sort: true,
+                        print: true,
+                        download: true,
+                        expandableRowsHeader: true,
+                        customBodyRender: (value, tableMeta, updateValue) => `${value}%`
+                    },
+                },
+                {
+                    name: 'performancePerHour',
+                    label: 'wydajność',
+                    options: {
+                        filter: true,
+                        sort: true,
+                        print: true,
+                        download: true,
+                        expandableRowsHeader: true,
+                        customBodyRender: (value, tableMeta, updateValue) => `${value} / h`
+                    },
+                },
+                {
+                    name: 'product',
+                    label: 'produkt',
+                    options: {
+                        filter: true,
+                        sort: true,
+                        print: true,
+                        download: true,
+                        expandableRowsHeader: true,
+                        customBodyRender: (value, tableMeta, updateValue) => value.name
+                    },
+                },
+                {
+                    name: 'series',
+                    label: 'seria',
+                    options: {
+                        filter: true,
+                        sort: false,
+                    },
+                },
+                {
+                    name: 'speedMachinePerCycle',
+                    label: 'szybkość',
+                    options: {
+                        filter: true,
+                        sort: false,
+                    },
+                },
+                {
+                    name: 'productionTimeToHour',
+                    label: 'czas pracy',
+                    options: {
+                        filter: true,
+                        sort: false,
+                        expandableRowsHeader: true,
+                        customBodyRender: (value, tableMeta, updateValue) => {
+                            const hours = Math.floor(value);
+                            const minutes = Math.floor(60 * (value - hours))
+                            return `${hours} h ${minutes} min`
+                        },
+                    },
+                },
+                {
+                    name: 'firstWorkplace',
+                    label: 'stanowisko 1',
+                    options: {
+                        filter: true,
+                        sort: true,
+                        print: true,
+                        download: true,
+                        expandableRowsHeader: true,
+                        customBodyRender: (value, tableMeta, updateValue) => `${value.name} ${value.lastName}`
+                    },
+                },
+                {
+                    name: 'secondWorkplace',
+                    label: 'stanowisko 2',
+                    options: {
+                        filter: true,
+                        sort: true,
+                        print: true,
+                        download: true,
+                        expandableRowsHeader: true,
+                        customBodyRender: (value, tableMeta, updateValue) => `${value.name} ${value.lastName}`
+                    },
+                },
+                {
+                    name: 'thirdWorkplace',
+                    label: 'stanowisko 3',
+                    options: {
+                        filter: true,
+                        sort: true,
+                        print: true,
+                        download: true,
+                        expandableRowsHeader: true,
+                        customBodyRender: (value, tableMeta, updateValue) => `${value.name} ${value.lastName}`
+                    },
+                },
+                {
+                    name: 'productionStart',
+                    label: 'początek produkcji',
+                    options: {
+                        filter: true,
+                        sort: true,
+                        print: true,
+                        download: true,
+                        expandableRowsHeader: true,
+                        customBodyRender: (value, tableMeta, updateValue) => value.substring(0, 16).replace('T', ' ')
+                    },
+                },
+                {
+                    name: 'productionEnd',
+                    label: 'koniec produkcji',
+                    options: {
+                        filter: true,
+                        sort: true,
+                        print: true,
+                        download: true,
+                        expandableRowsHeader: true,
+                        customBodyRender: (value, tableMeta, updateValue) => value.substring(0, 16).replace('T', ' ')
+                    },
+                },
+                {
+                    name: 'description',
+                    download: false,
+                    options: {
+                        filter: false,
+                        sort: false,
+                        print: false,
+                        download: false,
+                        expandableRowsHeader: true,
+                        display: false
+                    },
+                },
+                {
+                    name: 'id',
+                    label: ' ',
+                    options: {
+                        filter: false,
+                        sort: false,
+                        print: false,
+                        download: false,
+                        expandableRowsHeader: true,
+                        customBodyRender: (value, tableMeta, updateValue) => {
+                            console.log(value, tableMeta, updateValue)
+                            return (
+                                <SettingsMenu>
+                                    <Poper content={tableMeta.rowData[14]}>Pokarz opis</Poper>
+                                    <Poper>
+                                        <Typography className={classes.optionLink} component={Link} to={`${routes.productionReportDetail}/${value}`}>Szczegóły</Typography>
+                                    </Poper>
+                                    <Typography onClick={() => remove(value)} className={classes.optionLink}>Usuń</Typography>
+                                </SettingsMenu>
+                            )
+                        },
+                    },
+                },
+            ]
+        )
+    }, [classes.optionLink, lines])
 
     return (
         <Grid>

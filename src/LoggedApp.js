@@ -25,6 +25,7 @@ const UserManagement = lazy(() => import('./templates/UserManagement'));
 const LineDetailsPage = lazy(() => import('./templates/LineDetailsPage'));
 const EmployeeDetailsPage = lazy(() => import('./templates/EmployeeDetailsPage'));
 const RankingPage = lazy(() => import('./templates/RankingPage'));
+const ProductionReportDetailsPage = lazy(() => import('./templates/ProductionReportDetailsPage'));
 
 const useStyles = makeStyles((theme) => ({
     grow: {
@@ -51,7 +52,7 @@ const LoggedApp = ({ loggedUser, setLoggedUser }) => {
                     <Switch>
                         <Route path={routes.root} exact={true}>
                             <DashboardPage className='page' />
-                        </Route>
+                        </Route>productionReportDetail
                         <Route path={routes.login} exact={true}>
                             <LoginPage className='page' />
                         </Route>
@@ -69,6 +70,7 @@ const LoggedApp = ({ loggedUser, setLoggedUser }) => {
                         <Route path={`${routes.lineDetails}/:idLine`} render={(props) => <LineDetailsPage className='page' {...props} />} />
                         <Route path={`${routes.productDetails}/:idProduct`} render={(props) => <ProductDetailsPage className='page' {...props} />} />
                         <Route path={`${routes.employeeDetails}/:idEmployee`} render={(props) => <EmployeeDetailsPage className='page' {...props} />} />
+                        <Route path={`${routes.productionReportDetail}/:idReport`} render={(props) => <ProductionReportDetailsPage className='page' {...props} />} />
                         <Route path={`${routes.ranking}`} render={(props) => <RankingPage className='page' {...props} />} />
                     </Switch>
                 </Suspense>
