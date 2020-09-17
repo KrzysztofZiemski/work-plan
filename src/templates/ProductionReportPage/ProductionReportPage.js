@@ -57,7 +57,7 @@ export const ProductionReportPage = ({ className }) => {
             <Loader open={isSubmiting} />
             <DialogMessage open={openMessage} close={handleCloseMessage} messages={messages} />
             <Card className={classes.card}>
-                <HeaderPage title='Wprowadź raport' />
+                <HeaderPage title='Wprowadź raport produkcji' />
                 <AddReportForm setMessage={handleOpenMessage} isSubmiting={isSubmiting} onSubmit={handleSubmit} />
             </Card>
             <ReportsList pagination={5} />

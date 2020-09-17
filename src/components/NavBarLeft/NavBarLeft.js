@@ -81,7 +81,7 @@ export const NavBarLeft = ({ isActive }) => {
                 <ListItemCollapse label='Raporty' disableStrictModeCompat={true}>
                     <List component="div" disablePadding>
                         <ListItem button className={classes.subListItem} component={Link} to={routes.productionReport} selected={selected === 3 ? true : false} onClick={() => setSelected(3)}>
-                            <ListItemText primary="Dodaj raport produkcji" />
+                            <ListItemText primary="Dodaj raport" />
                         </ListItem>
                         <ListItem button className={classes.subListItem} component={Link} to={routes.productionReportList} selected={selected === 4 ? true : false} onClick={() => setSelected(4)}>
                             <ListItemText primary="Raporty" />

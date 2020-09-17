@@ -16,7 +16,7 @@ import { updateWorkPlane, createOrGetWorkPlan } from '../../services/workPlanApi
 import { workPlaceNames, initFreeEmployee, getWorkplanToSend } from './handlers';
 import useActiveEmployees from '../../hooks/useActiveEmployees';
 import { useDateWeek } from '../../hooks/useDateWeek';
-import { CardHeader } from '@material-ui/core';
+import { CardHeader, TextField } from '@material-ui/core';
 import HeaderPage from '../../components/HeaderPage';
 
 export const WorkPlanContext = createContext({
@@ -29,7 +29,8 @@ export const WorkPlanContext = createContext({
 const useStyles = makeStyles(theme => ({
     root: {
         flexWrap: 'nowrap',
-        fontSize: 10
+        fontSize: 10,
+        paddingBottom: 40
     },
     grow: {
         flexGrow: 1
@@ -37,11 +38,12 @@ const useStyles = makeStyles(theme => ({
     otherEmployees: {
         width: 240,
         minWidth: 240,
-        // height: '100%',
         position: 'sticky',
         top: 0,
-        maxHeight: '80vh',
-        overflow: 'auto'
+        maxHeight: '100vh',
+        overflow: 'auto',
+        backgroundColor: '#ffd08d',
+        borderRadius: 6
     },
     otherWorkplace: {
         maxHeight: 300
@@ -56,7 +58,9 @@ const useStyles = makeStyles(theme => ({
     },
     shiftTitle: {
         backgroundColor: '#222d32',
-        color: '#fff'
+        color: '#fff',
+        marginBottom: 6,
+        marginTop: 6,
     },
     lines: {
         display: 'flex',
@@ -67,7 +71,7 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-
+        justifyContent: 'center'
     },
     lineTitle: {
         marginRight: 40,
@@ -78,7 +82,22 @@ const useStyles = makeStyles(theme => ({
         overflow: 'auto'
     },
     workPlace: {
-        height: 300
+        margin: 6
+    },
+    notAvaibleEmployees: {
+        width: '50%',
+        marginLeft: 10,
+        marginRight: 10,
+    },
+    description: {
+        width: '90%',
+        marginLeft: '5%',
+        marginRight: '5%',
+        marginTop: '1%',
+    },
+    descriptionOther: {
+        width: '100%',
+        marginTop: '1%',
     },
 }));
 
@@ -91,7 +110,7 @@ const GraphicPage = (props) => {
     let [isSubmiting, setIsSubmiting] = useState(false);
     let [errorMessage, setErrorMessage] = useState({ message: [], isOpen: false });
     const [date, setDate] = useDateWeek();
-
+    console.log(workPlan)
     const classes = useStyles();
 
     useEffect(() => {
@@ -111,6 +130,23 @@ const GraphicPage = (props) => {
     }, [date, loggedUser, employees.fetched, employees.list]);
 
     const closeMessage = () => setErrorMessage({ message: '', isOpen: false });
+
+    const handleChangeDescriptionUnavaibleEmployees = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+        setWorkPlan(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+    const handleChangeDescriptionShift = (value, shiftIndex) => {
+        console.log(value, shiftIndex)
+        setWorkPlan(prev => {
+            const copyWorkPlan = Object.assign({}, prev);
+            copyWorkPlan.workShifts[shiftIndex].comments = value;
+            return copyWorkPlan;
+        });
+    };
 
     //przt upuszczaniu pracownika pobieramy parametry workplace i dodajemy obiekt pracownika w odpowiednim miejscu
     const setWorkplaceEmployee = ({ shift, line, workPlace }, employee) => {
@@ -195,104 +231,146 @@ const GraphicPage = (props) => {
                 <section className={`${props.className} graphicPage`}>
                     <WorkPlanContext.Provider value={{ setWorkplaceEmployee, removeEmployee, workPlan, submitWorkPlan }}>
                         <NavGraphic className='GraphicNav' dateStart={date.start} dateEnd={date.end} setDate={setDate}></NavGraphic>
+                        {workPlan &&
+                            <Grid container className={classes.root} >
+                                <Grid item className={classes.shiftsContainer} >
+                                    {workPlan.workShifts.map((shift, indexShift) => (
+                                        <Grid item key={`shift${indexShift}`} >
+                                            <Typography align='center' variant='button' >
+                                                <Grid component='h2' className={classes.shiftTitle}>
+                                                    {`Zmiana ${shift.shiftNumber}`}
+                                                </Grid>
+                                            </Typography>
+                                            <Grid className={classes.shiftOther} >
+                                                <Grid className={classes.workPlaceShift}>
+                                                    <WorkPlace key={`supervision${indexShift}`} shift={indexShift} workPlace={workPlaceNames.supervision} title='Supervisior'>
+                                                        {workPlan.workShifts[indexShift][workPlaceNames.supervision].map(employee => {
+                                                            return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.supervision} label={`${employee.name} ${employee.lastName}`}>
+                                                            </Employee>
+                                                        })}
+                                                    </WorkPlace>
+                                                </Grid>
+                                                <Grid className={classes.workPlaceShift}>
+                                                    <WorkPlace key={`unskilled${indexShift}`} shift={indexShift} workPlace={workPlaceNames.unskilled} title='Unskilled'>
+                                                        {workPlan.workShifts[indexShift][workPlaceNames.unskilled].map(employee => {
+                                                            return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.unskilled} label={`${employee.name} ${employee.lastName}`}>
 
-                        <Grid container className={classes.root} >
-                            <Grid item className={classes.shiftsContainer} >
-                                {workPlan ? workPlan.workShifts.map((shift, indexShift) => (
-                                    <Grid item key={`shift${indexShift}`} >
+                                                            </Employee>
+                                                        })}
+                                                    </WorkPlace>
+                                                </Grid>
+                                                <Grid className={classes.workPlaceShift}>
+                                                    <WorkPlace key={`leader${indexShift}`} shift={indexShift} workPlace={workPlaceNames.leader} title='Lider zmiany'>
+                                                        {workPlan.workShifts[indexShift][workPlaceNames.leader].map(employee => {
+                                                            return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.leader} label={`${employee.name} ${employee.lastName}`}>
+                                                            </Employee>
+                                                        })}
+                                                    </WorkPlace>
+                                                </Grid>
+                                                <Grid className={classes.workPlaceShift}>
+                                                    <WorkPlace key={`other${indexShift}`} shift={indexShift} workPlace={workPlaceNames.other} title='Inni'>
+                                                        {workPlan.workShifts[indexShift][workPlaceNames.other].map(employee => {
+                                                            return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.other} label={`${employee.name} ${employee.lastName}`}>
+                                                            </Employee>
+                                                        })}
+                                                    </WorkPlace>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid className={classes.lines}>
+                                                {workPlan.workShifts[indexShift].lines.map((line, indexLine) => (
+                                                    <Grid constainer={true} key={`line${indexLine}`} className={classes.line}>
+                                                        <Grid item component='h3' className={classes.lineTitle}>{`Linia ${line.lineNumber}`}</Grid>
+                                                        {workPlan.workShifts[indexShift].lines[indexLine].workplaces.map((workplace, indexWorkplace, workplacesArr) => {
+                                                            return <Grid className={classes.workPlaceShift} key={`workplace${indexWorkplace}`}>
+                                                                <WorkPlace className={classes.workPlace} shift={indexShift} line={indexLine} workPlace={indexWorkplace} title={workplace.nameWorkplace}>
+                                                                    {workPlan.workShifts[indexShift].lines[indexLine].workplaces[indexWorkplace].employeeListWorkplaces.map(employee => (
+                                                                        <Employee key={`employee${employee.id}`} id={employee.id} line={indexLine} shift={indexShift} workPlace={indexWorkplace} label={`${employee.name} ${employee.lastName}`}>
+                                                                        </Employee>
+                                                                    ))}
+                                                                </WorkPlace>
+                                                            </Grid>
+                                                        })}
+                                                    </Grid>
+
+                                                )
+                                                )}
+                                            </Grid>
+                                            <TextField
+                                                className={classes.description}
+                                                variant='outlined'
+                                                label={`informacje - zmiana ${shift.shiftNumber}`}
+                                                multiline
+                                                rows={2}
+                                                rowsMax={4}
+                                                name='infoHolidays'
+                                                value={workPlan.workShifts[indexShift].comments || ''}
+                                                onChange={(e) => handleChangeDescriptionShift(e.target.value, indexShift)}
+                                            />
+                                        </Grid>
+                                    ))}
+                                    <Grid >
                                         <Typography align='center' variant='button' >
                                             <Grid component='h2' className={classes.shiftTitle}>
-                                                {`Zmiana ${shift.shiftNumber}`}
-                                            </Grid>
-                                        </Typography>
-                                        <Grid className={classes.shiftOther} >
-                                            <Grid className={classes.workPlaceShift}>
-                                                <WorkPlace key={`supervision${indexShift}`} shift={indexShift} workPlace={workPlaceNames.supervision} title='Supervisior'>
-                                                    {workPlan.workShifts[indexShift][workPlaceNames.supervision].map(employee => {
-                                                        return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.supervision} label={`${employee.name} ${employee.lastName}`}>
-                                                        </Employee>
-                                                    })}
-                                                </WorkPlace>
-                                            </Grid>
-                                            <Grid className={classes.workPlaceShift}>
-                                                <WorkPlace key={`unskilled${indexShift}`} shift={indexShift} workPlace={workPlaceNames.unskilled} title='Unskilled'>
-                                                    {workPlan.workShifts[indexShift][workPlaceNames.unskilled].map(employee => {
-                                                        return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.unskilled} label={`${employee.name} ${employee.lastName}`}>
-
-                                                        </Employee>
-                                                    })}
-                                                </WorkPlace>
-                                            </Grid>
-                                            <Grid className={classes.workPlaceShift}>
-                                                <WorkPlace key={`leader${indexShift}`} shift={indexShift} workPlace={workPlaceNames.leader} title='Lider zmiany'>
-                                                    {workPlan.workShifts[indexShift][workPlaceNames.leader].map(employee => {
-                                                        return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.leader} label={`${employee.name} ${employee.lastName}`}>
-                                                        </Employee>
-                                                    })}
-                                                </WorkPlace>
-                                            </Grid>
-                                            <Grid className={classes.workPlaceShift}>
-                                                <WorkPlace key={`other${indexShift}`} shift={indexShift} workPlace={workPlaceNames.other} title='Inni'>
-                                                    {workPlan.workShifts[indexShift][workPlaceNames.other].map(employee => {
-                                                        return <Employee key={`employee${employee.id}`} id={employee.id} shift={indexShift} workPlace={workPlaceNames.other} label={`${employee.name} ${employee.lastName}`}>
-                                                        </Employee>
-                                                    })}
-                                                </WorkPlace>
-                                            </Grid>
+                                                Pracownicy niedostępni
                                         </Grid>
-                                        <Grid className={classes.lines}>
-                                            {workPlan.workShifts[indexShift].lines.map((line, indexLine) => (
-
-                                                <Grid constainer={true} key={`line${indexLine}`} className={classes.line}>
-                                                    <Grid item component='h3' className={classes.lineTitle}>{`Linia ${line.lineNumber}`}</Grid>
-
-                                                    {workPlan.workShifts[indexShift].lines[indexLine].workplaces.map((workplace, indexWorkplace, workplacesArr) => {
-                                                        return <Grid className={classes.workPlaceShift} key={`workplace${indexWorkplace}`}>
-                                                            <WorkPlace className={classes.workPlace} shift={indexShift} line={indexLine} workPlace={indexWorkplace} title={workplace.nameWorkplace}>
-                                                                {workPlan.workShifts[indexShift].lines[indexLine].workplaces[indexWorkplace].employeeListWorkplaces.map(employee => (
-                                                                    <Employee key={`employee${employee.id}`} id={employee.id} line={indexLine} shift={indexShift} workPlace={indexWorkplace} label={`${employee.name} ${employee.lastName}`}>
-                                                                    </Employee>
-                                                                ))}
-
-                                                            </WorkPlace>
-                                                        </Grid>
-                                                    })}
-
-                                                </Grid>
-
-                                            )
-                                            )}
+                                        </Typography>
+                                        <Grid className={classes.shiftOther}>
+                                            <Grid className={classes.notAvaibleEmployees}>
+                                                <WorkPlace row shift={null} line={null} workPlace={workPlaceNames.holidays} title='Urlopy' >
+                                                    {workPlan ? workPlan.holidaysEmployees.map(employee => (
+                                                        <Employee row key={`employee${employee.id}`} id={employee.id} line={null} shift={null} workPlace={workPlaceNames.holidays} label={`${employee.name} ${employee.lastName}`}>
+                                                            <span>{`${employee.name} ${employee.lastName}`}</span>
+                                                        </Employee>
+                                                    )) : null}
+                                                </WorkPlace>
+                                                <TextField
+                                                    className={classes.descriptionOther}
+                                                    variant='outlined'
+                                                    label="informacje - urlopy"
+                                                    multiline
+                                                    rows={2}
+                                                    rowsMax={4}
+                                                    name='infoHolidays'
+                                                    value={workPlan['infoHolidays'] || ''}
+                                                    onChange={handleChangeDescriptionUnavaibleEmployees}
+                                                />
+                                            </Grid>
+                                            <Grid className={classes.notAvaibleEmployees}>
+                                                <WorkPlace row shift={null} line={null} workPlace={workPlaceNames.absence} title='Niedostępni' >
+                                                    {workPlan ? workPlan.absenceEmployees.map(employee => (
+                                                        <Employee row key={`employee${employee.id}`} id={employee.id} line={null} shift={null} workPlace={workPlaceNames.absence} label={`${employee.name} ${employee.lastName}`}>
+                                                            <span>{`${employee.name} ${employee.lastName}`}</span>
+                                                        </Employee>
+                                                    )) : null}
+                                                </WorkPlace>
+                                                <TextField
+                                                    className={classes.descriptionOther}
+                                                    variant='outlined'
+                                                    label="informacje - pozostali nieobecni"
+                                                    multiline
+                                                    rows={2}
+                                                    rowsMax={4}
+                                                    name='infoAbsence'
+                                                    value={workPlan['infoAbsence'] || ''}
+                                                    onChange={handleChangeDescriptionUnavaibleEmployees}
+                                                />
+                                            </Grid>
                                         </Grid>
                                     </Grid>
-                                )) : null}
-                            </Grid>
-                            <Grid item className={classes.otherEmployees}>
-                                <WorkPlace shift={null} line={null} workPlace={workPlaceNames.free} title='Nieprzydzieleni pracownicy'>
-                                    {freeEmployees.map(employee => (
-                                        <Employee key={`employee${employee.id}`} id={employee.id} line={null} shift={null} workPlace={workPlaceNames.free}
-                                            label={`${employee.name} ${employee.lastName}`} >
-                                            <span>{`${employee.name} ${employee.lastName}`}</span>
-                                        </Employee>
-                                    ))}
+                                </Grid>
+                                <Grid item className={classes.otherEmployees}>
+                                    <WorkPlace shift={null} line={null} workPlace={workPlaceNames.free} color='inherit' title='Nieprzydzieleni pracownicy'>
+                                        {freeEmployees.map(employee => (
+                                            <Employee key={`employee${employee.id}`} id={employee.id} line={null} shift={null} workPlace={workPlaceNames.free}
+                                                label={`${employee.name} ${employee.lastName}`} >
+                                                <span>{`${employee.name} ${employee.lastName}`}</span>
+                                            </Employee>
+                                        ))}
 
-                                </WorkPlace>
-                                <WorkPlace shift={null} line={null} workPlace={workPlaceNames.holidays} title='Urlopy'>
-                                    {workPlan ? workPlan.holidaysEmployees.map(employee => (
-                                        <Employee key={`employee${employee.id}`} id={employee.id} line={null} shift={null} workPlace={workPlaceNames.holidays} label={`${employee.name} ${employee.lastName}`}>
-                                            <span>{`${employee.name} ${employee.lastName}`}</span>
-                                        </Employee>
-                                    )) : null}
-                                </WorkPlace>
-                                <WorkPlace shift={null} line={null} workPlace={workPlaceNames.absence} title='Niedostępni'>
-
-                                    {workPlan ? workPlan.absenceEmployees.map(employee => (
-                                        <Employee key={`employee${employee.id}`} id={employee.id} line={null} shift={null} workPlace={workPlaceNames.absence} label={`${employee.name} ${employee.lastName}`}>
-                                            <span>{`${employee.name} ${employee.lastName}`}</span>
-                                        </Employee>
-                                    )) : null}
-                                </WorkPlace>
+                                    </WorkPlace>
+                                </Grid>
                             </Grid>
-                        </Grid>
+                        }
                     </WorkPlanContext.Provider>
 
                 </section >

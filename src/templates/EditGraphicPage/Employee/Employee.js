@@ -14,13 +14,23 @@ const useStyles = makeStyles(() => ({
         cursor: 'grab',
         fontSize: 12,
         height: 20,
+        textTransform: 'capitalize ',
+    },
+    rootRow: {
+        padding: 4,
+        margin: 1,
+        justifyContent: 'flex-start',
+        cursor: 'grab',
+        fontSize: 12,
+        height: 20,
+        textTransform: 'capitalize ',
     },
     dragging: {
         opacity: '.2'
     }
 }))
 
-const Employee = ({ id, line, shift, workPlace, children, label }) => {
+const Employee = ({ id, line, shift, workPlace, children, label, row }) => {
 
     const classes = useStyles()
 
@@ -38,7 +48,7 @@ const Employee = ({ id, line, shift, workPlace, children, label }) => {
 
         <ListItemText
             ref={drag}
-            className={isDragging ? `${classes.dragging} ${classes.root}` : classes.root}
+            className={isDragging ? `${classes.dragging} ${classes.root}` : row ? classes.rootRow : classes.root}
             icon={<FaceIcon />}
         >
             {label}

@@ -5,30 +5,50 @@ import Paper from '@material-ui/core/Paper';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../../../utils/ItemTypes';
 import { WorkPlanContext } from '../GraphicPage';
+import { Grid } from '@material-ui/core';
 
 
 const useStyles = makeStyles(theme => ({
-    card: {
-        minHeight: 54,
+    root: {
         minWidth: 200,
-        margin: '3px 20px',
+    },
+    card: {
+        width: '100%',
+        margin: 0,
         textAlign: 'center',
         overflow: 'auto',
-        backgroundColor: '#aaa',
-        paddingTop: 0,
+        padding: 2,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-
+        minHeight: 50,
+        minWidth: 100,
+        backgroundColor: '#ebecf0',
+    },
+    cardRow: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        minHeight: 50,
+        margin: 0,
+        overflow: 'auto',
+        backgroundColor: '#ebecf0',
+        paddingTop: 0,
+        minWidth: 100,
+        alignItems: 'center',
     },
     title: {
-        backgroundColor: '#3c8dbc',
-        padding: 4,
+        backgroundColor: '#6376AE',
+        padding: 2,
         marginTop: 0,
-        width: '100%'
+        width: '100%',
+        fontSize: 12,
+        textAlign: 'center',
+    },
+    isOver: {
+        backgroundColor: 'black'
     }
 }))
-const WorkPlace = ({ line, shift, workPlace, children, title }) => {
+const WorkPlace = ({ line, shift, workPlace, children, title, className, row, color }) => {
 
     const { setWorkplaceEmployee, removeEmployee } = useContext(WorkPlanContext);
 
@@ -44,20 +64,21 @@ const WorkPlace = ({ line, shift, workPlace, children, title }) => {
             isOver: !!monitor.isOver(),
         })
     })
-
+    console.log('isover', isOver)
     return (
-        <>
+        <Grid className={className || classes.root}>
+            <Paper className={classes.title}>
+                {title}
+            </Paper >
             <List
-                className={classes.card}
+                className={row ? classes.cardRow : classes.card}
+                style={{ backgroundColor: color }}
                 ref={drop}
                 content
             >
-                <Paper elevation={3} className={classes.title}>
-                    {title}
-                </Paper >
                 {children}
             </List  >
-        </>
+        </Grid>
     )
 }
 

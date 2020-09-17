@@ -168,7 +168,7 @@ export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20 })
         print: true,
         download: true,
         search: true,
-        sort: false,
+        sort: true,
         downloadOptions: {
             filename: 'raporty.csv',
             separator: ';',
