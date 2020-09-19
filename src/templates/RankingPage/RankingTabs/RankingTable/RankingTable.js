@@ -143,7 +143,6 @@ const renderDataRanking = (arrRanking) => arrRanking.map(({ averagePerHour, perc
 ));
 
 
-
 const RankingTable = ({ ranking, name, className }) => {
     const tableData = useMemo(() => {
         return renderDataRanking(ranking)

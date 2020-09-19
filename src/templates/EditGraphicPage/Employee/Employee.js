@@ -15,6 +15,7 @@ const useStyles = makeStyles(() => ({
         fontSize: 12,
         height: 20,
         textTransform: 'capitalize ',
+        textAlign: 'center',
     },
     rootRow: {
         padding: 4,
@@ -24,6 +25,8 @@ const useStyles = makeStyles(() => ({
         fontSize: 12,
         height: 20,
         textTransform: 'capitalize ',
+        minWidth: 180,
+        textAlign: 'center',
     },
     dragging: {
         opacity: '.2'
@@ -43,12 +46,21 @@ const Employee = ({ id, line, shift, workPlace, children, label, row }) => {
             isDragging: !!monitor.isDragging(),
         })
     })
-
+    const setClass = () => {
+        let selectClasses = []
+        if (isDragging) selectClasses.push(classes.dragging);
+        if (row) {
+            selectClasses.push(classes.rootRow);
+        } else {
+            selectClasses.push(classes.root);
+        };
+        return selectClasses.join(' ')
+    }
     return (
 
         <ListItemText
             ref={drag}
-            className={isDragging ? `${classes.dragging} ${classes.root}` : row ? classes.rootRow : classes.root}
+            className={setClass()}
             icon={<FaceIcon />}
         >
             {label}

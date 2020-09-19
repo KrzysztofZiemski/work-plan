@@ -28,3 +28,24 @@ export const getWeekNumber = (date) => {
 export const getQuarterNumber = (date) => Math.ceil((date.getMonth() + 1) / 3);
 
 export const getHalfYearNumber = (date) => Math.ceil((date.getMonth() + 1) / 6);
+
+export const getWeekFromPeriod = (period, year = new Date().getFullYear()) => {
+
+    const oneDay = 1000 * 60 * 60 * 24;
+
+    const startFirstWeek = new Date(year, 0, 1);
+    const endFirstWeek = new Date(startFirstWeek.getTime() + (6 - startFirstWeek.getDay()) * oneDay);
+
+    if (period === 0) {
+        return {
+            start: startFirstWeek,
+            end: endFirstWeek,
+        }
+    }
+    const start = additionDays(period * 7, subtractionDate(startFirstWeek.getDay(), startFirstWeek))
+    const end = additionDays(period * 7, endFirstWeek);
+    return {
+        start,
+        end
+    }
+}

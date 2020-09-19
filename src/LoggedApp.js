@@ -34,6 +34,9 @@ const useStyles = makeStyles((theme) => ({
     root: {
         minHeight: '100vh',
         flexWrap: 'nowrap'
+    },
+    pages: {
+        padding: 20
     }
 }));
 
@@ -52,26 +55,26 @@ const LoggedApp = ({ loggedUser, setLoggedUser }) => {
                     <Switch>
                         <Route path={routes.root} exact={true}>
                             <DashboardPage className='page' />
-                        </Route>productionReportDetail
+                        </Route>
                         <Route path={routes.login} exact={true}>
                             <LoginPage className='page' />
                         </Route>
                         <Route path={routes.logout} exact={true}>
                             <Logout className='page' />
                         </Route>
-                        <Route path={routes.workPlanEdit} exact render={(props) => <GraphicPage className='page' {...props} />} />
-                        <Route path={routes.workPlan} exact render={(props) => <ViewGraphicPage className='page' {...props} />} />
-                        <Route path={routes.employeeManagement} exact render={(props) => <EmployeeManagementPage className='page' {...props} />} />
-                        <Route path={routes.productionReportList} exact render={(props) => <ReportsList className='page' {...props} />} />
-                        <Route path={routes.productionReport} exact render={(props) => <ProductionReportPage className='page' {...props} />} />
-                        <Route path={routes.productManagement} exact render={(props) => <ProductManagement className='page' {...props} />} />
-                        <Route path={routes.lineManagement} exact render={(props) => <LineManagement className='page' {...props} />} />
-                        <Route path={routes.userManagement} exact render={(props) => <UserManagement className='page' {...props} />} />
-                        <Route path={`${routes.lineDetails}/:idLine`} render={(props) => <LineDetailsPage className='page' {...props} />} />
-                        <Route path={`${routes.productDetails}/:idProduct`} render={(props) => <ProductDetailsPage className='page' {...props} />} />
-                        <Route path={`${routes.employeeDetails}/:idEmployee`} render={(props) => <EmployeeDetailsPage className='page' {...props} />} />
-                        <Route path={`${routes.productionReportDetail}/:idReport`} render={(props) => <ProductionReportDetailsPage className='page' {...props} />} />
-                        <Route path={`${routes.ranking}`} render={(props) => <RankingPage className='page' {...props} />} />
+                        <Route path={routes.workPlanEdit} exact render={(props) => <GraphicPage className={classes.pages} {...props} />} />
+                        <Route path={routes.workPlan} exact render={(props) => <ViewGraphicPage className={classes.pages} {...props} />} />
+                        <Route path={routes.employeeManagement} exact render={(props) => <EmployeeManagementPage className={classes.pages} {...props} />} />
+                        <Route path={routes.productionReportList} exact render={(props) => <ReportsList className={classes.pages} {...props} />} />
+                        <Route path={routes.productionReport} exact render={(props) => <ProductionReportPage className={classes.pages} {...props} />} />
+                        <Route path={routes.productManagement} exact render={(props) => <ProductManagement className={classes.pages} {...props} />} />
+                        <Route path={routes.lineManagement} exact render={(props) => <LineManagement className={classes.pages} {...props} />} />
+                        <Route path={routes.userManagement} exact render={(props) => <UserManagement className={classes.pages} {...props} />} />
+                        <Route path={`${routes.lineDetails}/:idLine`} render={(props) => <LineDetailsPage className={classes.pages} {...props} />} />
+                        <Route path={`${routes.productDetails}/:idProduct`} render={(props) => <ProductDetailsPage className={classes.pages} {...props} />} />
+                        <Route path={`${routes.employeeDetails}/:idEmployee`} render={(props) => <EmployeeDetailsPage className={classes.pages} {...props} />} />
+                        <Route path={`${routes.productionReportDetail}/:idReport`} render={(props) => <ProductionReportDetailsPage className={classes.pages} {...props} />} />
+                        <Route path={`${routes.ranking}`} render={(props) => <RankingPage className={classes.pages} {...props} />} />
                     </Switch>
                 </Suspense>
             </Grid>

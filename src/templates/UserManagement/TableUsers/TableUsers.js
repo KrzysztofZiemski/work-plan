@@ -154,7 +154,30 @@ export const TableUsers = ({ list, remove, roles }) => {
                 useDisplayedColumnsOnly: true,
                 useDisplayedRowsOnly: true,
             },
-        }
+        },
+        textLabels: {
+            body: {
+                noMatch: "Brak wyników",
+            },
+            pagination: {
+                next: "Następna strona",
+                previous: "Poprzednia strona",
+                rowsPerPage: "Ilość pozycji na stronie:",
+                displayRows: "z",
+            },
+            toolbar: {
+                search: "Szukaj",
+                downloadCsv: "Pobierz CSV",
+                print: "Drukuj",
+                viewColumns: "Widok kolumn",
+                filterTable: "Filtruj tabele",
+            },
+            filter: {
+                all: "Wszystko",
+                title: "Filtry",
+                reset: "zresetuj",
+            },
+        },
     };
 
     return (

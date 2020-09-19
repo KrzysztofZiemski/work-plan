@@ -11,12 +11,38 @@ import LineService from '../../../services/LineService';
 import SettingsMenu from '../../../components/SettingsMenu';
 import Poper from '../../../components/Poper';
 import { default as routes } from '../../../utils/routes';
+import { sortProvider } from '../../../helpers/dataTableHelpers';
 
 const headerNames = [
     {
         name: 'lineId',
         label: 'linia',
         download: true,
+    },
+    {
+        name: 'productionStart',
+        download: true,
+        label: 'początek produkcji'
+    },
+    {
+        name: 'productionEnd',
+        download: true,
+        label: 'koniec produkcji'
+    },
+    {
+        name: 'productionTimeToHour',
+        download: true,
+        label: 'czas pracy'
+    },
+    {
+        name: 'product',
+        download: true,
+        label: 'produkt'
+    },
+    {
+        name: 'series',
+        download: true,
+        label: 'seria'
     },
     {
         name: 'totalQuantityProduced',
@@ -31,33 +57,19 @@ const headerNames = [
     {
         name: 'percentagePerformance',
         download: true,
-        label: 'procent'
+        label: 'OEE'
     },
     {
         name: 'performancePerHour',
         download: true,
-        label: 'wydajność'
-    },
-    {
-        name: 'product',
-        download: true,
-        label: 'produkt'
-    },
-    {
-        name: 'series',
-        download: true,
-        label: 'seria'
+        label: 'wydajność/h'
     },
     {
         name: 'speedMachinePerCycle',
         download: true,
         label: 'szybkość'
     },
-    {
-        name: 'productionTimeToHour',
-        download: true,
-        label: 'czas pracy'
-    },
+
     {
         name: 'firstWorkplace',
         download: true,
@@ -73,17 +85,6 @@ const headerNames = [
         download: true,
         label: 'stanowisko 3'
     },
-
-    {
-        name: 'productionStart',
-        download: true,
-        label: 'początek produkcji'
-    },
-    {
-        name: 'productionEnd',
-        download: true,
-        label: 'koniec produkcji'
-    },
     {
         name: 'id',
         download: false,
@@ -94,6 +95,7 @@ const headerNames = [
         download: false,
     }
 ];
+
 const styles = makeStyles({
     optionLink: {
         color: 'black',
@@ -102,9 +104,14 @@ const styles = makeStyles({
         textDecoration: 'none',
         letterSpacing: '0.00938em',
         fontSize: '1rem'
+    },
+    linkInTable: {
+        textDecoration: 'none',
+        color: 'black',
+        fontSize: '0.875rem',
     }
 })
-export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20 }) => {
+export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20, className }) => {
     const classes = styles();
     let [reportsList, setReportsList] = useState([]);
     let [fetching, setFetching] = useState(false);
@@ -178,7 +185,47 @@ export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20 })
             },
         },
         onDownload: (buildHead, buildBody, columns, data) => {
+
+            for (let i = 0; i < data.length; i++) {
+                data[i].data[4] = data[i].data[4].name
+                data[i].data[10] = data[i].data[10].name
+                data[i].data[11] = data[i].data[11].name
+                data[i].data[12] = data[i].data[12].name
+            }
             return "\uFEFF" + buildHead(headerNames) + buildBody(data);
+        },
+        onPrint: (buildHead, buildBody, columns, data) => {
+
+            for (let i = 0; i < data.length; i++) {
+                data[i].data[4] = data[i].data[4].name
+                data[i].data[10] = data[i].data[10].name
+                data[i].data[11] = data[i].data[11].name
+                data[i].data[12] = data[i].data[12].name
+            }
+            return "\uFEFF" + buildHead(headerNames) + buildBody(data);
+        },
+        textLabels: {
+            body: {
+                noMatch: "Brak wyników",
+            },
+            pagination: {
+                next: "Następna strona",
+                previous: "Poprzednia strona",
+                rowsPerPage: "Ilość pozycji na stronie:",
+                displayRows: "z",
+            },
+            toolbar: {
+                search: "Szukaj",
+                downloadCsv: "Pobierz CSV",
+                print: "Drukuj",
+                viewColumns: "Widok kolumn",
+                filterTable: "Filtruj tabele",
+            },
+            filter: {
+                all: "Wszystko",
+                title: "Filtry",
+                reset: "zresetuj",
+            },
         },
     };
     const columns = useMemo(() => {
@@ -186,7 +233,7 @@ export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20 })
             [
                 {
                     name: 'lineId',
-                    label: 'linia',
+                    label: 'Linia',
                     options: {
                         filter: true,
                         sort: true,
@@ -195,88 +242,39 @@ export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20 })
                         expandableRowsHeader: true,
                         customBodyRender: (value, tableMeta, updateValue) => {
                             const lineName = lines.filter(line => line.id === value);
-                            return lineName.length === 1 ? lineName[0].name : `id ${value}`
+                            return (
+                                <Typography className={classes.linkInTable} component={Link} to={`${routes.lineDetails}/${value}`}>{lineName[0].name}</Typography>
+                            )
                         },
                     },
                 },
                 {
-                    name: 'totalQuantityProduced',
-                    label: 'wyprodukowano',
+                    name: 'productionStart',
+                    label: 'Początek produkcji',
                     options: {
                         filter: true,
                         sort: true,
                         print: true,
                         download: true,
                         expandableRowsHeader: true,
-                        customBodyRender: (value, tableMeta, updateValue) => `${value} / ${tableMeta.rowData[2]}`
+                        customBodyRender: (value, tableMeta, updateValue) => value.substring(0, 16).replace('T', ' ')
                     },
                 },
                 {
-                    name: 'maxPossibleItems',
-                    label: 'maksymalna ilość',
-                    options: {
-                        filter: true,
-                        sort: true,
-                        print: true,
-                        download: true,
-                        display: false
-                    },
-                },
-                {
-                    name: 'percentagePerformance',
-                    label: 'procent',
+                    name: 'productionEnd',
+                    label: 'Koniec produkcji',
                     options: {
                         filter: true,
                         sort: true,
                         print: true,
                         download: true,
                         expandableRowsHeader: true,
-                        customBodyRender: (value, tableMeta, updateValue) => `${value}%`
-                    },
-                },
-                {
-                    name: 'performancePerHour',
-                    label: 'wydajność',
-                    options: {
-                        filter: true,
-                        sort: true,
-                        print: true,
-                        download: true,
-                        expandableRowsHeader: true,
-                        customBodyRender: (value, tableMeta, updateValue) => `${value} / h`
-                    },
-                },
-                {
-                    name: 'product',
-                    label: 'produkt',
-                    options: {
-                        filter: true,
-                        sort: true,
-                        print: true,
-                        download: true,
-                        expandableRowsHeader: true,
-                        customBodyRender: (value, tableMeta, updateValue) => value.name
-                    },
-                },
-                {
-                    name: 'series',
-                    label: 'seria',
-                    options: {
-                        filter: true,
-                        sort: false,
-                    },
-                },
-                {
-                    name: 'speedMachinePerCycle',
-                    label: 'szybkość',
-                    options: {
-                        filter: true,
-                        sort: false,
+                        customBodyRender: (value, tableMeta, updateValue) => value.substring(0, 16).replace('T', ' ')
                     },
                 },
                 {
                     name: 'productionTimeToHour',
-                    label: 'czas pracy',
+                    label: 'Czas pracy',
                     options: {
                         filter: true,
                         sort: false,
@@ -289,63 +287,136 @@ export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20 })
                     },
                 },
                 {
-                    name: 'firstWorkplace',
-                    label: 'stanowisko 1',
+                    name: 'product',
+                    label: 'Produkt',
                     options: {
                         filter: true,
                         sort: true,
                         print: true,
                         download: true,
                         expandableRowsHeader: true,
-                        customBodyRender: (value, tableMeta, updateValue) => `${value.name} ${value.lastName}`
+                        customBodyRender: (value, tableMeta, updateValue) => {
+                            return (
+                                <Typography className={classes.linkInTable} component={Link} to={`${routes.productDetails}/${value.id}`}>{value.name}</Typography>
+                            )
+                        },
+                        sortCompare: sortProvider('name')
+                    },
+                },
+                {
+                    name: 'series',
+                    label: 'Seria',
+                    options: {
+                        filter: true,
+                        sort: false,
+                    },
+                },
+                {
+                    name: 'totalQuantityProduced',
+                    label: 'Wyprodukowano',
+                    options: {
+                        filter: true,
+                        sort: true,
+                        print: true,
+                        download: true,
+                        expandableRowsHeader: true,
+                        customBodyRender: (value, tableMeta, updateValue) => `${value} / ${tableMeta.rowData[7]}`,
+                    },
+                },
+                {
+                    name: 'maxPossibleItems',
+                    label: 'Maksymalna ilość',
+                    options: {
+                        filter: true,
+                        sort: true,
+                        print: true,
+                        download: true,
+                        display: false
+                    },
+                },
+                {
+                    name: 'percentagePerformance',
+                    label: 'OEE',
+                    options: {
+                        filter: true,
+                        sort: true,
+                        print: true,
+                        download: true,
+                        expandableRowsHeader: true,
+                        customBodyRender: (value, tableMeta, updateValue) => `${value}`
+                    },
+                },
+                {
+                    name: 'performancePerHour',
+                    label: 'Wydajność/h',
+                    options: {
+                        filter: true,
+                        sort: true,
+                        print: true,
+                        download: true,
+                        expandableRowsHeader: true,
+                        customBodyRender: (value, tableMeta, updateValue) => `${value}`
+                    },
+                },
+
+                {
+                    name: 'speedMachinePerCycle',
+                    label: 'Takty/mi',
+                    options: {
+                        filter: true,
+                        sort: false,
+                    },
+                },
+
+                {
+                    name: 'firstWorkplace',
+                    label: 'Stanowisko 1',
+                    options: {
+                        filter: true,
+                        sort: true,
+                        print: true,
+                        download: true,
+                        expandableRowsHeader: true,
+                        customBodyRender: (value, tableMeta, updateValue) => (
+                            <Typography className={classes.linkInTable} component={Link} to={`${routes.employeeDetails}/${value.id}`}>
+                                {`${value.name} ${value.lastName}`}
+                            </Typography>
+                        ),
+                        sortCompare: sortProvider('lastName')
                     },
                 },
                 {
                     name: 'secondWorkplace',
-                    label: 'stanowisko 2',
+                    label: 'Stanowisko 2',
                     options: {
                         filter: true,
                         sort: true,
                         print: true,
                         download: true,
                         expandableRowsHeader: true,
-                        customBodyRender: (value, tableMeta, updateValue) => `${value.name} ${value.lastName}`
+                        customBodyRender: (value, tableMeta, updateValue) => (
+                            <Typography className={classes.linkInTable} component={Link} to={`${routes.employeeDetails}/${value.id}`}>
+                                {`${value.name} ${value.lastName}`}
+                            </Typography>
+                        ),
+                        sortCompare: sortProvider('lastName')
                     },
                 },
                 {
                     name: 'thirdWorkplace',
-                    label: 'stanowisko 3',
+                    label: 'Stanowisko 3',
                     options: {
                         filter: true,
                         sort: true,
                         print: true,
                         download: true,
                         expandableRowsHeader: true,
-                        customBodyRender: (value, tableMeta, updateValue) => `${value.name} ${value.lastName}`
-                    },
-                },
-                {
-                    name: 'productionStart',
-                    label: 'początek produkcji',
-                    options: {
-                        filter: true,
-                        sort: true,
-                        print: true,
-                        download: true,
-                        expandableRowsHeader: true,
-                        customBodyRender: (value, tableMeta, updateValue) => value.substring(0, 16).replace('T', ' ')
-                    },
-                },
-                {
-                    name: 'productionEnd',
-                    label: 'koniec produkcji',
-                    options: {
-                        filter: true,
-                        sort: true,
-                        print: true,
-                        download: true,
-                        expandableRowsHeader: true,
-                        customBodyRender: (value, tableMeta, updateValue) => value.substring(0, 16).replace('T', ' ')
+                        customBodyRender: (value, tableMeta, updateValue) => (
+                            <Typography className={classes.linkInTable} component={Link} to={`${routes.employeeDetails}/${value.id}`}>
+                                {`${value.name} ${value.lastName}`}
+                            </Typography>
+                        ),
+                        sortCompare: sortProvider('lastName')
                     },
                 },
                 {
@@ -370,7 +441,6 @@ export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20 })
                         download: false,
                         expandableRowsHeader: true,
                         customBodyRender: (value, tableMeta, updateValue) => {
-                            console.log(value, tableMeta, updateValue)
                             return (
                                 <SettingsMenu>
                                     <Poper content={tableMeta.rowData[14]}>Pokarz opis</Poper>
@@ -388,7 +458,7 @@ export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20 })
     }, [classes.optionLink, lines])
 
     return (
-        <Grid>
+        <Grid className={className}>
             <Loader open={fetching} />
             <DialogMessage open={messageIsOpen} close={handleCloseMessage} messages={message} />
             <MUIDataTable

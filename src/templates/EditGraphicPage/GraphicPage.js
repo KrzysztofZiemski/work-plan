@@ -16,7 +16,7 @@ import { updateWorkPlane, createOrGetWorkPlan } from '../../services/workPlanApi
 import { workPlaceNames, initFreeEmployee, getWorkplanToSend } from './handlers';
 import useActiveEmployees from '../../hooks/useActiveEmployees';
 import { useDateWeek } from '../../hooks/useDateWeek';
-import { CardHeader, TextField } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import HeaderPage from '../../components/HeaderPage';
 
 export const WorkPlanContext = createContext({
@@ -30,20 +30,19 @@ const useStyles = makeStyles(theme => ({
     root: {
         flexWrap: 'nowrap',
         fontSize: 10,
-        paddingBottom: 40
-    },
-    grow: {
-        flexGrow: 1
+        paddingBottom: 40,
+        flexDirection: 'column'
     },
     otherEmployees: {
-        width: 240,
-        minWidth: 240,
         position: 'sticky',
         top: 0,
-        maxHeight: '100vh',
+        maxHeight: '30vh',
+        minHeight: 50,
         overflow: 'auto',
         backgroundColor: '#ffd08d',
-        borderRadius: 6
+        borderRadius: 6,
+        zIndex: 500,
+        padding: '10px 20px'
     },
     otherWorkplace: {
         maxHeight: 300
@@ -54,7 +53,8 @@ const useStyles = makeStyles(theme => ({
     shiftOther: {
         flexDirection: 'row',
         display: 'flex',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
+        // backgroundColor: '#B8D1F3',
     },
     shiftTitle: {
         backgroundColor: '#222d32',
@@ -65,20 +65,29 @@ const useStyles = makeStyles(theme => ({
     lines: {
         display: 'flex',
         flexDirection: 'column',
-
     },
     line: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        borderBottom: '1px solid black',
+        borderTop: '1px solid black',
+        marginTop: -1,
+        padding: '1%',
+        // backgroundColor: '#B8D1F3',
+        '&:nth-child(odd)': {
+            backgroundColor: '#DAE5F4'
+        }
     },
     lineTitle: {
         marginRight: 40,
     },
     workPlaceShift: {
         width: 250,
-        height: 80,
+        marginLeft: '3%',
+        marginRight: '3%',
+        height: 90,
         overflow: 'auto'
     },
     workPlace: {
@@ -110,7 +119,7 @@ const GraphicPage = (props) => {
     let [isSubmiting, setIsSubmiting] = useState(false);
     let [errorMessage, setErrorMessage] = useState({ message: [], isOpen: false });
     const [date, setDate] = useDateWeek();
-    console.log(workPlan)
+
     const classes = useStyles();
 
     useEffect(() => {
@@ -125,6 +134,7 @@ const GraphicPage = (props) => {
             .catch(err => {
                 setErrorMessage({ message: [`Nie udało się pobrać planu pracy ${err}`], isOpen: true });
                 setIsSubmiting(false);
+                if (workPlan) setWorkPlan(null)
             })
 
     }, [date, loggedUser, employees.fetched, employees.list]);
@@ -140,7 +150,6 @@ const GraphicPage = (props) => {
         }));
     };
     const handleChangeDescriptionShift = (value, shiftIndex) => {
-        console.log(value, shiftIndex)
         setWorkPlan(prev => {
             const copyWorkPlan = Object.assign({}, prev);
             copyWorkPlan.workShifts[shiftIndex].comments = value;
@@ -214,6 +223,7 @@ const GraphicPage = (props) => {
     //zapisujemy plan
     const submitWorkPlan = () => {
         const preparationWorkPlan = getWorkplanToSend(workPlan);
+        if (!preparationWorkPlan) return
         setIsSubmiting(true);
         updateWorkPlane(1, preparationWorkPlan)
             .then(res => setIsSubmiting(false))
@@ -227,12 +237,24 @@ const GraphicPage = (props) => {
         <section className={props.className}>
             <HeaderPage title='Edycja Planu Pracy' />
             <DialogMessage open={errorMessage.isOpen} close={closeMessage} messages={errorMessage.message} />
-            <DndProvider backend={Backend}>
-                <section className={`${props.className} graphicPage`}>
-                    <WorkPlanContext.Provider value={{ setWorkplaceEmployee, removeEmployee, workPlan, submitWorkPlan }}>
-                        <NavGraphic className='GraphicNav' dateStart={date.start} dateEnd={date.end} setDate={setDate}></NavGraphic>
-                        {workPlan &&
+
+            <section className={`${props.className} graphicPage`}>
+                <WorkPlanContext.Provider value={{ setWorkplaceEmployee, removeEmployee, workPlan, submitWorkPlan }}>
+                    <NavGraphic className='GraphicNav' dateStart={date.start} dateEnd={date.end} setDate={setDate} isSubmiting={isSubmiting}></NavGraphic>
+                    {workPlan &&
+                        <DndProvider backend={Backend}>
                             <Grid container className={classes.root} >
+                                <Grid item className={classes.otherEmployees}>
+                                    <WorkPlace shift={null} line={null} row workPlace={workPlaceNames.free} color='inherit' title='Nieprzydzieleni pracownicy'>
+                                        {freeEmployees.map(employee => (
+                                            <Employee key={`employee${employee.id}`} row id={employee.id} line={null} shift={null} workPlace={workPlaceNames.free}
+                                                label={`${employee.name} ${employee.lastName}`} >
+                                                <span>{`${employee.name} ${employee.lastName}`}</span>
+                                            </Employee>
+                                        ))}
+
+                                    </WorkPlace>
+                                </Grid>
                                 <Grid item className={classes.shiftsContainer} >
                                     {workPlan.workShifts.map((shift, indexShift) => (
                                         <Grid item key={`shift${indexShift}`} >
@@ -358,23 +380,13 @@ const GraphicPage = (props) => {
                                         </Grid>
                                     </Grid>
                                 </Grid>
-                                <Grid item className={classes.otherEmployees}>
-                                    <WorkPlace shift={null} line={null} workPlace={workPlaceNames.free} color='inherit' title='Nieprzydzieleni pracownicy'>
-                                        {freeEmployees.map(employee => (
-                                            <Employee key={`employee${employee.id}`} id={employee.id} line={null} shift={null} workPlace={workPlaceNames.free}
-                                                label={`${employee.name} ${employee.lastName}`} >
-                                                <span>{`${employee.name} ${employee.lastName}`}</span>
-                                            </Employee>
-                                        ))}
-
-                                    </WorkPlace>
-                                </Grid>
                             </Grid>
-                        }
-                    </WorkPlanContext.Provider>
+                        </DndProvider>
+                    }
+                </WorkPlanContext.Provider>
 
-                </section >
-            </DndProvider>
+            </section >
+
         </section>
     )
 }

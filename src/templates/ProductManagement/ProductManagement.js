@@ -8,6 +8,8 @@ import DialogMessage from '../../components/DialogMessage';
 import { getProductsByActive, removeProduct, addProduct } from '../../services/ProductService';
 import PanelProductsList from './PanelProductsList';
 import AddFormDialog from '../../components/AddFormDialog';
+import HeaderPage from '../../components/HeaderPage';
+
 const useStyles = makeStyles(theme => ({
     header: {
         backgroundColor: '#222d32',
@@ -237,9 +239,7 @@ export const ProductManagement = ({ className }) => {
         <Grid container component='section' direction='column' className={className}>
             <DialogMessage open={alert} close={closeAlert} messages={alertMessage} />
             <Grid item>
-                <Typography component='h2' align='center' variant='button' className={classes.header}>
-                    Produkty
-                </Typography>
+                <HeaderPage title='Produkty'></HeaderPage>
             </Grid>
             <Grid container>
                 <Grid item>

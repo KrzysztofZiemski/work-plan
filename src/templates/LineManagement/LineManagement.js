@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import TableLines from './TableLines';
 import AddFormDialog from '../../components/AddFormDialog';
+import HeaderPage from '../../components/HeaderPage';
 
 const fieldsAddLine = [
     {
@@ -104,9 +105,7 @@ export const LineManagement = ({ className }) => {
         <Grid container component='section' direction='column' className={className}>
             <DialogMessage open={openMessage} close={handleCloseMessage} messages={message} />
             <Grid item>
-                <Typography component='h2' align='center' variant='button' className={classes.header}>
-                    Linie
-                </Typography>
+                <HeaderPage title='Linie'></HeaderPage>
             </Grid>
             <Grid container>
                 <Grid item>

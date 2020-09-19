@@ -27,9 +27,12 @@ const useStyles = makeStyles(() => ({
         textAlign: 'center',
         fontSize: 17
     },
+    button: {
+        minHeight: 37
+    }
 }));
 
-const NavGraphic = ({ className, dateEnd, dateStart, setDate }) => {
+const NavGraphic = ({ className, dateEnd, dateStart, setDate, isSubmiting }) => {
     const classes = useStyles()
     const { submitWorkPlan } = useContext(WorkPlanContext);
 
@@ -49,7 +52,7 @@ const NavGraphic = ({ className, dateEnd, dateStart, setDate }) => {
                 <Grid>
                     <Typography className={classes.title}>Wybierz początek tygodnia pracy</Typography>
                     <DateTimePicker date={dateStart} setDate={setDate} onlyDate arrows />
-                    <ButtonLoader variant="contained" color="primary" className={classes.btn} onClick={submitWorkPlan}>Zapisz</ButtonLoader>
+                    <ButtonLoader variant="contained" color="primary" className={classes.button} onClick={submitWorkPlan} isSubmitting={isSubmiting} value='Zapisz' />
                 </Grid>
             </Grid>
 

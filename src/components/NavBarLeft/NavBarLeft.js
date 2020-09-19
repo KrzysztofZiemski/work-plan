@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
     root: {
         width: 240,
         maxWidth: 360,
-        transition: '.5s',
+        transition: '.3s',
         height: '100vh',
         backgroundColor: '#0a2164',
         color: '#fff',
@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
         width: 240,
         marginLeft: -240,
         maxWidth: 360,
-        transition: '.5s',
+        transition: '.2s',
         height: '100%',
         flexGrow: 1,
         backgroundColor: '#fff',
@@ -47,7 +47,7 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-export const NavBarLeft = ({ isActive }) => {
+export const NavBarLeft = () => {
     const classes = useStyles();
     const { activeLeftMenu } = useContext(UserContext)
     let [selected, setSelected] = useState(null);
@@ -93,17 +93,14 @@ export const NavBarLeft = ({ isActive }) => {
                         <ListItem button className={classes.subListItem} component={Link} to={routes.ranking} selected={selected === 5 ? true : false} onClick={() => setSelected(5)}>
                             <ListItemText primary="Ranking" />
                         </ListItem>
+                        <ListItemCollapse label='Pracownicy' disableStrictModeCompat={true}>
+                            <ListItem button className={classes.subListItem} component={Link} to={routes.ranking} selected={selected === 7 ? true : false} onClick={() => setSelected(7)}>
+                                <ListItemText primary="Prac" />
+                            </ListItem>
+                        </ListItemCollapse>
+
+
                     </List>
-                    {/* <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 6 ? true : false} onClick={() => setSelected(6)}>
-                            <ListItemText primary="Linie" />
-                        </ListItem>
-                    </List>
-                    <List component="div" disablePadding>
-                        <ListItem button className={classes.subListItem} component={Link} to={'/'} selected={selected === 7 ? true : false} onClick={() => setSelected(7)}>
-                            <ListItemText primary="Wpisy" />
-                        </ListItem>
-                    </List> */}
                 </ListItemCollapse>
                 <ListItemCollapse label='Zarządzanie' disableStrictModeCompat={true}>
                     <List component="div" disablePadding>

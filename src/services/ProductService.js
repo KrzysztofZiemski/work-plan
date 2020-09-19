@@ -47,7 +47,6 @@ export const getProduct = (id) => {
 }
 
 export const update = (id, data) => {
-    console.log('zapytanie', JSON.stringify(data))
     const options = {
         method: 'PUT',
         body: JSON.stringify(data),

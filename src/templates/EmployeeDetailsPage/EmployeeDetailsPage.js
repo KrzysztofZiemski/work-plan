@@ -37,7 +37,6 @@ export const EmployeeDetailsPage = ({ match, className }) => {
                 setEmployee(data);
             })
             .catch(err => {
-                console.log('err', err)
                 setIsSubmiting(false);
                 if (err.response.status === 404) {
                     setMessage({ isOpen: true, text: ['Sprawdź poprawność linku', 'Błąd przy próbie pobrania informacji'] });

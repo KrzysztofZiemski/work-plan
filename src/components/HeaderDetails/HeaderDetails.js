@@ -4,11 +4,12 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import ButtonLoader from './../ButtonLoader';
 import { YES, NO } from '../../utils/conts';
+
 const styles = makeStyles(({
     paper: {
         display: 'flex',
         minWidth: 380,
-        borderRadius: 20,
+        borderRadius: 3,
         backgroundColor: 'rgba(60,141,188,.1)',
         boxShadow: 'inset 39px 0px 78px -28px rgba(60,141,188,0.74)'
     },

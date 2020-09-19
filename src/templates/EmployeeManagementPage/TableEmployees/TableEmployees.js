@@ -46,7 +46,7 @@ const columns = [
 
     {
         name: 'name',
-        label: 'imię',
+        label: 'Imię',
         options: {
             filter: true,
             sort: true,
@@ -57,7 +57,7 @@ const columns = [
     },
     {
         name: 'lastName',
-        label: 'nazwisko',
+        label: 'Nazwisko',
         options: {
             filter: true,
             sort: true
@@ -65,7 +65,7 @@ const columns = [
     },
     {
         name: 'isActive',
-        label: 'status',
+        label: 'Status',
         options: {
             filter: true,
             sort: true,
@@ -75,7 +75,7 @@ const columns = [
     },
     {
         name: 'settings',
-        label: 'ustawienia',
+        label: 'Edycja',
         options: {
             filter: false,
             sort: false,
@@ -122,7 +122,30 @@ const TableEmployees = ({ list, remove }) => {
                 useDisplayedColumnsOnly: true,
                 useDisplayedRowsOnly: true,
             },
-        }
+        },
+        textLabels: {
+            body: {
+                noMatch: "Brak wyników",
+            },
+            pagination: {
+                next: "Następna strona",
+                previous: "Poprzednia strona",
+                rowsPerPage: "Ilość pozycji na stronie:",
+                displayRows: "z",
+            },
+            toolbar: {
+                search: "Szukaj",
+                downloadCsv: "Pobierz CSV",
+                print: "Drukuj",
+                viewColumns: "Widok kolumn",
+                filterTable: "Filtruj tabele",
+            },
+            filter: {
+                all: "Wszystko",
+                title: "Filtry",
+                reset: "zresetuj",
+            },
+        },
     };
 
     return (

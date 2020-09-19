@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -6,7 +6,8 @@ import useRanking from '../../hooks/useRanking';
 import RankingTabs from './RankingTabs';
 import RankingPanel from './RankingPanel';
 import DialogMessage from '../../components/DialogMessage';
-
+import HeaderPage from '../../components/HeaderPage';
+// import { getWeekFromPeriod } from './../../helpers/dateHelper';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,20 +26,21 @@ export const RankingPage = () => {
         setError(false);
     }
     const classes = useStyles();
-
     const handleGetRanking = (date, type) => {
         setIsSubmiting(true);
         getRanking(date, type)
             .then(() => setIsSubmiting(false))
             .catch(err => setError(true));
     }
+
     return (
         <Grid className={classes.root}>
+            <HeaderPage title='Ranking'></HeaderPage>
             <Grid>
                 <RankingPanel isSubmiting={isSubmiting} submit={handleGetRanking} />
             </Grid>
             <Grid container className={classes.tables}>
-                {ranking.year && <RankingTabs ranking={ranking.year} title='ranking roczny' />}
+                {ranking.year && <RankingTabs ranking={ranking.year} title={`ranking roczny za ${ranking.year.year}`} />}
                 {ranking.halfYear && <RankingTabs ranking={ranking.halfYear} title='ranking półroczny' />}
                 {ranking.quarter && <RankingTabs ranking={ranking.quarter} title='ranking kwartalny' />}
                 {ranking.month && <RankingTabs ranking={ranking.month} title='ranking miesięczny' />}

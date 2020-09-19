@@ -21,20 +21,24 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        minHeight: 50,
+        minHeight: 57,
         minWidth: 100,
         backgroundColor: '#ebecf0',
+        borderBottom: '5px solid #999',
+        borderLeft: '2px solid #999',
+        borderRight: '2px solid #999',
     },
     cardRow: {
         display: 'flex',
         flexWrap: 'wrap',
-        minHeight: 50,
+        minHeight: 57,
         margin: 0,
         overflow: 'auto',
         backgroundColor: '#ebecf0',
         paddingTop: 0,
         minWidth: 100,
         alignItems: 'center',
+        padding: 4
     },
     title: {
         backgroundColor: '#6376AE',
@@ -64,7 +68,7 @@ const WorkPlace = ({ line, shift, workPlace, children, title, className, row, co
             isOver: !!monitor.isOver(),
         })
     })
-    console.log('isover', isOver)
+
     return (
         <Grid className={className || classes.root}>
             <Paper className={classes.title}>

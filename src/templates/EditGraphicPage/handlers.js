@@ -53,6 +53,7 @@ const _getId = (arr) => {
     return arr.map(item => item.id)
 }
 export const getWorkplanToSend = (workPlan) => {
+    if (!workPlan) return;
     const copy = JSON.parse(JSON.stringify(workPlan))
     copy.holidaysEmployees = _getId(copy.holidaysEmployees);
     copy.absenceEmployees = _getId(copy.absenceEmployees);

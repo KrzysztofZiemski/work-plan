@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useMemo } from 'react';
+import React, { useState, useContext, useEffect, useMemo, useRef } from 'react';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -23,7 +23,7 @@ const styles = makeStyles({
 
 export const ProductionReportDetailsPage = ({ match, className }) => {
     //TODO - czyści formularz po update, a musi aktualizować poprawnymi wartościami
-
+    const isMounted = useRef()
     const { params } = match;
 
     const [messages, setMessages] = useState([])
@@ -35,16 +35,23 @@ export const ProductionReportDetailsPage = ({ match, className }) => {
     const classes = styles();
 
     useEffect(() => {
+        isMounted.current = true
         setIsSubmiting(true);
         ProductionReportService.get(params.idReport)
             .then(res => {
+                if (!isMounted.current) return;
                 setIsSubmiting(false);
                 setReport(res);
             })
             .catch(status => {
+                if (!isMounted.current) return;
                 setIsSubmiting(false);
                 handleOpenMessage(['Wystąpił błąd z połączeniem', `status ${status}`]);
             });
+
+        return () => {
+            isMounted.current = false;
+        }
     }, [params.idReport])
 
     const dataReport = useMemo(() => {
@@ -77,7 +84,6 @@ export const ProductionReportDetailsPage = ({ match, className }) => {
 
     const handleSubmit = (data) => {
         setIsSubmiting(true);
-        console.log(data)
         data.speedMachinePerCycle = data.speedMachinePerMinute
         delete data.speedMachinePerMinute;
 

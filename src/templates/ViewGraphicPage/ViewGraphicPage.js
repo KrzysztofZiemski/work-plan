@@ -27,7 +27,7 @@ const useStyles = makeStyles(({
     },
 }));
 
-export const ViewGraphicPage = () => {
+export const ViewGraphicPage = ({ className }) => {
     const componentRef = useRef();
     let [dates, setDates] = useDateWeek();
     let [workPlan, setWorkPlan] = useState();
@@ -49,7 +49,7 @@ export const ViewGraphicPage = () => {
     const classes = useStyles();
 
     return (
-        <div>
+        <section className={className}>
             <HeaderPage title='Plan pracy' />
             <Grid container className={classes.settings}>
                 <Grid>
@@ -60,7 +60,7 @@ export const ViewGraphicPage = () => {
             </Grid>
             {isError ? <DialogMessage open={isError} close={closeMessage} messages={['Wystąpił błąd podczas pobierania grafiku']} /> :
                 <GraphicToPrint ref={componentRef} data={workPlan} />}
-        </div>
+        </section>
 
     );
 };

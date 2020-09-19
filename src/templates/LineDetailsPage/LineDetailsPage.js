@@ -5,12 +5,17 @@ import DialogMessage from '../../components/DialogMessage';
 
 import LineTable from './LineTable';
 import { Grid, Card } from '@material-ui/core';
+// import { makeStyles } from '@material-ui/core/styles';
+
 import HeaderDetailsCircles from '../../components/HeaderDetailsCircles';
 import HeaderDetails from '../../components/HeaderDetails';
 import routes from '../../utils/routes';
 import { Redirect } from 'react-router-dom';
 
+
 export const LineDetailsPage = props => {
+
+
     const { match: { params } } = props;
     const [line, setLine] = useState('');
     const [message, setMessage] = useState({ isOpen: false, text: [] });
@@ -86,7 +91,7 @@ export const LineDetailsPage = props => {
     }, [params.idLine])
     return (
         isExistingId ? (
-            < section className={props.className} >
+            <section className={props.className} >
                 <DialogMessage open={message.isOpen} close={handleCloseMessage} messages={message.text} />
                 <Card container component={Grid}>
                     <HeaderDetails content={content} onChange={handleUpdateLine} onRemove={handleRemoveLine} isSubmiting={isSubmiting} />

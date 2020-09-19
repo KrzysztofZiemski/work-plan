@@ -11,6 +11,7 @@ import AddFormDialog from '../../components/AddFormDialog';
 import { EmployeesContext } from '../../Contexts';
 import useActiveEmployees from '../../hooks/useActiveEmployees';
 import useInActiveEmployees from '../../hooks/useInActiveEmployees';
+import HeaderPage from '../../components/HeaderPage';
 
 const useStyles = makeStyles(theme => ({
     header: {
@@ -165,9 +166,7 @@ export const EmployeeManagementPage = ({ className }) => {
             <Grid container component='section' direction='column' className={className}>
                 <DialogMessage open={alert} close={closeAlert} messages={alertMessage} />
                 <Grid item>
-                    <Typography component='h2' align='center' variant='button' className={classes.header}>
-                        Pracownicy
-                </Typography>
+                    <HeaderPage title='Pracownicy'></HeaderPage>
                 </Grid>
                 <Grid container>
                     <Grid item>

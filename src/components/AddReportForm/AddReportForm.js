@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useCallback } from 'react';
+import React, { useEffect, useState, useContext, useCallback, useRef } from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -122,24 +122,30 @@ export const AddReportForm = ({ setMessage, isSubmiting, initValue, onSubmit }) 
 
     const { linesList, setLinesList } = useContext(LinesContext);
     const { productsList, setProductsList } = useContext(ProductsContext);
-
+    const isMounted = useRef()
     const [employees] = useActiveEmployees();
     let [formData, setFormData] = useState(initValue || blankForm);
     let [errors, setErrors] = useState(blankErrors);
     let [errorLabels, setErrorLabels] = useState(blankErrorLabels);
 
     useEffect(() => {
+        isMounted.current = true;
         (async () => {
             try {
                 const lines = await LineService.getAllLines();
-                setLinesList(lines);
                 const products = await getProductsByActive();
+                if (!isMounted.current) return
+                setLinesList(lines);
                 setProductsList(products);
             } catch (err) {
+                if (!isMounted.current) return
                 setMessage(['Błąd łączności z serwerem', 'spróbuj odświerzyć stronę', `status ${err}`]);
             }
 
         })();
+        return () => {
+            isMounted.current = false;
+        }
     }, []);
 
     const sorterEmployees = useCallback(() => {

@@ -9,7 +9,7 @@ import TableUsers from './TableUsers';
 import AddFormDialog from '../../components/AddFormDialog';
 import { UserService } from '../../services/UserService';
 import RoleService from '../../services/RoleService';
-
+import HeaderPage from '../../components/HeaderPage';
 
 const useStyles = makeStyles(theme => ({
     header: {
@@ -104,7 +104,7 @@ export const UserManagement = ({ className }) => {
         }
     }, [setRoleList, setUsersList, usersList])
     const refresh = () => {
-        UserService.getAll().then(data => console.log(data))
+        UserService.getAll().then(res => setUsersList(res.data))
             .catch(err => {
                 setMessage(['Nie udało się połączyc z serwerem', `status ${err}`])
                 setOpenMessage(true);
@@ -157,9 +157,7 @@ export const UserManagement = ({ className }) => {
         <Grid container component='section' direction='column' className={className}>
             <DialogMessage open={openMessage} close={handleCloseMessage} messages={message} />
             <Grid item>
-                <Typography component='h2' align='center' variant='button' className={classes.header}>
-                    Użytkownicy
-                </Typography>
+                <HeaderPage title='Użytkownicy'></HeaderPage>
             </Grid>
             <Grid container>
                 <Grid item>
