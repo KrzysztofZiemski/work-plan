@@ -93,13 +93,11 @@ export const NavBarLeft = () => {
                         <ListItem button className={classes.subListItem} component={Link} to={routes.ranking} selected={selected === 5 ? true : false} onClick={() => setSelected(5)}>
                             <ListItemText primary="Ranking" />
                         </ListItem>
-                        <ListItemCollapse label='Pracownicy' disableStrictModeCompat={true}>
+                        {/* <ListItemCollapse label='Pracownicy' disableStrictModeCompat={true}>
                             <ListItem button className={classes.subListItem} component={Link} to={routes.ranking} selected={selected === 7 ? true : false} onClick={() => setSelected(7)}>
                                 <ListItemText primary="Prac" />
                             </ListItem>
-                        </ListItemCollapse>
-
-
+                        </ListItemCollapse> */}
                     </List>
                 </ListItemCollapse>
                 <ListItemCollapse label='Zarządzanie' disableStrictModeCompat={true}>
