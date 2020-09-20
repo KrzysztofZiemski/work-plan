@@ -14,6 +14,7 @@ export class UserService {
         return axios('/api/v1/user')
     }
     static add = (data) => {
+        console.log('useradd', data)
         const options = {
             method: 'POST',
             credentials: 'include',
@@ -30,12 +31,15 @@ export class UserService {
             })
     }
     static remove = (id) => {
-        const options = {
+        const requestOptions = {
             method: 'DELETE',
+            credentials: 'include',
+            mode: 'cors',
         }
-        return fetch(`${USER_SERVER}/${id}`, options)
+        return fetch(`${USER_SERVER}/${id}`, requestOptions)
             .then(res => {
                 if (res.status === 200) return res.json();
+                console.log('res', res)
                 return Promise.reject(res.status);
             })
 

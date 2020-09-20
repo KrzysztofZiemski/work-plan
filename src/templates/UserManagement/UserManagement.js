@@ -4,23 +4,14 @@ import DialogMessage from '../../components/DialogMessage';
 import Loader from '../../components/Loader';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 import TableUsers from './TableUsers';
 import AddFormDialog from '../../components/AddFormDialog';
 import { UserService } from '../../services/UserService';
 import RoleService from '../../services/RoleService';
 import HeaderPage from '../../components/HeaderPage';
 
-const useStyles = makeStyles(theme => ({
-    header: {
-        backgroundColor: '#222d32',
-        color: '#fff',
-        padding: 10
-    },
-    formControl: {
-        minWidth: 180,
-    },
-}));
+
 const renderFields = (roleList) => ([
     {
         name: 'name',
@@ -77,7 +68,6 @@ const renderFields = (roleList) => ([
     },
 ])
 export const UserManagement = ({ className }) => {
-    const classes = useStyles();
     const { roleList, setRoleList } = useContext(RoleContext);
     const { usersList, setUsersList } = useContext(UsersContext);
     let [openMessage, setOpenMessage] = useState(false);
@@ -115,6 +105,7 @@ export const UserManagement = ({ className }) => {
         setFetching(true);
         const deletedUsersMessage = [];
         const errors = [];
+        console.log('users', users)
         const requests = users.map(user => {
             return UserService.remove(user.id)
                 .then(resData => deletedUsersMessage.push(`nazwa: ${resData.name}, numer: ${resData.surname}`))
