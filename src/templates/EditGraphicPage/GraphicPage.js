@@ -226,7 +226,10 @@ const GraphicPage = (props) => {
         if (!preparationWorkPlan) return
         setIsSubmiting(true);
         updateWorkPlane(1, preparationWorkPlan)
-            .then(res => setIsSubmiting(false))
+            .then(res => {
+                if(res.status===401) return Promise.reject(res.status);
+                setIsSubmiting(false)
+            })
             .catch(err => {
                 setIsSubmiting(false);
                 alert(`nie udało się zapisać planu - ${err}`);

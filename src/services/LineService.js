@@ -2,11 +2,17 @@ import { SERVER } from '../config';
 const SERVER_LINES = `${SERVER}/api/v1/line`;
 class LineService {
 
-    static getAllLines = () => fetch(SERVER_LINES)
+    static getAllLines = () => {
+        const options = {
+            method: 'GET',
+            credentials: 'include',
+            mode: 'cors',
+        }
+        return fetch(SERVER_LINES,options)
         .then(res => {
             if (res.ok === true) return res.json();
             return Promise.reject(res.status);
-        })
+        })}
     static add = (data) => {
         const options = {
             method: 'POST',
@@ -26,6 +32,8 @@ class LineService {
     static remove = (id) => {
         const options = {
             method: 'DELETE',
+            credentials: 'include',
+            mode: 'cors',
         }
         return fetch(`${SERVER_LINES}/${id}`, options)
             .then(res => {
@@ -35,16 +43,24 @@ class LineService {
 
     }
     static get = (id) => {
-        return fetch(`${SERVER_LINES}/${id}`)
-            .then(resp => {
-                if (resp.status === 200) return resp.json();
-                return Promise.reject(resp.status)
-            })
-            .catch(err => Promise.reject(err))
-    }
+        const options = {
+            method: 'GET',
+            credentials: 'include',
+            mode: 'cors',
+        }
+      
+            return fetch(`${SERVER_LINES}/${id}`,options)
+                .then(resp => {
+                    if (resp.status === 200) return resp.json();
+                    return Promise.reject(resp.status)
+                })
+                .catch(err => Promise.reject(err))
+        }
     static update = (id, data) => {
         const options = {
             method: 'PUT',
+            credentials: 'include',
+            mode: 'cors',
             body: JSON.stringify(data),
             headers: {
                 'Content-Type': 'application/json'

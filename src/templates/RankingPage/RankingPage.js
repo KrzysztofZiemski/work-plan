@@ -26,11 +26,15 @@ export const RankingPage = () => {
         setError(false);
     }
     const classes = useStyles();
+
     const handleGetRanking = (date, type) => {
         setIsSubmiting(true);
         getRanking(date, type)
             .then(() => setIsSubmiting(false))
-            .catch(err => setError(true));
+            .catch(err => {
+                setIsSubmiting(false)
+                setError(true);
+            });
     }
 
     return (

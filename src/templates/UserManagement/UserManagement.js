@@ -105,7 +105,6 @@ export const UserManagement = ({ className }) => {
         setFetching(true);
         const deletedUsersMessage = [];
         const errors = [];
-        console.log('users', users)
         const requests = users.map(user => {
             return UserService.remove(user.id)
                 .then(resData => deletedUsersMessage.push(`nazwa: ${resData.name}, numer: ${resData.surname}`))
@@ -161,4 +160,5 @@ export const UserManagement = ({ className }) => {
             <Loader open={fetching} />
         </Grid>
     )
-}
+};
+

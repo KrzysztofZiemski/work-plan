@@ -53,7 +53,7 @@ export const ProductionReportDetailsPage = ({ match, className }) => {
             isMounted.current = false;
         }
     }, [params.idReport])
-
+ 
     const dataReport = useMemo(() => {
         if (report) return {
             firstWorkplaceIdEmployee: report.firstWorkplace,
@@ -84,9 +84,16 @@ export const ProductionReportDetailsPage = ({ match, className }) => {
 
     const handleSubmit = (data) => {
         setIsSubmiting(true);
-        data.speedMachinePerCycle = data.speedMachinePerMinute
+       
+        data.productionStart=getCorrectlyFormatData(data.productionStart);
+        data.productionEnd=getCorrectlyFormatData(data.productionEnd);
+        data.speedMachinePerCycle = data.speedMachinePerMinute;
+        data.productionTimeToHour=data.productionHours+data.productionMinutes/60
         delete data.speedMachinePerMinute;
-
+console.log('data',data)
+        // powinno   jeszcze iść
+        // "percentagePerformance": 0,
+        //     "performancePerHour": 0,
         return ProductionReportService.update(params.idReport, data)
             .then(data => {
                 setIsSubmiting(false);
@@ -121,5 +128,7 @@ export const ProductionReportDetailsPage = ({ match, className }) => {
         </section>
     )
 };
+
+
 
 

@@ -3,7 +3,12 @@ import axios from '../utils/axios'
 const USER_SERVER = `${SERVER}/api/v1/user`
 export class UserService {
     static getUser(id) {
-        return fetch(`${USER_SERVER}/${id}`)
+        const options = {
+            method: 'GET',
+            credentials: 'include',
+            mode: 'cors',
+        }
+        return fetch(`${USER_SERVER}/${id}`,options)
             .then(res => {
                 if (res.ok) return res.json();
                 Promise.reject(res.status)
@@ -14,7 +19,7 @@ export class UserService {
         return axios('/api/v1/user')
     }
     static add = (data) => {
-        console.log('useradd', data)
+
         const options = {
             method: 'POST',
             credentials: 'include',
@@ -39,7 +44,6 @@ export class UserService {
         return fetch(`${USER_SERVER}/${id}`, requestOptions)
             .then(res => {
                 if (res.status === 200) return res.json();
-                console.log('res', res)
                 return Promise.reject(res.status);
             })
 

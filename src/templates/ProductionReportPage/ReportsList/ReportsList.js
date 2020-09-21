@@ -128,7 +128,11 @@ export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20, c
     useEffect(() => {
         const sorterByNewest = (a, b) => new Date(b.productionEnd).getTime() - new Date(a.productionEnd).getTime();
         LineService.getAllLines()
-            .then(data => setLines(data));
+            .then(data => setLines(data))
+            .catch(err=>{
+                setMessage(['błąd połączenia',err]);
+                setMessageIsOpen(true);
+            })
 
         if (startDate && endDate) {
             ProductionReportService.getBetween(startDate, endDate)
@@ -185,7 +189,6 @@ export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20, c
             },
         },
         onDownload: (buildHead, buildBody, columns, data) => {
-
             for (let i = 0; i < data.length; i++) {
                 data[i].data[4] = data[i].data[4].name
                 data[i].data[10] = data[i].data[10].name
@@ -243,7 +246,7 @@ export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20, c
                         customBodyRender: (value, tableMeta, updateValue) => {
                             const lineName = lines.filter(line => line.id === value);
                             return (
-                                <Typography className={classes.linkInTable} component={Link} to={`${routes.lineDetails}/${value}`}>{lineName[0].name}</Typography>
+                                lineName[0] &&  <Typography className={classes.linkInTable} component={Link} to={`${routes.lineDetails}/${value}`}>{lineName[0].name}</Typography>
                             )
                         },
                     },

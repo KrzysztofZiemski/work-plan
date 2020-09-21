@@ -15,6 +15,7 @@ const createWorkPlan = (startDate, endDate, userId) => {
 
     return fetch(WORK_PLAN_URL, {
         method: 'POST',
+        mode: 'cors',
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
@@ -70,10 +71,9 @@ const updateWorkPlane = (idUser, workPlan) => {
     return fetch(`${WORK_PLAN_URL}/${workPlan.id}/user/${idUser}`, {
         method: 'PUT',
         mode: 'cors',
-        credentials: 'same-origin',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
         },
         body: JSON.stringify(workPlan)
     })

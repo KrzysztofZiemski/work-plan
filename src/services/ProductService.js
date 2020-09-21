@@ -49,6 +49,8 @@ export const getProduct = (id) => {
 export const update = (id, data) => {
     const options = {
         method: 'PUT',
+        mode: 'cors',
+        credentials: 'include',
         body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json'

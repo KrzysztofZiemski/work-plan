@@ -158,11 +158,13 @@ export const AddReportForm = ({ setMessage, isSubmiting, initValue, onSubmit }) 
         if (!isOk) return;
         const data = { ...formData };
 
+        // return
 
         data.firstWorkplaceIdEmployee = data.firstWorkplaceIdEmployee.id;
         data.secondWorkplaceIdEmployee = data.secondWorkplaceIdEmployee.id;
         data.thirdWorkplaceIdEmployee = data.thirdWorkplaceIdEmployee.id;
-        if (!data.series) delete data.series;
+    
+        console.log(data)
         const isSubmited = await onSubmit(data);
         if (isSubmited) setFormData(blankForm);
     }

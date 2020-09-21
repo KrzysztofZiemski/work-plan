@@ -25,6 +25,11 @@ class ProductionReportService {
     }
     static getBetween = (start, end) => {
         //format date yyyy-MM-dd-HH:mm
+        const options = {
+            method: 'POST',
+            credentials: 'include',
+            mode: 'cors',
+        }
         const URL = `${SERVER_REPORT}/start/${start}/end/${end}`;
         return fetch(URL)
             .then(res => {
@@ -33,9 +38,14 @@ class ProductionReportService {
             })
     }
     static get = (id) => {
+        const requestOptions = {
+            method: 'GET',
+            credentials: 'include',
+            mode: 'cors',
+        }
         //format date yyyy-MM-dd-HH:mm
         const URL = `${SERVER_REPORT}/${id}`;
-        return fetch(URL)
+        return fetch(URL,requestOptions)
             .then(res => {
                 if (res.status === 200) return res.json();
                 return Promise.reject(res.status);
@@ -43,7 +53,12 @@ class ProductionReportService {
     }
 
     static getAll = () => {
-        return fetch(SERVER_REPORT)
+        const requestOptions = {
+            method: 'GET',
+            credentials: 'include',
+            mode: 'cors',
+        }
+        return fetch(SERVER_REPORT,requestOptions)
             .then(res => {
                 if (res.status === 200) return res.json();
                 return Promise.reject(res.status);
@@ -72,7 +87,10 @@ class ProductionReportService {
         const URL = `${SERVER_REPORT}/${id}`;
         const requestOptions = {
             method: 'DELETE',
+            credentials: 'include',
+            mode: 'cors'
         }
+        
         return fetch(URL, requestOptions)
             .then(res => {
                 if (res.status === 200) return Promise.resolve();

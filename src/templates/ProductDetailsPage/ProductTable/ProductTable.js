@@ -113,7 +113,6 @@ export const ProductTable = ({ id, type }) => {
                     const summaryData = ['Podsumowanie', summaryResponse.options.totalProduced, summaryResponse.options.percentage, summaryResponse.options.averageSpeed, summaryResponse.options.averagePerHour];
 
                     dataTable.push(summaryData);
-                    console.log('reportList', reportList)
                     setReports(reportList);
                     setDataTable(dataTable);
 
@@ -125,7 +124,6 @@ export const ProductTable = ({ id, type }) => {
             setMessage({ isOpen: true, text: ['Nie udało się pobrać danych', `Błąd ${err}`] });
         }
     }
-    console.log(reports)
     const renderReports = () => {
         if (!reports) return [];
         return reports.map(report => {

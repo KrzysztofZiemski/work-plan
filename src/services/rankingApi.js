@@ -8,23 +8,36 @@ const fetchCreate = (URL, year, period) => {
         dateRangeNumber: period,
         year: year,
     }
-    return fetch(`${RANKING}/${URL}`, {
+    const options = {
         method: 'POST',
         body: JSON.stringify(data),
+        credentials: 'include',
+        mode: 'cors',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
-    }).then(res => {
+    };
+
+    return fetch(`${RANKING}/${URL}`, options).then(res => {
         if (res.ok) return res.json();
         return Promise.reject(res.status);
     })
 };
 
-const fetchGet = (URL) => fetch(`${RANKING}/${URL}`).then(res => {
+const fetchGet = (URL) => {
+    const options = {
+        method: 'GET',
+        credentials: 'include',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    };
+    return fetch(`${RANKING}/${URL}`).then(res => {
     if (res.ok) return res.json();
     return Promise.reject(res.status);
 });
-
+}
 
 export const createWeek = (date) => fetchCreate('week', date.getFullYear(), getWeekNumber(date));
 

@@ -36,7 +36,7 @@ export const RankingPanel = ({ isSubmiting, submit }) => {
 
     const classes = useStyles();
     const [date, setDate] = useState(new Date());
-    const [type, setType] = useState();
+    const [type, setType] = useState(rankingTypes.YEAR);
     const handleChangeType = (event) => {
         setType(event.target.value);
     };
@@ -75,7 +75,6 @@ export const RankingPanel = ({ isSubmiting, submit }) => {
                     value={type}
                     onChange={handleChangeType}
                 >
-                    <MenuItem value={''}>{' '}</MenuItem>
                     <MenuItem value={rankingTypes.YEAR}>Roczny</MenuItem>
                     <MenuItem value={rankingTypes.HALF_YEAR}>Półroczny</MenuItem>
                     <MenuItem value={rankingTypes.QUARTER}>Kwartalny</MenuItem>
