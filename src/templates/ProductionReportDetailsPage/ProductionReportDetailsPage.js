@@ -4,12 +4,15 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import { makeStyles } from '@material-ui/core/styles';
 
-import AddReportForm from '../../components/AddReportForm';
+import ChangeReportForm from './ChangeReportForm';
 import Loader from '../../components/Loader';
 import DialogMessage from '../../components/DialogMessage';
 import ProductionReportService from '../../services/ProductionReportService';
+
 import { UserContext } from '../../Contexts';
 import { getCorrectlyFormatData } from '../../helpers/dateHelper';
+import HeaderPage from '../../components/HeaderPage';
+import { Grid } from '@material-ui/core';
 
 const styles = makeStyles({
     cardHeader: {
@@ -25,7 +28,7 @@ export const ProductionReportDetailsPage = ({ match, className }) => {
     //TODO - czyści formularz po update, a musi aktualizować poprawnymi wartościami
     const isMounted = useRef()
     const { params } = match;
-
+    console.log('productiornreportpagedetail')
     const [messages, setMessages] = useState([])
     const [openMessage, setOpenMessage] = useState(false);
     const [isSubmiting, setIsSubmiting] = useState(false);
@@ -53,7 +56,7 @@ export const ProductionReportDetailsPage = ({ match, className }) => {
             isMounted.current = false;
         }
     }, [params.idReport])
- 
+
     const dataReport = useMemo(() => {
         if (report) return {
             firstWorkplaceIdEmployee: report.firstWorkplace,
@@ -69,6 +72,8 @@ export const ProductionReportDetailsPage = ({ match, className }) => {
             speedMachinePerMinute: report.speedMachinePerCycle,
             productionHours: Math.floor(report.productionTimeToHour),
             productionMinutes: Math.floor(60 * (report.productionTimeToHour - Math.floor(report.productionTimeToHour))),
+            percentagePerformance: report.percentagePerformance,
+            performancePerHour: report.performancePerHour,
         }
     }, [report])
 
@@ -84,13 +89,13 @@ export const ProductionReportDetailsPage = ({ match, className }) => {
 
     const handleSubmit = (data) => {
         setIsSubmiting(true);
-       
-        data.productionStart=getCorrectlyFormatData(data.productionStart);
-        data.productionEnd=getCorrectlyFormatData(data.productionEnd);
+
+        data.productionStart = getCorrectlyFormatData(data.productionStart);
+        data.productionEnd = getCorrectlyFormatData(data.productionEnd);
         data.speedMachinePerCycle = data.speedMachinePerMinute;
-        data.productionTimeToHour=data.productionHours+data.productionMinutes/60
+        data.productionTimeToHour = data.productionHours + data.productionMinutes / 60
         delete data.speedMachinePerMinute;
-console.log('data',data)
+        console.log('data', data)
         // powinno   jeszcze iść
         // "percentagePerformance": 0,
         //     "performancePerHour": 0,
@@ -106,17 +111,20 @@ console.log('data',data)
     };
 
     return (
-        <section className={className}>
+        <Grid component='section' className={className}>
+            <Grid item>
+                <HeaderPage title='Zmiana dodanego raportu'></HeaderPage>
+            </Grid>
             <DialogMessage open={openMessage} close={handleCloseMessage} messages={messages} />
             <Loader open={isSubmiting} />
             {
                 report && <Card className={classes.card}>
                     <CardHeader
-                        component='h1'
+                        component='h2'
                         title={`Raport z okresu ${report.productionStart ? `${getCorrectlyFormatData(report.productionStart)} - ${getCorrectlyFormatData(report.productionEnd)}` : ''}`}
                         className={classes.cardHeader}
                     />
-                    <AddReportForm
+                    <ChangeReportForm
                         setMessage={handleOpenMessage}
                         isSubmiting={isSubmiting}
                         onSubmit={handleSubmit}
@@ -124,8 +132,7 @@ console.log('data',data)
                     />
                 </Card>
             }
-
-        </section>
+        </Grid>
     )
 };
 

@@ -11,11 +11,15 @@ import ProductTable from './ProductTable';
 import { Redirect } from 'react-router-dom';
 import routes from '../../utils/routes';
 import { YES, NO } from '../../utils/conts';
+import { HeaderPage } from '../../components/HeaderPage/HeaderPage';
 
 const styles = makeStyles(({
     header: {
         display: 'flex',
         flexWrap: 'nowrap'
+    },
+    right: {
+        flexGrow: 1
     }
 }))
 
@@ -131,7 +135,11 @@ export const ProductDetailsPage = ({ className, match }) => {
                 <DialogMessage open={message.isOpen} close={handleCloseMessage} messages={message.text} />
                 <Card container component={Grid} className={classes.header}>
                     <HeaderDetails content={content} isSubmiting={isSubmiting} onRemove={handleRemove} onChange={handleUpdate} />
-                    <HeaderDetailsCircles title='Produkcja' id={params.idProduct} type='PRODUCT' setMessage={setMessage} />
+                    <Grid className={classes.right}>
+                        <HeaderPage title={`${product.name || ''}`} />
+                        <HeaderDetailsCircles title='Produkcja' id={params.idProduct} type='PRODUCT' setMessage={setMessage} />
+                    </Grid>
+
                 </Card>
                 <ProductTable id={params.idProduct} type={'PRODUCT'} />
             </section > :

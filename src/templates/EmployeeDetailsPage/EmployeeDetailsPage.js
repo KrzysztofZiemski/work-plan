@@ -12,14 +12,17 @@ import HeaderDetailsCircles from '../../components/HeaderDetailsCircles';
 import DialogMessage from '../../components/DialogMessage';
 import { Redirect } from 'react-router-dom';
 import routes from '../../utils/routes';
+import { HeaderPage } from '../../components/HeaderPage/HeaderPage';
 
 const styles = makeStyles(({
     header: {
         display: 'flex',
         flexWrap: 'nowrap'
+    },
+    right: {
+        flexGrow: 1
     }
-}))
-
+}));
 
 export const EmployeeDetailsPage = ({ match, className }) => {
 
@@ -125,7 +128,10 @@ export const EmployeeDetailsPage = ({ match, className }) => {
                 <DialogMessage open={message.isOpen} close={handleCloseMessage} messages={message.text} />
                 <Card container component={Grid} className={classes.header}>
                     <HeaderDetails content={content} isSubmiting={isSubmiting} onRemove={handleRemove} onChange={handleUpdate} />
-                    <HeaderDetailsCircles title='Produkcja' id={params.idEmployee} type='EMPLOYEE' setMessage={setMessage} />
+                    <Grid className={classes.right}>
+                        <HeaderPage title={`${employee.name + employee.lastName || ''}`} />
+                        <HeaderDetailsCircles title='Produkcja' id={params.idEmployee} type='EMPLOYEE' setMessage={setMessage} />
+                    </Grid>
                 </Card>
                 <EmployeeTable id={params.idEmployee} type='EMPLOYEE' />
             </Grid> :

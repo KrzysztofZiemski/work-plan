@@ -8,11 +8,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import ButtonLoader from '../ButtonLoader';
-import LineService from '../../services/LineService';
-import { getProductsByActive } from '../../services/ProductService';
-import { LinesContext, ProductsContext } from '../../Contexts';
-import useActiveEmployees from '../../hooks/useActiveEmployees';
+import ButtonLoader from '../../../components/ButtonLoader';
+import LineService from '../../../services/LineService';
+import { getProductsByActive } from '../../../services/ProductService';
+import { LinesContext, ProductsContext } from '../../../Contexts';
+import useActiveEmployees from '../../../hooks/useActiveEmployees';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -116,7 +116,7 @@ const blankErrorLabels = {
     totalQuantityProduced: '',
 }
 
-export const AddReportForm = ({ setMessage, isSubmiting, initValue, onSubmit }) => {
+export const ChangeReportForm = ({ setMessage, isSubmiting, initValue, onSubmit }) => {
 
     const classes = useStyles();
 
@@ -443,8 +443,30 @@ export const AddReportForm = ({ setMessage, isSubmiting, initValue, onSubmit }) 
                         error={errors.totalQuantityProduced}
                         helperText={errorLabels.totalQuantityProduced}
                     />
-
+                    <TextField
+                        variant='outlined'
+                        type='number'
+                        name='percentagePerformance'
+                        value={formData.percentagePerformance}
+                        onChange={handleChange}
+                        label='OEE'
+                        className={classes.quantityProducedField}
+                        error={errors.percentagePerformance}
+                        helperText={errorLabels.percentagePerformance}
+                    />
+                    <TextField
+                        variant='outlined'
+                        type='number'
+                        name='performancePerHour'
+                        value={formData.performancePerHour}
+                        onChange={handleChange}
+                        label='wydajność/h'
+                        className={classes.quantityProducedField}
+                        error={errors.performancePerHour}
+                        helperText={errorLabels.performancePerHour}
+                    />
                 </Grid>
+
                 <h2 className={classes.subTitlesForm}>Pracownicy</h2>
                 <Grid container>
                     <Grid className={classes.autoComplete}>
@@ -536,9 +558,17 @@ export const AddReportForm = ({ setMessage, isSubmiting, initValue, onSubmit }) 
 
 //to wysyłam
 
-
+//trzeba jeszcze wprowadzić valie do tych 2 inputów
 //to muszę wysłać
 
 // "percentagePerformance": 0,
-//     "performancePerHour": 0,
+// name: 'percentagePerformance',
+//         download: true,
+//         label: 'OEE'
+//bumber
 
+
+
+//     "performancePerHour": 0,
+// label: 'wydajność/h'
+//number

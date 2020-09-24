@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { subtractionDate } from '../../../helpers/dateHelper';
-import { Select, InputLabel, FormControl, MenuItem, Typography } from '@material-ui/core';
+import { Select, InputLabel, FormControl, MenuItem, Typography, TextField } from '@material-ui/core';
 import { getCorrectlyFormatData } from '../../../helpers/dateHelper';
 import DateTimePicker from '../../../components/DateTimePicker';
 import DialogMessage from '../../../components/DialogMessage';
@@ -58,6 +58,7 @@ export const ProductTable = ({ id, type }) => {
     let [message, setMessage] = useState({ isOpen: false, text: [] });
     let [dataTable, setDataTable] = useState([]);
     let [linesFilter, setLinesFilter] = useState('');
+    let [seriesFilter, setSeriesFilter] = useState('');
     let [linesList, setLinesList] = useState([]);
     let [reports, setReports] = useState([]);
 
@@ -66,7 +67,16 @@ export const ProductTable = ({ id, type }) => {
         LineService.getAllLines()
             .then(data => setLinesList(data))
             .catch(err => setMessage({ isOpen: true, text: ['Wystąpił błąd podczas wczytywania zasobu', `Błąd ${err}`] }))
-    }, [])
+    }, []);
+    const renderReports = useMemo(() => {
+        if (!reports) return [];
+        return reports.map(report => {
+            return ([
+                `${getCorrectlyFormatData(report.startProduction)}  -  ${getCorrectlyFormatData(report.endProduction)}`, report.totalQuantityProduced, report.series, `${report.performancePerHour} h`, report.speedMachinePerCycle, report.line.name, `${report.firstWorkplace.name} ${report.firstWorkplace.lastName}`, `${report.secondWorkplace.name} ${report.secondWorkplace.lastName}`, `${report.thirdWorkplace.name} ${report.thirdWorkplace.lastName}`
+            ])
+        })
+    }, [reports])
+
     if (!id || !type) return;
 
     const handleCloseMessage = () => {
@@ -74,6 +84,9 @@ export const ProductTable = ({ id, type }) => {
     }
     const handleChangeLine = (e) => {
         setLinesFilter(e.target.value);
+    }
+    const handleSeriesChangeL = (e) => {
+        setSeriesFilter(e.target.value);
     }
 
     const getReportProduct = async () => {
@@ -124,15 +137,9 @@ export const ProductTable = ({ id, type }) => {
             setMessage({ isOpen: true, text: ['Nie udało się pobrać danych', `Błąd ${err}`] });
         }
     }
-    const renderReports = () => {
-        if (!reports) return [];
-        return reports.map(report => {
-            return ([
-                `${getCorrectlyFormatData(report.startProduction)}  -  ${getCorrectlyFormatData(report.endProduction)}`, report.totalQuantityProduced, report.series, `${report.performancePerHour} h`, report.speedMachinePerCycle, report.line.name, `${report.firstWorkplace.name} ${report.firstWorkplace.lastName}`, `${report.secondWorkplace.name} ${report.secondWorkplace.lastName}`, `${report.thirdWorkplace.name} ${report.thirdWorkplace.lastName}`
-            ])
-        })
 
-    }
+
+
     return (
         <Grid>
             <Grid container className={classes.root}>
@@ -156,6 +163,17 @@ export const ProductTable = ({ id, type }) => {
                             ))}
                         </Select>
                     </FormControl>
+                    <FormControl variant="outlined" className={classes.formControl}>
+                        <InputLabel id="lineId">Linia</InputLabel>
+                        <TextField
+                            labelId="lineId"
+                            id="series"
+                            value={seriesFilter}
+                            onChange={handleChangeLine}
+                            name='lineId'
+                            label="Seria"
+                        />
+                    </FormControl>
                     <ButtonLoader onClick={getReportProduct} className={classes.button} value='Pobierz dane' isSubmitting={isFetching} />
                 </Grid>
                 <Grid className={classes.tableContainer}>
@@ -164,7 +182,7 @@ export const ProductTable = ({ id, type }) => {
             </Grid>
             {reports.length > 0 ? <Grid container>
                 <Typography component='h2' className={classes.reportsHeader}>Raporty</Typography>
-                <TableDetails headers={headerReports} rows={renderReports()} summary={false} />
+                <TableDetails headers={headerReports} rows={renderReports} summary={false} />
             </Grid> : null}
         </Grid>
     );

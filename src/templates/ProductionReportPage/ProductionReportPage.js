@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import AddReportForm from '../../components/AddReportForm';
 import Loader from '../../components/Loader';
 import DialogMessage from '../../components/DialogMessage';
-import ReportsList from './ReportsList';
+import ReportsList from './../../components/ReportsList';
 import ProductionReportService from '../../services/ProductionReportService';
 import { UserContext } from '../../Contexts';
 import HeaderPage from '../../components/HeaderPage';

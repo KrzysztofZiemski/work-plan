@@ -8,11 +8,11 @@ const useStyles = makeStyles(({
         borderBottom: '1px solid black'
     }
 }));
-
+//title
 export const HeaderPage = (props) => {
     const classes = useStyles();
 
     return (
-        <CardHeader component='h1' title='Plan pracy' {...props} className={classes.root} />
+        <CardHeader component='h1' {...props} className={classes.root} />
     );
 };

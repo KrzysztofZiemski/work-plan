@@ -5,16 +5,23 @@ import DialogMessage from '../../components/DialogMessage';
 
 import LineTable from './LineTable';
 import { Grid, Card } from '@material-ui/core';
-// import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import HeaderDetailsCircles from '../../components/HeaderDetailsCircles';
 import HeaderDetails from '../../components/HeaderDetails';
 import routes from '../../utils/routes';
 import { Redirect } from 'react-router-dom';
+import { HeaderPage } from '../../components/HeaderPage/HeaderPage';
 
+const useStyles = makeStyles(({
+    right: {
+        flexGrow: 1
+    }
+}))
 
 export const LineDetailsPage = props => {
 
+    const classes = useStyles();
 
     const { match: { params } } = props;
     const [line, setLine] = useState('');
@@ -92,10 +99,15 @@ export const LineDetailsPage = props => {
     return (
         isExistingId ? (
             <section className={props.className} >
+
                 <DialogMessage open={message.isOpen} close={handleCloseMessage} messages={message.text} />
                 <Card container component={Grid}>
                     <HeaderDetails content={content} onChange={handleUpdateLine} onRemove={handleRemoveLine} isSubmiting={isSubmiting} />
-                    <HeaderDetailsCircles title='Produkcja' id={params.idLine} type='LINE' setMessage={setMessage} />
+                    <Grid className={classes.right}>
+                        <HeaderPage title={`${line.name || ''}`} />
+                        <HeaderDetailsCircles title='Produkcja' id={params.idLine} type='LINE' setMessage={setMessage} />
+                    </Grid>
+
                 </Card>
                 <LineTable id={params.idLine} type='LINE' />
             </section >

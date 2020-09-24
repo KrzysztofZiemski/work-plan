@@ -4,14 +4,14 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
-import Loader from '../../../components/Loader';
-import DialogMessage from '../../../components/DialogMessage';
-import ProductionReportService from '../../../services/ProductionReportService';
-import LineService from '../../../services/LineService';
-import SettingsMenu from '../../../components/SettingsMenu';
-import Poper from '../../../components/Poper';
-import { default as routes } from '../../../utils/routes';
-import { sortProvider } from '../../../helpers/dataTableHelpers';
+import Loader from '../Loader';
+import DialogMessage from '../DialogMessage';
+import ProductionReportService from '../../services/ProductionReportService';
+import LineService from '../../services/LineService';
+import SettingsMenu from '../SettingsMenu';
+import Poper from '../Poper';
+import { default as routes } from '../../utils/routes';
+import { sortProvider } from '../../helpers/dataTableHelpers';
 
 const headerNames = [
     {
@@ -129,8 +129,8 @@ export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20, c
         const sorterByNewest = (a, b) => new Date(b.productionEnd).getTime() - new Date(a.productionEnd).getTime();
         LineService.getAllLines()
             .then(data => setLines(data))
-            .catch(err=>{
-                setMessage(['błąd połączenia',err]);
+            .catch(err => {
+                setMessage(['błąd połączenia', err]);
                 setMessageIsOpen(true);
             })
 
@@ -246,7 +246,7 @@ export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20, c
                         customBodyRender: (value, tableMeta, updateValue) => {
                             const lineName = lines.filter(line => line.id === value);
                             return (
-                                lineName[0] &&  <Typography className={classes.linkInTable} component={Link} to={`${routes.lineDetails}/${value}`}>{lineName[0].name}</Typography>
+                                lineName[0] && <Typography className={classes.linkInTable} component={Link} to={`${routes.lineDetails}/${value}`}>{lineName[0].name}</Typography>
                             )
                         },
                     },

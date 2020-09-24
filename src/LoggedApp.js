@@ -16,7 +16,7 @@ const ViewGraphicPage = lazy(() => import('./templates/ViewGraphicPage'));
 const DashboardPage = lazy(() => import('./templates/DashboardPage'));
 const ProductionReportPage = lazy(() => import('./templates/ProductionReportPage'));
 const EmployeeManagementPage = lazy(() => import('./templates/EmployeeManagementPage'));
-const ReportsList = lazy(() => import('./templates/ProductionReportPage/ReportsList'));
+const ReportsList = lazy(() => import('./components//ReportsList'));
 const ProductManagement = lazy(() => import('./templates/ProductManagement'));
 const LoginPage = lazy(() => import('./templates/LoginPage'));
 const ProductDetailsPage = lazy(() => import('./templates/ProductDetailsPage'));
