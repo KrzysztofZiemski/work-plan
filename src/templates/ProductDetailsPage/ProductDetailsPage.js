@@ -139,7 +139,6 @@ export const ProductDetailsPage = ({ className, match }) => {
                         <HeaderPage title={`${product.name || ''}`} />
                         <HeaderDetailsCircles title='Produkcja' id={params.idProduct} type='PRODUCT' setMessage={setMessage} />
                     </Grid>
-
                 </Card>
                 <ProductTable id={params.idProduct} type={'PRODUCT'} />
             </section > :
