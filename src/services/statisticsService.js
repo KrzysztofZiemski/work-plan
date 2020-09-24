@@ -34,7 +34,7 @@ const create = ({ start, end, id, type, options = {} }) => {
         percentage: true,
         averagePerHour: true,
     }
-
+    console.log('options', { ...defaultOptions, ...options })
     const data = {
         start: getCorrectlyFormatData(start),
         end: getCorrectlyFormatData(end),

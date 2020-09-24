@@ -46,7 +46,10 @@ const useStyles = makeStyles(({
         fontSize: 19,
         margin: '0 auto',
         padding: 10,
-    }
+    },
+    formControl: {
+        margin: 5
+    },
 }));
 
 
@@ -85,7 +88,7 @@ export const ProductTable = ({ id, type }) => {
     const handleChangeLine = (e) => {
         setLinesFilter(e.target.value);
     }
-    const handleSeriesChangeL = (e) => {
+    const handleSeriesChange = (e) => {
         setSeriesFilter(e.target.value);
     }
 
@@ -97,10 +100,13 @@ export const ProductTable = ({ id, type }) => {
             type,
             options: {}
         }
+        if (seriesFilter) dataRequest.options = { series: seriesFilter };
+
         try {
             setFetching(true);
             if (linesFilter) {
-                dataRequest.options = { line: linesFilter };
+                dataRequest.options.line = linesFilter;
+
                 const response = await statistics.create(dataRequest);
 
                 const dataTable = [response.options.line, response.options.totalProduced, response.options.percentage, response.options.averageSpeed, response.options.averagePerHour];
@@ -109,7 +115,7 @@ export const ProductTable = ({ id, type }) => {
                 setDataTable([dataTable]);
             } else {
                 const requests = linesList.map(line => {
-                    dataRequest.options = { line: line.id };
+                    dataRequest.options.line = line.id;
                     return statistics.create(dataRequest);
                 });
 
@@ -138,8 +144,6 @@ export const ProductTable = ({ id, type }) => {
         }
     }
 
-
-
     return (
         <Grid>
             <Grid container className={classes.root}>
@@ -164,12 +168,11 @@ export const ProductTable = ({ id, type }) => {
                         </Select>
                     </FormControl>
                     <FormControl variant="outlined" className={classes.formControl}>
-                        <InputLabel id="lineId">Linia</InputLabel>
                         <TextField
-                            labelId="lineId"
+                            variant='outlined'
                             id="series"
                             value={seriesFilter}
-                            onChange={handleChangeLine}
+                            onChange={handleSeriesChange}
                             name='lineId'
                             label="Seria"
                         />
