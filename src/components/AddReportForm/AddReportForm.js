@@ -5,6 +5,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
+import DateFnsUtils from '@date-io/date-fns';
+import { KeyboardDatePicker, KeyboardTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -44,7 +46,15 @@ const useStyles = makeStyles((theme) => ({
     subTitlesForm: {
         margin: 15,
         padding: 5
-    }
+    },
+    date: {
+        width: 200,
+        margin: 10,
+    },
+    time: {
+        width: 150,
+        margin: 10,
+    },
 }));
 
 const today = () => {
@@ -64,8 +74,8 @@ const errorsMessage = {
     wrongDates: 'czas końca pracy musi być późniejszy niż początku',
 }
 const blankForm = {
-    productionStart: today(),
-    productionEnd: today(),
+    productionStart: new Date(),
+    productionEnd: new Date(),
     lineId: '',
     productionHours: 0,
     productionMinutes: 0,
@@ -164,7 +174,6 @@ export const AddReportForm = ({ setMessage, isSubmiting, initValue, onSubmit }) 
         data.secondWorkplaceIdEmployee = data.secondWorkplaceIdEmployee.id;
         data.thirdWorkplaceIdEmployee = data.thirdWorkplaceIdEmployee.id;
 
-        console.log(data)
         const isSubmited = await onSubmit(data);
         if (isSubmited) setFormData(blankForm);
     }
@@ -175,6 +184,8 @@ export const AddReportForm = ({ setMessage, isSubmiting, initValue, onSubmit }) 
         setFormData(prevState => ({ ...prevState, [name]: value }))
     };
     const handleChangeAutoCompleteFields = (name, newValue) => setFormData(prevState => ({ ...prevState, [name]: newValue }));
+    const handleChangeDateStart = date => setFormData(prevState => ({ ...prevState, productionStart: date }));
+    const handleChangeDateEnd = date => setFormData(prevState => ({ ...prevState, productionEnd: date }));
 
     const validation = () => {
         let isOk = true;
@@ -307,36 +318,80 @@ export const AddReportForm = ({ setMessage, isSubmiting, initValue, onSubmit }) 
             <Grid component='form' onSubmit={handleSubmit} item>
                 <h2 className={classes.subTitlesForm}>Czas pracy</h2>
                 <Grid>
-                    <TextField
-                        name='productionStart'
-                        id="productionStart"
-                        label="Początek pracy"
-                        type="datetime-local"
-                        variant='outlined'
-                        value={formData.productionStart}
-                        className={classes.textField}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        onChange={handleChange}
-                        error={errors.productionStart}
-                        helperText={errorLabels.productionStart}
-                    />
-                    <TextField
-                        value={formData.productionEnd}
-                        name='productionEnd'
-                        id="productionEnd"
-                        label="Koniec pracy"
-                        type="datetime-local"
-                        variant='outlined'
-                        className={classes.textField}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        onChange={handleChange}
-                        error={errors.productionEnd}
-                        helperText={errorLabels.productionEnd}
-                    />
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <Grid >
+                            <KeyboardDatePicker
+                                label="Początek pracy"
+                                autoOk={true}
+                                inputVariant="outlined"
+                                format="dd/MM/yyyy"
+                                margin="normal"
+                                value={formData.productionStart || ''}
+                                onChange={handleChangeDateStart}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date',
+                                }}
+                                className={classes.date}
+                                maxDate={formData.productionEnd}
+                                invalidDateMessage='niepoprawny format daty'
+                                maxDateMessage='Data początku pracy nie może być późniejsza niż końca pracy'
+
+                            />
+                            <KeyboardTimePicker
+                                label="Początek pracy"
+                                inputVariant="outlined"
+                                autoOk={true}
+                                ampm={false}
+                                margin="normal"
+                                format="HH:mm"
+                                value={formData.productionStart}
+                                onChange={handleChangeDateStart}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change time',
+                                }}
+                                className={classes.time}
+                                maxDate={formData.productionEnd}
+                                invalidDateMessage='niepoprawny format daty'
+                                maxDateMessage='Data początku pracy nie może być późniejsza niż końca pracy'
+                            />
+                        </Grid>
+                        <Grid>
+                            <KeyboardDatePicker
+                                label="Koniec pracy"
+                                autoOk={true}
+                                inputVariant="outlined"
+                                format="dd/MM/yyyy"
+                                margin="normal"
+                                value={formData.productionEnd || ''}
+                                onChange={handleChangeDateEnd}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date',
+                                }}
+                                className={classes.date}
+                                minDate={formData.productionStart}
+                                invalidDateMessage='niepoprawny format daty'
+                                minDateMessage='Data Końca pracy nie może być wcześniejsza niż początku pracy'
+                            />
+                            <KeyboardTimePicker
+                                label="Koniec pracy"
+                                inputVariant="outlined"
+                                autoOk={true}
+                                ampm={false}
+                                margin="normal"
+                                format="HH:mm"
+                                value={formData.productionEnd}
+                                onChange={handleChangeDateEnd}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change time',
+                                }}
+                                className={classes.time}
+                                minDate={formData.productionStart}
+                                invalidDateMessage='niepoprawny format daty'
+                                minDateMessage='Data Końca pracy nie może być wcześniejsza niż początku pracy'
+                            />
+                        </Grid>
+
+                    </MuiPickersUtilsProvider>
                 </Grid>
                 <Grid>
                     <TextField

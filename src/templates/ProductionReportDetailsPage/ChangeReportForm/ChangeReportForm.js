@@ -4,15 +4,20 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Grid from '@material-ui/core/Grid';
+import DateFnsUtils from '@date-io/date-fns';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import ButtonLoader from '../../../components/ButtonLoader';
+import 'date-fns';
+// import DateTimePicker from './../../../components/DateTimePicker';
 import LineService from '../../../services/LineService';
 import { getProductsByActive } from '../../../services/ProductService';
 import { LinesContext, ProductsContext } from '../../../Contexts';
 import useActiveEmployees from '../../../hooks/useActiveEmployees';
+import { KeyboardDatePicker, KeyboardTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -44,7 +49,15 @@ const useStyles = makeStyles((theme) => ({
     subTitlesForm: {
         margin: 15,
         padding: 5
-    }
+    },
+    date: {
+        width: 200,
+        margin: 10,
+    },
+    time: {
+        width: 150,
+        margin: 10,
+    },
 }));
 
 const today = () => {
@@ -174,6 +187,8 @@ export const ChangeReportForm = ({ setMessage, isSubmiting, initValue, onSubmit 
         const value = e.target.value;
         setFormData(prevState => ({ ...prevState, [name]: value }))
     };
+    const handleChangeDateStart = date => setFormData(prevState => ({ ...prevState, productionStart: date }));
+    const handleChangeDateEnd = date => setFormData(prevState => ({ ...prevState, productionEnd: date }));
     const handleChangeAutoCompleteFields = (name, newValue) => setFormData(prevState => ({ ...prevState, [name]: newValue }));
 
     const validation = () => {
@@ -307,7 +322,7 @@ export const ChangeReportForm = ({ setMessage, isSubmiting, initValue, onSubmit 
             <Grid component='form' onSubmit={handleSubmit} item>
                 <h2 className={classes.subTitlesForm}>Czas pracy</h2>
                 <Grid>
-                    <TextField
+                    {/* <TextField
                         name='productionStart'
                         id="productionStart"
                         label="Początek pracy"
@@ -336,7 +351,73 @@ export const ChangeReportForm = ({ setMessage, isSubmiting, initValue, onSubmit 
                         onChange={handleChange}
                         error={errors.productionEnd}
                         helperText={errorLabels.productionEnd}
-                    />
+                    /> */}
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <Grid >
+                            <KeyboardDatePicker
+                                label="Początek pracy"
+                                autoOk={true}
+                                inputVariant="outlined"
+                                format="dd/MM/yyyy"
+                                margin="normal"
+                                value={formData.productionStart || ''}
+                                onChange={handleChangeDateStart}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date',
+                                }}
+                                className={classes.date}
+                                maxDate={formData.productionEnd}
+
+                            />
+                            <KeyboardTimePicker
+                                label="Początek pracy"
+                                inputVariant="outlined"
+                                autoOk={true}
+                                ampm={false}
+                                margin="normal"
+                                format="HH:mm"
+                                value={formData.productionStart}
+                                onChange={handleChangeDateStart}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change time',
+                                }}
+                                className={classes.time}
+                                maxDate={formData.productionEnd}
+                            />
+                        </Grid>
+                        <Grid>
+                            <KeyboardDatePicker
+                                label="Koniec pracy"
+                                autoOk={true}
+                                inputVariant="outlined"
+                                format="dd/MM/yyyy"
+                                margin="normal"
+                                value={formData.productionEnd || ''}
+                                onChange={handleChangeDateEnd}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date',
+                                }}
+                                className={classes.date}
+                                minDate={formData.productionStart}
+                            />
+                            <KeyboardTimePicker
+                                label="Koniec pracy"
+                                inputVariant="outlined"
+                                autoOk={true}
+                                ampm={false}
+                                margin="normal"
+                                format="HH:mm"
+                                value={formData.productionEnd}
+                                onChange={handleChangeDateEnd}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change time',
+                                }}
+                                className={classes.time}
+                                minDate={formData.productionStart}
+                            />
+                        </Grid>
+                    </MuiPickersUtilsProvider>
+                    {/* <DateTimePicker date={dateStart} setDate={setDateStart} name='Czas początkowy' className={classes.date} /> */}
                 </Grid>
                 <Grid>
                     <TextField

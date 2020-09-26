@@ -1,11 +1,12 @@
 import { SERVER } from '../config';
+import { getCorrectlyFormatData } from './../helpers/dateHelper';
 const SERVER_REPORT = `${SERVER}/api/v1/production-report`;
-class ProductionReportService {
-    static save = (data, loggedUserId) => {
-        data.productionStart = data.productionStart.replace('T', '-');
-        data.productionEnd = data.productionEnd.replace('T', '-');
 
-        const URL = `${SERVER_REPORT}?idUser=${loggedUserId}`;
+class ProductionReportService {
+    static save = (data) => {
+
+        data.productionStart = getCorrectlyFormatData(data.productionStart);
+        data.productionEnd = getCorrectlyFormatData(data.productionEnd);
 
         const requestOptions = {
             method: 'POST',
@@ -17,7 +18,7 @@ class ProductionReportService {
             body: JSON.stringify(data)
         }
 
-        return fetch(URL, requestOptions)
+        return fetch(SERVER_REPORT, requestOptions)
             .then(res => {
                 if (res.status === 200) return Promise.resolve();
                 return Promise.reject(res.status);
@@ -45,7 +46,7 @@ class ProductionReportService {
         }
         //format date yyyy-MM-dd-HH:mm
         const URL = `${SERVER_REPORT}/${id}`;
-        return fetch(URL,requestOptions)
+        return fetch(URL, requestOptions)
             .then(res => {
                 if (res.status === 200) return res.json();
                 return Promise.reject(res.status);
@@ -58,7 +59,7 @@ class ProductionReportService {
             credentials: 'include',
             mode: 'cors',
         }
-        return fetch(SERVER_REPORT,requestOptions)
+        return fetch(SERVER_REPORT, requestOptions)
             .then(res => {
                 if (res.status === 200) return res.json();
                 return Promise.reject(res.status);
@@ -90,7 +91,7 @@ class ProductionReportService {
             credentials: 'include',
             mode: 'cors'
         }
-        
+
         return fetch(URL, requestOptions)
             .then(res => {
                 if (res.status === 200) return Promise.resolve();

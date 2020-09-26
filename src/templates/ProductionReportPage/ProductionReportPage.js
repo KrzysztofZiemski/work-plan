@@ -18,12 +18,15 @@ const styles = makeStyles({
         width: '99%'
     }
 })
-
+//TODO - texthelper for date
 export const ProductionReportPage = ({ className }) => {
     let [messages, setMessages] = useState([])
     let [openMessage, setOpenMessage] = useState(false);
     let [isSubmiting, setIsSubmiting] = useState(false);
-    const { loggedUser } = useContext(UserContext);
+    let [dateStart, setDateStart] = useState(false);
+    let [dateEnd, setDateEnd] = useState(false);
+
+    // const { loggedUser } = useContext(UserContext);
     const classes = styles();
 
     const handleCloseMessage = () => {
@@ -39,10 +42,11 @@ export const ProductionReportPage = ({ className }) => {
     const handleSubmit = (data) => {
 
         setIsSubmiting(true);
-        return ProductionReportService.save(data, loggedUser.id)
+        return ProductionReportService.save(data)
             .then(data => {
                 setIsSubmiting(false);
                 handleOpenMessage(['Dodano raport']);
+                setDateEnd(new Date())
                 return true;
             })
             .catch(err => {
@@ -60,7 +64,7 @@ export const ProductionReportPage = ({ className }) => {
                 <HeaderPage title='Wprowadź raport produkcji' />
                 <AddReportForm setMessage={handleOpenMessage} isSubmiting={isSubmiting} onSubmit={handleSubmit} />
             </Card>
-            <ReportsList pagination={5} />
+            <ReportsList pagination={5} endDate={dateEnd} />
         </section>
     )
 };

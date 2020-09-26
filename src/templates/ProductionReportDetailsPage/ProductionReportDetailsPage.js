@@ -102,7 +102,7 @@ export const ProductionReportDetailsPage = ({ match, className }) => {
         return ProductionReportService.update(params.idReport, data)
             .then(data => {
                 setIsSubmiting(false);
-                handleOpenMessage(['Dodano raport']);
+                handleOpenMessage(['Zmodyfikowano raport']);
             })
             .catch(err => {
                 setIsSubmiting(false);
