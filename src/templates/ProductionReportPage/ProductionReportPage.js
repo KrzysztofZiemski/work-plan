@@ -23,7 +23,6 @@ export const ProductionReportPage = ({ className }) => {
     let [messages, setMessages] = useState([])
     let [openMessage, setOpenMessage] = useState(false);
     let [isSubmiting, setIsSubmiting] = useState(false);
-    let [dateStart, setDateStart] = useState(false);
     let [dateEnd, setDateEnd] = useState(false);
 
     // const { loggedUser } = useContext(UserContext);
