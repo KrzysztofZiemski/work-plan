@@ -13,6 +13,8 @@ import TableDetails from '../../../components/TableDetails';
 import ButtonLoader from '../../../components/ButtonLoader';
 import LineService from '../../../services/LineService';
 import TabBars from '../../../components/TabBars';
+import { convertReportsToTable } from '../../../helpers/statisticsHelper';
+import ReportsList from '../../../components/ReportsList';
 
 const headersTable = [' ', 'Ilość wyprodukowana', 'Wydajność', 'Prędkość', 'Wydajność na godzinę'];
 const headerReports = ['Czas', 'Wyprodukowano', 'Seria', 'Czas Produkcji', 'Prędkość', 'Linia', 'Stanowisko 1', 'Stanowisko 2', 'Stanowisko 3']
@@ -50,6 +52,10 @@ const useStyles = makeStyles(({
     formControl: {
         margin: 5
     },
+    reports: {
+        justifyContent: 'center',
+        marginTop: 30,
+    },
 }));
 
 
@@ -79,6 +85,8 @@ export const ProductTable = ({ id, type }) => {
             ])
         })
     }, [reports])
+
+    const reportsList = useMemo(() => convertReportsToTable(reports), [reports])
 
     if (!id || !type) return;
 
@@ -183,10 +191,10 @@ export const ProductTable = ({ id, type }) => {
                     <TableDetails headers={headersTable} rows={dataTable ? dataTable : []} />
                 </Grid>
             </Grid>
-            {reports.length > 0 ? <Grid container>
-                <Typography component='h2' className={classes.reportsHeader}>Raporty</Typography>
-                <TableDetails headers={headerReports} rows={renderReports} summary={false} />
+            {reports.length > 0 ? <Grid container className={classes.reports}>
+                <ReportsList isFetching={isFetching} list={reportsList} />
             </Grid> : null}
+
         </Grid>
     );
 };
