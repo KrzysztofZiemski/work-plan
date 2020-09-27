@@ -5,65 +5,106 @@ import DialogMessage from '../../components/DialogMessage';
 import ReportsList from '../../components/ReportsList';
 import HeaderPage from '../../components/HeaderPage';
 import { convertReportsToTable } from '../../helpers/statisticsHelper';
+
 import statistics from '../../services/statisticsService';
+import { getEmployee } from '../../services/employeesService';
+import LineService from '../../services/LineService';
+import { getProduct } from '../../services/ProductService';
+
 import { subtractionDate } from '../../helpers/dateHelper';
 import { getQueries } from '../../helpers/requestHelper';
+import { statisticsTypes } from './../../utils/conts';
+import { Redirect } from 'react-router-dom';
 
 export const ProductionReportListPage = ({ className, match, location }) => {
-
-    getQueries(location.search)
     let [messages, setMessages] = useState([])
     let [openMessage, setOpenMessage] = useState(false);
     let [reportList, setReportsList] = useState(false);
     let [isFetching, setIsFetching] = useState(false);
-    const queries = useRef();
+    const [objectName, setObjectName] = useState();
+
+    const [queries, setQueries] = useState('INIT');
 
     useEffect(() => {
-        queries.current = getQueries(location.search);
+        const queries = getQueries(location.search)
+        setQueries(queries);
+        try {
+            switch (queries.type) {
+                case statisticsTypes.EMPLOYEE:
+                    getEmployee(queries.id).then(({ name, lastName }) => setObjectName(`${name} ${lastName}`));
+                    break;
+                case statisticsTypes.PRODUCT:
+                    getProduct(queries.id).then(({ name }) => setObjectName(`${name}`));
+                    break;
+                case statisticsTypes.LINE:
+                    LineService.get(queries.id).then(({ name }) => setObjectName(`${name}`));
+                    break;
+                default:
+            }
+        }
+        catch (err) {
+            console.log(`BŁĄD POBRANIA OBIEKTU ${err}`)
+        }
+
     }, [location.search])
 
-    useEffect(() => {
-        if ((queries.current && queries.current.hasOwnProperty('type')) && (queries.current && queries.current.hasOwnProperty('id'))) return;
-        // if (queries.current.hasOwnProperty('type')) return
-        // if (!queries.current.type || !queries.current.id) return;
-        const sorterByNewest = (a, b) => new Date(b.productionEnd).getTime() - new Date(a.productionEnd).getTime();
-        setIsFetching(true);
-        ProductionReportService.getAll()
-            .then(data => {
-                setReportsList(data.sort(sorterByNewest));
-                setIsFetching(false);
-            })
-            .catch(err => {
-                setMessages(['błąd połączenia']);
-                setOpenMessage(true);
-                setIsFetching(false);
-            });
-    }, [location])
 
     useEffect(() => {
-        if (!(queries.current && queries.current.hasOwnProperty('type')) || !(queries.current && queries.current.hasOwnProperty('id'))) return;
-        const start = queries.current.start ? new Date(queries.current.start) : new Date(subtractionDate(30));
-        const end = queries.current.end ? new Date(queries.current.end) : new Date();
-        const dataRequest = {
-            start,
-            end,
-            id: [queries.current.id],
-            type: queries.current.type.toUpperCase(),
-            options: {},
+        if ((queries && queries.hasOwnProperty('type')) && (queries && queries.hasOwnProperty('id'))) {
+            if (queries.type !== statisticsTypes.EMPLOYEE && queries.type !== statisticsTypes.LINE && queries.type !== statisticsTypes.PRODUCT) {
+                return;
+            }
+
+            const start = queries.start ? new Date(queries.start) : new Date(subtractionDate(30));
+            const end = queries.end ? new Date(queries.end) : new Date();
+            const dataRequest = {
+                start,
+                end,
+                id: [queries.id],
+                type: queries.type.toUpperCase(),
+                options: {},
+            }
+            statistics.create(dataRequest)
+                .then(data => {
+                    setReportsList(convertReportsToTable(data.dataReport));
+                }).catch(status => {
+                    setOpenMessage(true);
+                    setMessages(['nie usało się pobrać raportów', `status ${status}`])
+                })
+        } else {
+            if (queries === 'INIT') return
+            const sorterByNewest = (a, b) => new Date(b.productionEnd).getTime() - new Date(a.productionEnd).getTime();
+            setIsFetching(true);
+            ProductionReportService.getAll()
+                .then(data => {
+                    setReportsList(data.sort(sorterByNewest));
+                    setIsFetching(false);
+                })
+                .catch(err => {
+                    setMessages(['błąd połączenia']);
+                    setOpenMessage(true);
+                    setIsFetching(false);
+                });
         }
-        console.log('dataRequest', dataRequest)
-        statistics.create(dataRequest)
-            .then(data => {
-                console.log('data', data)
-                setReportsList(convertReportsToTable(data.dataReport));
-            }).catch(err => console.log('err', err))
-    }, [])
-
+    }, [queries])
 
     const handleCloseMessage = () => {
         setOpenMessage(false);
         setMessages([]);
     };
+    const renderTitle = () => {
+        if (!queries || !objectName) return 'Lista raportów'
+        switch (queries.type) {
+            case statisticsTypes.EMPLOYEE:
+                return 'Lista raportów dla pracownika ' + objectName
+            case statisticsTypes.PRODUCT:
+                return 'Lista raportów dla produktu ' + objectName
+            case statisticsTypes.LINE:
+                return 'Lista raportów dla linii ' + objectName
+            default:
+                return 'Lista raportów '
+        }
+    }
 
     const remove = async (id) => {
         const confirm = window.confirm("Czy na pewno chcesz usunąc raport?");
@@ -86,7 +127,7 @@ export const ProductionReportListPage = ({ className, match, location }) => {
         <div className={className}>
             <Loader open={isFetching} />
             <DialogMessage open={openMessage} close={handleCloseMessage} messages={messages} />
-            <HeaderPage title='Lista raportów' />
+            <HeaderPage title={renderTitle()} />
             <ReportsList list={reportList} remove={remove} isFetching={isFetching} />
         </div>
     );

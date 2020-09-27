@@ -8,3 +8,9 @@ export const rankingTypes = {
 
 export const YES = 'TAK'
 export const NO = 'NIE'
+
+export const statisticsTypes = {
+    EMPLOYEE: 'EMPLOYEE',
+    LINE: 'LINE',
+    PRODUCT: 'PRODUCT',
+}
