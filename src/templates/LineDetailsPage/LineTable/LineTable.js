@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
@@ -10,15 +10,17 @@ import DateTimePicker from '../../../components/DateTimePicker';
 import { subtractionDate } from '../../../helpers/dateHelper';
 import DialogMessage from '../../../components/DialogMessage';
 import { getProductsByActive } from './../../../services/ProductService';
+import ReportsList from '../../../components/ReportsList';
+import { convertReportsToTable } from '../../../helpers/statisticsHelper';
 
 const useStyles = makeStyles(({
     root: {
         padding: 20,
-        flexWrap: 'nowrap'
+        // flexWrap: 'nowrap'
     },
     tableContainer: {
         flexGrow: 1,
-        margin: '0 20px'
+        margin: '20px 20px'
     },
     panelFilter: {
         display: 'flex',
@@ -34,6 +36,10 @@ const useStyles = makeStyles(({
     },
     seriesInput: {
         margin: '10px 0'
+    },
+    reports: {
+        justifyContent: 'center',
+        marginTop: 30,
     }
 }));
 
@@ -52,8 +58,8 @@ const StatisticsContainer = ({ id, type }) => {
     let [seriesFilter, setSeriesFilter] = useState('');
     const [products, setProducts] = useState([]);
     const [productFilter, setProductFilter] = useState('');
+    const [reports, setReports] = useState([]);
 
-    console.log('dataTable', dataTable)
     useEffect(() => {
         setFetching(true)
         getProductsByActive()
@@ -65,7 +71,10 @@ const StatisticsContainer = ({ id, type }) => {
                 setFetching(false);
                 setMessage({ isOpen: true, text: [`Błąd ${err.status}`] });
             })
-    }, [])
+    }, []);
+
+    const reportsList = useMemo(() => convertReportsToTable(reports), [reports])
+
     if (!id || !type) return;
 
     const handleCloseMessage = () => {
@@ -96,9 +105,12 @@ const StatisticsContainer = ({ id, type }) => {
         if (productFilter) {
             try {
                 data.options['product'] = productFilter;
-                const stats = await statistics.createCircle(data);
+                // const stats = await statistics.createCircle(data);
+                const stats = await statistics.create(data);
+
                 const row = [stats.options.product, stats.options.totalProduced, `${stats.options.percentage}%`, stats.options.averageSpeed, stats.options.averagePerHour];
                 setFetching(false);
+                setReports(stats.dataReport);
                 return setDataTable([row]);
             } catch (err) {
                 setFetching(false);
@@ -107,7 +119,6 @@ const StatisticsContainer = ({ id, type }) => {
                     text: ['Wystąpił błąd pobierania', `Błąd ${err}`]
                 });
             }
-
         }
 
         const productRequests = products.map(product => {
@@ -117,7 +128,7 @@ const StatisticsContainer = ({ id, type }) => {
         delete data.options.product;
 
         //summary
-        productRequests.push(statistics.createCircle(data));
+        productRequests.push(statistics.create(data));
 
         Promise.all(productRequests)
             .then(dataArr => {
@@ -125,9 +136,12 @@ const StatisticsContainer = ({ id, type }) => {
                 setFetching(false);
                 dataArr.forEach(data => {
                     if (data.options.totalProduced === 0) return;
+                    if (!data.options.product) setReports(data.dataReport);
+
                     const name = data.options.product ? data.options.product : 'Total';
                     const row = [name, data.options.totalProduced, `${data.options.percentage}%`, data.options.averageSpeed, data.options.averagePerHour];
                     rows.push(row);
+
                 })
                 if (rows.length === 0) rows.push(['Brak produktów spełniających kryteria', 0, 0, 0, 0])
                 setDataTable(rows);
@@ -140,7 +154,6 @@ const StatisticsContainer = ({ id, type }) => {
                 })
             })
     }
-
 
     return (
         <Grid container className={classes.root}>
@@ -170,6 +183,9 @@ const StatisticsContainer = ({ id, type }) => {
             <Grid className={classes.tableContainer}>
                 <TableDetails headers={headersTable} rows={dataTable ? dataTable : []} />
             </Grid>
+            {reports.length > 0 ? <Grid container className={classes.reports}>
+                <ReportsList isFetching={isFetching} list={reportsList} />
+            </Grid> : null}
         </Grid>
     );
 };

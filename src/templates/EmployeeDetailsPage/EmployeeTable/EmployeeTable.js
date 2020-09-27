@@ -2,8 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import { subtractionDate } from '../../../helpers/dateHelper';
-import { Select, InputLabel, FormControl, MenuItem, Typography } from '@material-ui/core';
-import { getCorrectlyFormatData } from '../../../helpers/dateHelper';
+import { Select, InputLabel, FormControl, MenuItem } from '@material-ui/core';
 import DateTimePicker from '../../../components/DateTimePicker';
 import DialogMessage from '../../../components/DialogMessage';
 import statistics from '../../../services/statisticsService';
@@ -160,16 +159,6 @@ export const EmployeeTable = ({ id, type }) => {
             setDataTableSecondWorkplace(dataSecondWorkplace);
             setDataTableThirdWorkplace(dataThirdWorkplace);
         })
-    };
-
-    const renderReports = () => {
-        if (!reports) return [];
-        return reports.map(report => {
-            return ([
-                `${getCorrectlyFormatData(report.startProduction)}  -  ${getCorrectlyFormatData(report.endProduction)}`, report.totalQuantityProduced, report.series, `${report.performancePerHour} h`, report.speedMachinePerCycle, report.line.name, `${report.firstWorkplace.name} ${report.firstWorkplace.lastName}`, `${report.secondWorkplace.name} ${report.secondWorkplace.lastName}`, `${report.thirdWorkplace.name} ${report.thirdWorkplace.lastName}`
-            ])
-        })
-
     };
 
     const dataTableComponents = () => ([
