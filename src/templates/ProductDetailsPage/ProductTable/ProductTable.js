@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { subtractionDate } from '../../../helpers/dateHelper';
-import { Select, InputLabel, FormControl, MenuItem, Typography, TextField } from '@material-ui/core';
+import { Select, InputLabel, FormControl, MenuItem, TextField } from '@material-ui/core';
 import { getCorrectlyFormatData } from '../../../helpers/dateHelper';
 import DateTimePicker from '../../../components/DateTimePicker';
 import DialogMessage from '../../../components/DialogMessage';
@@ -12,12 +12,10 @@ import statistics from '../../../services/statisticsService';
 import TableDetails from '../../../components/TableDetails';
 import ButtonLoader from '../../../components/ButtonLoader';
 import LineService from '../../../services/LineService';
-import TabBars from '../../../components/TabBars';
 import { convertReportsToTable } from '../../../helpers/statisticsHelper';
 import ReportsList from '../../../components/ReportsList';
 
 const headersTable = [' ', 'Ilość wyprodukowana', 'Wydajność', 'Prędkość', 'Wydajność na godzinę'];
-const headerReports = ['Czas', 'Wyprodukowano', 'Seria', 'Czas Produkcji', 'Prędkość', 'Linia', 'Stanowisko 1', 'Stanowisko 2', 'Stanowisko 3']
 
 const useStyles = makeStyles(({
     root: {
