@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Loader from '../Loader';
 import DialogMessage from '../DialogMessage';
-import ProductionReportService from '../../services/ProductionReportService';
 import LineService from '../../services/LineService';
 import SettingsMenu from '../SettingsMenu';
 import Poper from '../Poper';
@@ -96,6 +95,71 @@ const headerNames = [
     }
 ];
 
+const options = {
+    rowsPerPageOptions: [5, 20, 50],
+    rowsPerPage: 20,
+    filter: true,
+    responsive: 'standard',
+    filterType: "dropdown",
+    selectableRows: false,
+    pagination: true,
+    print: true,
+    download: true,
+    search: true,
+    sort: true,
+    downloadOptions: {
+        filename: 'raporty.csv',
+        separator: ';',
+        filterOptions: {
+            useDisplayedColumnsOnly: true,
+            useDisplayedRowsOnly: true,
+        },
+    },
+    onDownload: (buildHead, buildBody, columns, data) => {
+        for (let i = 0; i < data.length; i++) {
+            data[i].data[4] = data[i].data[4].name
+            data[i].data[10] = data[i].data[10].name
+            data[i].data[11] = data[i].data[11].name
+            data[i].data[12] = data[i].data[12].name
+        }
+        return "\uFEFF" + buildHead(headerNames) + buildBody(data);
+    },
+    onPrint: (buildHead, buildBody, columns, data) => {
+
+        for (let i = 0; i < data.length; i++) {
+            data[i].data[4] = data[i].data[4].name
+            data[i].data[10] = data[i].data[10].name
+            data[i].data[11] = data[i].data[11].name
+            data[i].data[12] = data[i].data[12].name
+        }
+        return "\uFEFF" + buildHead(headerNames) + buildBody(data);
+    },
+    textLabels: {
+        body: {
+            noMatch: "Brak wyników",
+        },
+        pagination: {
+            next: "Następna strona",
+            previous: "Poprzednia strona",
+            rowsPerPage: "Ilość pozycji na stronie:",
+            displayRows: "z",
+        },
+        toolbar: {
+            search: "Szukaj",
+            downloadCsv: "Pobierz CSV",
+            print: "Drukuj",
+            viewColumns: "Widok kolumn",
+            filterTable: "Filtruj tabele",
+        },
+        filter: {
+            all: "Wszystko",
+            title: "Filtry",
+            reset: "zresetuj",
+        },
+    },
+};
+
+
 const styles = makeStyles({
     optionLink: {
         color: 'black',
@@ -110,11 +174,10 @@ const styles = makeStyles({
         color: 'black',
         fontSize: '0.875rem',
     }
-})
-export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20, className }) => {
+});
+
+export const ReportsList = ({ list, remove, fullHeight, className, isFetching }) => {
     const classes = styles();
-    let [reportsList, setReportsList] = useState([]);
-    let [fetching, setFetching] = useState(false);
     let [message, setMessage] = useState([]);
     let [messageIsOpen, setMessageIsOpen] = useState(false);
     let [lines, setLines] = useState([]);
@@ -124,113 +187,15 @@ export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20, c
         setMessage([]);
 
     }
-
     useEffect(() => {
-        const sorterByNewest = (a, b) => new Date(b.productionEnd).getTime() - new Date(a.productionEnd).getTime();
         LineService.getAllLines()
             .then(data => setLines(data))
             .catch(err => {
                 setMessage(['błąd połączenia', err]);
                 setMessageIsOpen(true);
             })
+    }, []);
 
-        if (startDate && endDate) {
-            ProductionReportService.getBetween(startDate, endDate)
-                .then(data => setReportsList(data.sort(sorterByNewest)))
-                .catch(err => {
-                    setMessage(['błąd połączenia']);
-                    setMessageIsOpen(true);
-                });
-        } else {
-            ProductionReportService.getAll()
-                .then(data => setReportsList(data.sort(sorterByNewest)))
-                .catch(err => {
-                    setMessage(['błąd połączenia']);
-                    setMessageIsOpen(true)
-                });
-        }
-    }, [startDate, endDate]);
-
-    const remove = async (id) => {
-        const confirm = window.confirm("Czy na pewno chcesz usunąc raport?");
-        if (!confirm) return;
-        setFetching(true);
-        try {
-            await ProductionReportService.remove(id);
-            setFetching(false);
-            setReportsList(prevState => prevState.filter(report => report.id !== id));
-            setMessage(['Usunieto raport']);
-            setMessageIsOpen(true);
-        } catch (status) {
-            setMessage(['Wystąpił problem z usunieciem raportu', `status ${status}`]);
-            setMessageIsOpen(true);
-            setFetching(false);
-        };
-    };
-
-    const options = {
-        rowsPerPageOptions: [5, 20, 50],
-        rowsPerPage: pagination,
-        filter: true,
-        responsive: 'standard',
-        filterType: "dropdown",
-        selectableRows: false,
-        pagination: true,
-        print: true,
-        download: true,
-        search: true,
-        sort: true,
-        downloadOptions: {
-            filename: 'raporty.csv',
-            separator: ';',
-            filterOptions: {
-                useDisplayedColumnsOnly: true,
-                useDisplayedRowsOnly: true,
-            },
-        },
-        onDownload: (buildHead, buildBody, columns, data) => {
-            for (let i = 0; i < data.length; i++) {
-                data[i].data[4] = data[i].data[4].name
-                data[i].data[10] = data[i].data[10].name
-                data[i].data[11] = data[i].data[11].name
-                data[i].data[12] = data[i].data[12].name
-            }
-            return "\uFEFF" + buildHead(headerNames) + buildBody(data);
-        },
-        onPrint: (buildHead, buildBody, columns, data) => {
-
-            for (let i = 0; i < data.length; i++) {
-                data[i].data[4] = data[i].data[4].name
-                data[i].data[10] = data[i].data[10].name
-                data[i].data[11] = data[i].data[11].name
-                data[i].data[12] = data[i].data[12].name
-            }
-            return "\uFEFF" + buildHead(headerNames) + buildBody(data);
-        },
-        textLabels: {
-            body: {
-                noMatch: "Brak wyników",
-            },
-            pagination: {
-                next: "Następna strona",
-                previous: "Poprzednia strona",
-                rowsPerPage: "Ilość pozycji na stronie:",
-                displayRows: "z",
-            },
-            toolbar: {
-                search: "Szukaj",
-                downloadCsv: "Pobierz CSV",
-                print: "Drukuj",
-                viewColumns: "Widok kolumn",
-                filterTable: "Filtruj tabele",
-            },
-            filter: {
-                all: "Wszystko",
-                title: "Filtry",
-                reset: "zresetuj",
-            },
-        },
-    };
     const columns = useMemo(() => {
         return (
             [
@@ -458,18 +423,20 @@ export const ReportsList = ({ startDate, endDate, fullHeight, pagination = 20, c
                 },
             ]
         )
-    }, [classes.optionLink, lines])
-
+    }, [classes.linkInTable, classes.optionLink, lines, remove])
+    console.log('list', list)
     return (
-        <Grid className={className}>
-            <Loader open={fetching} />
+
+        list ? <Grid className={className}>
+            <Loader open={isFetching} />
             <DialogMessage open={messageIsOpen} close={handleCloseMessage} messages={message} />
             <MUIDataTable
                 title={"Lista raportów"}
-                data={reportsList}
+                data={list}
                 columns={columns}
                 options={options}
             />
-        </Grid>
+        </Grid> :
+            <Loader open={isFetching} />
     )
 }

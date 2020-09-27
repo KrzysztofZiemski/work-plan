@@ -14,9 +14,9 @@ import Logout from './components/Logout';
 const GraphicPage = lazy(() => import('./templates/EditGraphicPage/GraphicPage'));
 const ViewGraphicPage = lazy(() => import('./templates/ViewGraphicPage'));
 const DashboardPage = lazy(() => import('./templates/DashboardPage'));
-const ProductionReportPage = lazy(() => import('./templates/ProductionReportPage'));
+const ProductionAddReportPage = lazy(() => import('./templates/ProductionAddReportPage'));
 const EmployeeManagementPage = lazy(() => import('./templates/EmployeeManagementPage'));
-const ReportsList = lazy(() => import('./components//ReportsList'));
+const ProductionReportListPage = lazy(() => import('./templates/ProductionReportListPage'));
 const ProductManagement = lazy(() => import('./templates/ProductManagement'));
 const LoginPage = lazy(() => import('./templates/LoginPage'));
 const ProductDetailsPage = lazy(() => import('./templates/ProductDetailsPage'));
@@ -65,8 +65,8 @@ const LoggedApp = ({ loggedUser, setLoggedUser }) => {
                         <Route path={routes.workPlanEdit} exact render={(props) => <GraphicPage className={classes.pages} {...props} />} />
                         <Route path={routes.workPlan} exact render={(props) => <ViewGraphicPage className={classes.pages} {...props} />} />
                         <Route path={routes.employeeManagement} exact render={(props) => <EmployeeManagementPage className={classes.pages} {...props} />} />
-                        <Route path={routes.productionReportList} exact render={(props) => <ReportsList className={classes.pages} {...props} />} />
-                        <Route path={routes.productionReport} exact render={(props) => <ProductionReportPage className={classes.pages} {...props} />} />
+                        <Route path={routes.productionReportList} exact render={(props) => <ProductionReportListPage className={classes.pages} {...props} />} />
+                        <Route path={routes.productionReport} exact render={(props) => <ProductionAddReportPage className={classes.pages} {...props} />} />
                         <Route path={routes.productManagement} exact render={(props) => <ProductManagement className={classes.pages} {...props} />} />
                         <Route path={routes.lineManagement} exact render={(props) => <LineManagement className={classes.pages} {...props} />} />
                         <Route path={routes.userManagement} exact render={(props) => <UserManagement className={classes.pages} {...props} />} />
