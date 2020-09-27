@@ -50,7 +50,7 @@ export const ProductionReportListPage = ({ className }) => {
             setReportsList(false);
         };
     };
-
+    console.log(reportList)
     return (
         <div className={className}>
             <Loader open={isFetching} />
@@ -60,3 +60,5 @@ export const ProductionReportListPage = ({ className }) => {
         </div>
     );
 };
+
+

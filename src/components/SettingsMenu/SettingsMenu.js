@@ -42,7 +42,7 @@ export const SettingsMenu = ({ children }) => {
     const showOptionsPanel = () => {
         return <IconButton
             edge="end"
-            aria-label="account of current user"
+            aria-label="options"
             aria-haspopup="true"
             onClick={handleProfileMenuOpen}
             color="inherit"
@@ -53,7 +53,7 @@ export const SettingsMenu = ({ children }) => {
     const renderChildresn = () => {
         if (!children) return null;
         if (Array.isArray(children)) {
-            return children.map((child, index) => <MenuItem key={child.key ? child.key : `settingsMenu ${index}`} onClick={handleMenuClose}>{child}</MenuItem>)
+            return children.map((child, index) => <MenuItem key={child && child.key ? child.key : `settingsMenu ${index}`} onClick={handleMenuClose}>{child}</MenuItem>)
         }
         return <MenuItem onClick={handleMenuClose}>{children}</MenuItem>
     }

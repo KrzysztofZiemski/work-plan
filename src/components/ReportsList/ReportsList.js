@@ -173,6 +173,10 @@ const styles = makeStyles({
         textDecoration: 'none',
         color: 'black',
         fontSize: '0.875rem',
+        '&:hover': {
+            color: '#3C8DBC',
+            textDecoration: 'underline'
+        }
     }
 });
 
@@ -181,12 +185,11 @@ export const ReportsList = ({ list, remove, fullHeight, className, isFetching })
     let [message, setMessage] = useState([]);
     let [messageIsOpen, setMessageIsOpen] = useState(false);
     let [lines, setLines] = useState([]);
-
     const handleCloseMessage = () => {
         setMessageIsOpen(false);
         setMessage([]);
-
     }
+
     useEffect(() => {
         LineService.getAllLines()
             .then(data => setLines(data))
@@ -411,11 +414,11 @@ export const ReportsList = ({ list, remove, fullHeight, className, isFetching })
                         customBodyRender: (value, tableMeta, updateValue) => {
                             return (
                                 <SettingsMenu>
-                                    <Poper content={tableMeta.rowData[14]}>Pokarz opis</Poper>
+                                    {tableMeta.rowData[14] && <Poper content={tableMeta.rowData[14]}>Pokarz opis</Poper>}
                                     <Poper>
                                         <Typography className={classes.optionLink} component={Link} to={`${routes.productionReportDetail}/${value}`}>Szczegóły</Typography>
                                     </Poper>
-                                    <Typography onClick={() => remove(value)} className={classes.optionLink}>Usuń</Typography>
+                                    {remove && <Typography onClick={() => remove(value)} className={classes.optionLink}>Usuń</Typography>}
                                 </SettingsMenu>
                             )
                         },
@@ -424,7 +427,7 @@ export const ReportsList = ({ list, remove, fullHeight, className, isFetching })
             ]
         )
     }, [classes.linkInTable, classes.optionLink, lines, remove])
-    console.log('list', list)
+
     return (
 
         list ? <Grid className={className}>

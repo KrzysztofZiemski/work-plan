@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import { subtractionDate } from '../../../helpers/dateHelper';
@@ -11,10 +11,10 @@ import TableDetails from '../../../components/TableDetails';
 import ButtonLoader from '../../../components/ButtonLoader';
 import LineService from '../../../services/LineService';
 import TabBars from '../../../components/TabBars';
-
+import ReportsList from '../../../components/ReportsList';
+import { convertReportsToTable } from '../../../helpers/statisticsHelper';
 
 const headersTable = [' ', 'Ilość wyprodukowana', 'Wydajność', 'Prędkość', 'Wydajność na godzinę'];
-const headerReports = ['Czas', 'Wyprodukowano', 'Seria', 'Czas Produkcji', 'Prędkość', 'Linia', 'Stanowisko 1', 'Stanowisko 2', 'Stanowisko 3']
 const tabHeaders = ['Wszystkie', 'stanowisko pierwsze', 'stanowisko drugie', 'stanowisko trzecie']
 
 const useStyles = makeStyles(({
@@ -67,21 +67,24 @@ export const EmployeeTable = ({ id, type }) => {
     let [linesList, setLinesList] = useState([]);
     let [reports, setReports] = useState([]);
 
-    //nie pobiera po linii jeszcze
     useEffect(() => {
         LineService.getAllLines()
             .then(data => setLinesList(data))
             .catch(err => setMessage({ isOpen: true, text: ['Wystąpił błąd podczas wczytywania zasobu', `Błąd ${err}`] }))
     }, []);
 
+    const reportsList = useMemo(() => convertReportsToTable(reports), [reports])
+
     if (!id || !type) return;
 
     const handleCloseMessage = () => {
         setMessage({ isOpen: false, text: [] })
-    }
+    };
+
     const handleChangeLine = (e) => {
         setLinesFilter(e.target.value);
-    }
+    };
+
     const getDataTables = (options = {}, isGetReports = false) => {
         const dataRequest = {
             start: dateStart,
@@ -157,9 +160,8 @@ export const EmployeeTable = ({ id, type }) => {
             setDataTableSecondWorkplace(dataSecondWorkplace);
             setDataTableThirdWorkplace(dataThirdWorkplace);
         })
+    };
 
-
-    }
     const renderReports = () => {
         if (!reports) return [];
         return reports.map(report => {
@@ -168,7 +170,8 @@ export const EmployeeTable = ({ id, type }) => {
             ])
         })
 
-    }
+    };
+
     const dataTableComponents = () => ([
         <TableDetails headers={headersTable} rows={dataTableAll ? dataTableAll : []} summary={dataTableAll && dataTableAll.length > 1} />,
         <TableDetails headers={headersTable} rows={dataTableFirstWorkplace ? dataTableFirstWorkplace : []} summary={dataTableFirstWorkplace && dataTableFirstWorkplace.length > 1} />,
@@ -204,8 +207,7 @@ export const EmployeeTable = ({ id, type }) => {
                 <TabBars headers={tabHeaders} components={dataTableComponents()} />
             </Grid>
             {reports.length > 0 ? <Grid container>
-                <Typography component='h2' className={classes.reportsHeader}>Raporty</Typography>
-                <TableDetails headers={headerReports} rows={renderReports()} summary={false} />
+                <ReportsList isFetching={isFetching} list={reportsList} />
             </Grid> : null}
         </Grid>
     );

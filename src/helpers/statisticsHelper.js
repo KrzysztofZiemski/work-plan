@@ -41,3 +41,12 @@
 //     });
 //     return output;
 // }
+export const convertReportsToTable = (reportsArr) =>
+    reportsArr.map(({ sendProduction, idProductionReport, line, startProduction, endProduction, ...other }) => ({
+        productionStart: startProduction,
+        productionEnd: endProduction,
+        description: '',
+        lineId: line.id,
+        id: idProductionReport,
+        ...other,
+    }))

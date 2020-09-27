@@ -10,6 +10,7 @@ import ReportsList from '../../components/ReportsList';
 import ProductionReportService from '../../services/ProductionReportService';
 import HeaderPage from '../../components/HeaderPage';
 
+const sorterByNewest = (a, b) => new Date(b.productionEnd).getTime() - new Date(a.productionEnd).getTime();
 
 const styles = makeStyles({
     card: {
@@ -22,11 +23,8 @@ export const ProductionAddReportPage = ({ className }) => {
     let [messages, setMessages] = useState([])
     let [openMessage, setOpenMessage] = useState(false);
     let [isFetching, setIsFetching] = useState(false);
-    let [dateEnd, setDateEnd] = useState(false);
     let [reportList, setReportsList] = useState(false);
     useEffect(() => {
-        const sorterByNewest = (a, b) => new Date(b.productionEnd).getTime() - new Date(a.productionEnd).getTime();
-
         ProductionReportService.getAll()
             .then(data => setReportsList(data.sort(sorterByNewest)))
             .catch(err => {
@@ -54,7 +52,12 @@ export const ProductionAddReportPage = ({ className }) => {
             .then(data => {
                 setIsFetching(false);
                 handleOpenMessage(['Dodano raport']);
-                setDateEnd(new Date())
+                ProductionReportService.getAll()
+                    .then(data => setReportsList(data.sort(sorterByNewest)))
+                    .catch(err => {
+                        setMessages(['błąd połączenia']);
+                        setOpenMessage(true)
+                    });
                 return true;
             })
             .catch(err => {
@@ -63,6 +66,7 @@ export const ProductionAddReportPage = ({ className }) => {
                 return false;
             })
     };
+
     const remove = async (id) => {
         const confirm = window.confirm("Czy na pewno chcesz usunąc raport?");
         if (!confirm) return;

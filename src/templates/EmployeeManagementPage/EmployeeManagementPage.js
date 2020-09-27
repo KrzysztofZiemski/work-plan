@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useMemo } from 'react';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import TableEmployees from './TableEmployees/TableEmployees';
 import Loader from '../../components/Loader';
@@ -155,12 +154,13 @@ export const EmployeeManagementPage = ({ className }) => {
         })
     };
 
-    const renderList = () => {
+    const list = useMemo(() => {
         if (filterEmployees === options.all.value) {
             return [...employeesActive.list, ...employeesInActive.list]
         }
         return filterEmployees === options.active.value ? employeesActive.list : employeesInActive.list;
-    }
+    }, [employeesActive.list, employeesInActive.list, filterEmployees])
+
     return (
         <>
             <Grid container component='section' direction='column' className={className}>
@@ -177,7 +177,7 @@ export const EmployeeManagementPage = ({ className }) => {
                     </Grid>
                 </Grid>
                 <Grid item>
-                    <TableEmployees list={renderList()} remove={removeEmployees}></TableEmployees>
+                    <TableEmployees list={list} remove={removeEmployees}></TableEmployees>
                 </Grid>
                 <Loader open={isLoaded} />
             </Grid>

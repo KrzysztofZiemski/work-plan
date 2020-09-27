@@ -129,7 +129,7 @@ export const EmployeeDetailsPage = ({ match, className }) => {
                 <Card container component={Grid} className={classes.header}>
                     <HeaderDetails content={content} isSubmiting={isSubmiting} onRemove={handleRemove} onChange={handleUpdate} />
                     <Grid className={classes.right}>
-                        <HeaderPage title={`${employee.name + employee.lastName || ''}`} />
+                        <HeaderPage title={employee ? `${employee.name} ${employee.lastName}` : ''} />
                         <HeaderDetailsCircles title='Produkcja' id={params.idEmployee} type='EMPLOYEE' setMessage={setMessage} />
                     </Grid>
                 </Card>
