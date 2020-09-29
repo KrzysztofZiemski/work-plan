@@ -8,11 +8,12 @@ class LineService {
             credentials: 'include',
             mode: 'cors',
         }
-        return fetch(SERVER_LINES,options)
-        .then(res => {
-            if (res.ok === true) return res.json();
-            return Promise.reject(res.status);
-        })}
+        return fetch(SERVER_LINES, options)
+            .then(res => {
+                if (res.ok === true) return res.json();
+                return Promise.reject(res.status);
+            })
+    }
     static add = (data) => {
         const options = {
             method: 'POST',
@@ -48,14 +49,14 @@ class LineService {
             credentials: 'include',
             mode: 'cors',
         }
-      
-            return fetch(`${SERVER_LINES}/${id}`,options)
-                .then(resp => {
-                    if (resp.status === 200) return resp.json();
-                    return Promise.reject(resp.status)
-                })
-                .catch(err => Promise.reject(err))
-        }
+
+        return fetch(`${SERVER_LINES}/${id}`, options)
+            .then(resp => {
+                if (resp.status === 200) return resp.json();
+                return Promise.reject(resp.status)
+            })
+            .catch(err => Promise.reject(err.status))
+    }
     static update = (id, data) => {
         const options = {
             method: 'PUT',

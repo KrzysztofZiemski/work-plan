@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProductionReportService from '../../services/ProductionReportService';
 import Loader from '../../components/Loader';
 import DialogMessage from '../../components/DialogMessage';
@@ -14,48 +14,55 @@ import { getProduct } from '../../services/ProductService';
 import { subtractionDate } from '../../helpers/dateHelper';
 import { getQueries } from '../../helpers/requestHelper';
 import { statisticsTypes } from './../../utils/conts';
-import { Redirect } from 'react-router-dom';
 
 export const ProductionReportListPage = ({ className, match, location }) => {
     let [messages, setMessages] = useState([])
     let [openMessage, setOpenMessage] = useState(false);
     let [reportList, setReportsList] = useState(false);
     let [isFetching, setIsFetching] = useState(false);
-    const [objectName, setObjectName] = useState();
-
-    const [queries, setQueries] = useState('INIT');
-
+    const [objectName, setObjectName] = useState('');
+    console.log('objectName', objectName)
+    const getNameObject = (type, id) => {
+        switch (type) {
+            case statisticsTypes.EMPLOYEE:
+                return getEmployee(id).then(({ name, lastName }) => `${name} ${lastName}`);
+            case statisticsTypes.PRODUCT:
+                return getProduct(id).then(({ name }) => `${name}`);
+            case statisticsTypes.LINE:
+                return LineService.get(id).then(({ name }) => `${name}`);
+            default:
+                return Promise.resolve(null)
+        }
+    }
     useEffect(() => {
         const queries = getQueries(location.search)
-        setQueries(queries);
-        try {
-            switch (queries.type) {
-                case statisticsTypes.EMPLOYEE:
-                    getEmployee(queries.id).then(({ name, lastName }) => setObjectName(`${name} ${lastName}`));
-                    break;
-                case statisticsTypes.PRODUCT:
-                    getProduct(queries.id).then(({ name }) => setObjectName(`${name}`));
-                    break;
-                case statisticsTypes.LINE:
-                    LineService.get(queries.id).then(({ name }) => setObjectName(`${name}`));
-                    break;
-                default:
-            }
-        }
-        catch (err) {
-            console.log(`BŁĄD POBRANIA OBIEKTU ${err}`)
-        }
+        if (queries && queries.type && queries.id) {
 
-    }, [location.search])
+            getNameObject(queries.type, queries.id)
+                .then(name => setObjectName(name))
+                .catch(err => console.log(`nie udało się pobrać nazwy obiektu`, err));
+        };
 
-
-    useEffect(() => {
-        if ((queries && queries.hasOwnProperty('type')) && (queries && queries.hasOwnProperty('id'))) {
-            if (queries.type !== statisticsTypes.EMPLOYEE && queries.type !== statisticsTypes.LINE && queries.type !== statisticsTypes.PRODUCT) {
+        setIsFetching(true);
+        if (!queries || (queries.type !== statisticsTypes.EMPLOYEE && queries.type !== statisticsTypes.LINE && queries.type !== statisticsTypes.PRODUCT)) {
+            const sorterByNewest = (a, b) => new Date(b.productionEnd).getTime() - new Date(a.productionEnd).getTime();
+            ProductionReportService.getAll()
+                .then(data => {
+                    setReportsList(data.sort(sorterByNewest));
+                    setIsFetching(false);
+                }).catch(status => {
+                    setIsFetching(false);
+                    setMessages(['Błąd pobrania raportów', `status ${status}`]);
+                    setOpenMessage(true);
+                })
+        } else {
+            if (!queries.id) {
+                setMessages(['Sprawdź poprawność linku']);
+                setOpenMessage(true);
+                setIsFetching(false);
                 return;
             }
-
-            const start = queries.start ? new Date(queries.start) : new Date(subtractionDate(30));
+            const start = queries.start ? new Date(queries.start) : new Date(subtractionDate(365 * 5));
             const end = queries.end ? new Date(queries.end) : new Date();
             const dataRequest = {
                 start,
@@ -67,44 +74,21 @@ export const ProductionReportListPage = ({ className, match, location }) => {
             statistics.create(dataRequest)
                 .then(data => {
                     setReportsList(convertReportsToTable(data.dataReport));
+                    setIsFetching(false);
                 }).catch(status => {
                     setOpenMessage(true);
-                    setMessages(['nie usało się pobrać raportów', `status ${status}`])
-                })
-        } else {
-            if (queries === 'INIT') return
-            const sorterByNewest = (a, b) => new Date(b.productionEnd).getTime() - new Date(a.productionEnd).getTime();
-            setIsFetching(true);
-            ProductionReportService.getAll()
-                .then(data => {
-                    setReportsList(data.sort(sorterByNewest));
+                    setMessages(['nie usało się pobrać raportów', `status ${status}`]);
                     setIsFetching(false);
                 })
-                .catch(err => {
-                    setMessages(['błąd połączenia']);
-                    setOpenMessage(true);
-                    setIsFetching(false);
-                });
         }
-    }, [queries])
+
+
+    }, [location.search])
 
     const handleCloseMessage = () => {
         setOpenMessage(false);
         setMessages([]);
     };
-    const renderTitle = () => {
-        if (!queries || !objectName) return 'Lista raportów'
-        switch (queries.type) {
-            case statisticsTypes.EMPLOYEE:
-                return 'Lista raportów dla pracownika ' + objectName
-            case statisticsTypes.PRODUCT:
-                return 'Lista raportów dla produktu ' + objectName
-            case statisticsTypes.LINE:
-                return 'Lista raportów dla linii ' + objectName
-            default:
-                return 'Lista raportów '
-        }
-    }
 
     const remove = async (id) => {
         const confirm = window.confirm("Czy na pewno chcesz usunąc raport?");
@@ -127,7 +111,7 @@ export const ProductionReportListPage = ({ className, match, location }) => {
         <div className={className}>
             <Loader open={isFetching} />
             <DialogMessage open={openMessage} close={handleCloseMessage} messages={messages} />
-            <HeaderPage title={renderTitle()} />
+            <HeaderPage title={`Lista raportów ${objectName ? `dla ${objectName}` : ''}`} />
             <ReportsList list={reportList} remove={remove} isFetching={isFetching} />
         </div>
     );

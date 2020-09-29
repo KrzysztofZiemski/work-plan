@@ -26,11 +26,6 @@ class ProductionReportService {
     }
     static getBetween = (start, end) => {
         //format date yyyy-MM-dd-HH:mm
-        const options = {
-            method: 'POST',
-            credentials: 'include',
-            mode: 'cors',
-        }
         const URL = `${SERVER_REPORT}/start/${start}/end/${end}`;
         return fetch(URL)
             .then(res => {
