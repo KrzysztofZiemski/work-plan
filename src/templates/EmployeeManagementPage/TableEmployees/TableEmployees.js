@@ -139,8 +139,7 @@ const TableEmployees = ({ list, remove }) => {
                         </Poper>
                     </SettingsMenu>
                 },
-
-            }
+            },
         },
     ], [classes.linkInTable, classes.optionLink])
 
