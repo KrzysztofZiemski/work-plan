@@ -6,7 +6,10 @@ const FILTER_FALSE = '?filterIsActive=false';
 export const getEmployeesByActive = (active = true) => {
     const URL = active ? WORKERS_URL : WORKERS_URL + FILTER_FALSE;
     return axios.get(URL)
-        .then(res => res.data)
+        .then(res => {
+            if (res.status !== 200) return Promise.reject(res.status)
+            return res.data
+        })
         .catch(err => Promise.reject(err));
 };
 

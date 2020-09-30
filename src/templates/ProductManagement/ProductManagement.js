@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
+
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+
 import TableProducts from './TableProducts/TableProducts';
 import Loader from '../../components/Loader';
 import DialogMessage from '../../components/DialogMessage';
@@ -10,17 +10,7 @@ import PanelProductsList from './PanelProductsList';
 import AddFormDialog from '../../components/AddFormDialog';
 import HeaderPage from '../../components/HeaderPage';
 
-const useStyles = makeStyles(theme => ({
-    header: {
-        backgroundColor: '#222d32',
-        color: '#fff',
-        padding: 10
-    },
-    formControl: {
-        margin: theme.spacing(1),
-        minWidth: 180,
-    },
-}));
+
 const options = {
     active: {
         value: 'active',
@@ -84,7 +74,7 @@ const fieldsAddProduct = [
 ];
 
 export const ProductManagement = ({ className }) => {
-    const classes = useStyles();
+
 
     let [products, setProducts] = useState({
         active: {
@@ -96,6 +86,7 @@ export const ProductManagement = ({ className }) => {
             fetched: false
         },
     });
+    console.log(products)
     let [filterProducts, setFiletrProducts] = useState(options.active.value);
     let [isLoaded, setIsLoaded] = useState(false);
     let [alert, setAlert] = useState(false);
