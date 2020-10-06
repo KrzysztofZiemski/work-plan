@@ -28,7 +28,6 @@ export const ProductionReportDetailsPage = ({ match, className }) => {
     //TODO - czyści formularz po update, a musi aktualizować poprawnymi wartościami
     const isMounted = useRef()
     const { params } = match;
-    console.log('productiornreportpagedetail')
     const [messages, setMessages] = useState([])
     const [openMessage, setOpenMessage] = useState(false);
     const [isSubmiting, setIsSubmiting] = useState(false);
@@ -95,7 +94,6 @@ export const ProductionReportDetailsPage = ({ match, className }) => {
         data.speedMachinePerCycle = data.speedMachinePerMinute;
         data.productionTimeToHour = data.productionHours + data.productionMinutes / 60
         delete data.speedMachinePerMinute;
-        console.log('data', data)
         // powinno   jeszcze iść
         // "percentagePerformance": 0,
         //     "performancePerHour": 0,

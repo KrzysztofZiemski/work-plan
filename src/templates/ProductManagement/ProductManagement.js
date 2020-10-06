@@ -86,7 +86,7 @@ export const ProductManagement = ({ className }) => {
             fetched: false
         },
     });
-    console.log(products)
+
     let [filterProducts, setFiletrProducts] = useState(options.active.value);
     let [isLoaded, setIsLoaded] = useState(false);
     let [alert, setAlert] = useState(false);

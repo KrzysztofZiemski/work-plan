@@ -177,7 +177,6 @@ export const ChangeReportForm = ({ setMessage, isSubmiting, initValue, onSubmit 
         data.secondWorkplaceIdEmployee = data.secondWorkplaceIdEmployee.id;
         data.thirdWorkplaceIdEmployee = data.thirdWorkplaceIdEmployee.id;
 
-        console.log(data)
         const isSubmited = await onSubmit(data);
         if (isSubmited) setFormData(blankForm);
     }

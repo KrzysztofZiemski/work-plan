@@ -42,7 +42,6 @@ const create = ({ start, end, id, type, options = {} }) => {
         type,
         options: { ...defaultOptions, ...options }
     }
-    console.log('tak idzie', data)
     return axios.post(`${SERVER_STATISTICS}`, JSON.stringify(data))
         .then(res => res.data)
         .catch(err => Promise.reject(err.response.status));

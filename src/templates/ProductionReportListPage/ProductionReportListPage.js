@@ -21,7 +21,7 @@ export const ProductionReportListPage = ({ className, match, location }) => {
     let [reportList, setReportsList] = useState(false);
     let [isFetching, setIsFetching] = useState(false);
     const [objectName, setObjectName] = useState('');
-    console.log('objectName', objectName)
+
     const getNameObject = (type, id) => {
         switch (type) {
             case statisticsTypes.EMPLOYEE:
