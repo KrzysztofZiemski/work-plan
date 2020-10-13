@@ -134,7 +134,7 @@ const GraphicPage = (props) => {
     };
 
     const handleGetWorkplan = (start, end) => {
-        console.log('aaaaaaaaaaa', start, end)
+        setIsSubmiting(true);
         createOrGetWorkPlan(start, end, loggedUser.id)
             .then(wrokPlanResponse => {
                 setWorkPlan(wrokPlanResponse);

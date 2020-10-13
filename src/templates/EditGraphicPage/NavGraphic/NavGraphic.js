@@ -37,7 +37,7 @@ const NavGraphic = ({ className, dateEnd, dateStart, setDate, isSubmiting, submi
         <>
             <Grid container justify="center" className={classes.root}>
                 <Card>
-                    <DateSelectWeek isSubmiting={isSubmiting} submit={handleGetDates} />
+                    <DateSelectWeek isSubmitting={isSubmiting} submit={handleGetDates} />
                 </Card>
             </Grid>
 

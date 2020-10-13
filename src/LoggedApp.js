@@ -36,8 +36,8 @@ const useStyles = makeStyles((theme) => ({
         flexWrap: 'nowrap'
     },
     pages: {
-        padding: 20
-    }
+        height: '100%',
+    },
 }));
 
 const LoggedApp = ({ loggedUser, setLoggedUser }) => {
@@ -54,7 +54,7 @@ const LoggedApp = ({ loggedUser, setLoggedUser }) => {
                 <Suspense fallback={<Loader open={true} size={200} backdor={false} />}>
                     <Switch>
                         <Route path={routes.root} exact={true}>
-                            <DashboardPage className='page' />
+                            <DashboardPage className={classes.pages} />
                         </Route>
                         <Route path={routes.login} exact={true}>
                             <LoginPage className='page' />
