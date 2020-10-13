@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, createContext, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -15,9 +15,9 @@ import DialogMessage from '../../components/DialogMessage';
 import { updateWorkPlane, createOrGetWorkPlan } from '../../services/workPlanApi';
 import { workPlaceNames, initFreeEmployee, getWorkplanToSend } from './handlers';
 import useActiveEmployees from '../../hooks/useActiveEmployees';
-import { useDateWeek } from '../../hooks/useDateWeek';
 import { TextField } from '@material-ui/core';
 import HeaderPage from '../../components/HeaderPage';
+import ButtonLoader from '../../components/ButtonLoader';
 
 export const WorkPlanContext = createContext({
     setWorkplaceEmployee: null,
@@ -118,26 +118,9 @@ const GraphicPage = (props) => {
     let [workPlan, setWorkPlan] = useState(false);
     let [isSubmiting, setIsSubmiting] = useState(false);
     let [errorMessage, setErrorMessage] = useState({ message: [], isOpen: false });
-    const [date, setDate] = useDateWeek();
+    // const [date, setDate] = useDateWeek();
 
     const classes = useStyles();
-
-    useEffect(() => {
-        if (!loggedUser) return;
-        setIsSubmiting(true)
-        createOrGetWorkPlan(date.start, date.end, loggedUser.id)
-            .then(wrokPlanResponse => {
-                setWorkPlan(wrokPlanResponse);
-                setIsSubmiting(false);
-                if (employees.fetched) initFreeEmployee(employees.list, wrokPlanResponse, setFreeEmployees)
-            })
-            .catch(err => {
-                setErrorMessage({ message: [`Nie udało się pobrać planu pracy ${err}`], isOpen: true });
-                setIsSubmiting(false);
-                if (workPlan) setWorkPlan(null)
-            })
-
-    }, [date, loggedUser, employees.fetched, employees.list]);
 
     const closeMessage = () => setErrorMessage({ message: '', isOpen: false });
 
@@ -149,6 +132,21 @@ const GraphicPage = (props) => {
             [name]: value
         }));
     };
+
+    const handleGetWorkplan = (start, end) => {
+        console.log('aaaaaaaaaaa', start, end)
+        createOrGetWorkPlan(start, end, loggedUser.id)
+            .then(wrokPlanResponse => {
+                setWorkPlan(wrokPlanResponse);
+                setIsSubmiting(false);
+                if (employees.fetched) initFreeEmployee(employees.list, wrokPlanResponse, setFreeEmployees)
+            })
+            .catch(err => {
+                setErrorMessage({ message: [`Nie udało się pobrać planu pracy ${err}`], isOpen: true });
+                setIsSubmiting(false);
+                if (workPlan) setWorkPlan(null)
+            })
+    }
     const handleChangeDescriptionShift = (value, shiftIndex) => {
         setWorkPlan(prev => {
             const copyWorkPlan = Object.assign({}, prev);
@@ -225,9 +223,10 @@ const GraphicPage = (props) => {
         const preparationWorkPlan = getWorkplanToSend(workPlan);
         if (!preparationWorkPlan) return
         setIsSubmiting(true);
+
         updateWorkPlane(1, preparationWorkPlan)
             .then(res => {
-                if(res.status===401) return Promise.reject(res.status);
+                if (res.status === 401) return Promise.reject(res.status);
                 setIsSubmiting(false)
             })
             .catch(err => {
@@ -235,15 +234,15 @@ const GraphicPage = (props) => {
                 alert(`nie udało się zapisać planu - ${err}`);
             })
     }
-
+    console.log('workplan', workPlan)
     return (
         <section className={props.className}>
-            <HeaderPage title='Edycja Planu Pracy' />
+            <HeaderPage title={workPlan ? `Edycja Planu Pracy (${workPlan.startDay} - ${workPlan.startDay})` : 'Edycja Planu Pracy'} />
             <DialogMessage open={errorMessage.isOpen} close={closeMessage} messages={errorMessage.message} />
 
             <section className={`${props.className} graphicPage`}>
                 <WorkPlanContext.Provider value={{ setWorkplaceEmployee, removeEmployee, workPlan, submitWorkPlan }}>
-                    <NavGraphic className='GraphicNav' dateStart={date.start} dateEnd={date.end} setDate={setDate} isSubmiting={isSubmiting}></NavGraphic>
+                    <NavGraphic className='GraphicNav' submit={handleGetWorkplan} isSubmiting={isSubmiting}></NavGraphic>
                     {workPlan &&
                         <DndProvider backend={Backend}>
                             <Grid container className={classes.root} >
@@ -257,6 +256,7 @@ const GraphicPage = (props) => {
                                         ))}
 
                                     </WorkPlace>
+                                    <Grid><ButtonLoader value='ZAPISZ' onClick={submitWorkPlan} isSubmitting={isSubmiting} /></Grid>
                                 </Grid>
                                 <Grid item className={classes.shiftsContainer} >
                                     {workPlan.workShifts.map((shift, indexShift) => (

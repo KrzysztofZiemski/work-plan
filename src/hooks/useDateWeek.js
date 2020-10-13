@@ -4,7 +4,7 @@ import { getStartEndWeek, getWeekNumber } from '../helpers/dateHelper';
 
 
 export const useDateWeek = () => {
-
+    //ogranicznie końca początku roku
     let [date, setDate] = useState(() => {
         const [start, end] = getStartEndWeek(new Date());
         const numberWeek = getWeekNumber(new Date());

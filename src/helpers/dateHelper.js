@@ -83,11 +83,11 @@ export const getDateFromWeekNumber = (weekNumber, year) => {
     const start = new Date(startYear.getTime() + (weekNumber - 1) * 86400000 * 7 - startYear.getDay() * 86400000);
     const end = additionDays(6, start);
     return [start, end];
-}
+};
 
 export const getWeekNumber = (date) => {
     const startYear = new Date(date.getFullYear(), 0, 1);
-    return Math.ceil((((date - startYear) / 86400000) + startYear.getDay()) / 7)
+    return Math.ceil((((date - startYear) / 86400000) + startYear.getDay() + 1) / 7);
 };
 
 export const getQuarterNumber = (date) => Math.ceil((date.getMonth() + 1) / 3);
@@ -110,17 +110,18 @@ export const getWeekFromPeriod = (period, year = new Date().getFullYear()) => {
     }
     const start = additionDays((period - 1) * 7, subtractionDate(startFirstWeek.getDay(), startFirstWeek))
     let end = additionDays((period - 1) * 7, endFirstWeek);
-    if (end.getFullYear() > year) end = new Date(year, 11, 31)
+    if (end.getFullYear() > year) end = new Date(year, 11, 31);
     return {
         start,
         end
     }
-}
+};
 
 const setStartDay = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
 
 export const getStartEndWeek = (date) => {
-    const day = new Date(date).getDay();
+    const actuallyDate = new Date(date)
+    const day = actuallyDate.getDay();
     let start;
     let end;
 
@@ -134,5 +135,8 @@ export const getStartEndWeek = (date) => {
         start = subtractionDate(day, date);
         end = additionDays(6 - day, date);
     }
+    if (start.getFullYear() < actuallyDate.getFullYear()) start = new Date(actuallyDate.getFullYear(), 0, 1);
+    if (end.getFullYear() > actuallyDate.getFullYear()) end = new Date(actuallyDate.getFullYear(), 11, 31);
+
     return [setStartDay(start), setStartDay(end)];
-}
+};

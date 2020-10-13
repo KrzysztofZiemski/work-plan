@@ -18,13 +18,11 @@ import { rankingTypes } from '../../utils/conts';
 import ButtonLoader from '../ButtonLoader/ButtonLoader';
 
 const useStyles = makeStyles(({
-    // root: {
-    //     display: 'fex',
-    //     flexWrap: 'nowrap',
-    //     justifyContent: 'center',
-    //     overflow: 'hidden',
-    //     margin: 3
-    // },
+
+    container: {
+        display: 'flex',
+        justifyContent: 'center',
+    },
     arrows: {
         fontSize: 60,
         alignSelf: 'center',
@@ -63,7 +61,7 @@ const useStyles = makeStyles(({
 }))
 
 
-export const DateSelectWeek = ({ className, name = '', submit, isSubmitting }) => {
+export const DateSelectWeek = ({ name = '', submit, isSubmitting, ...props }) => {
     const classes = useStyles()
     let [dates, setDates] = useDateWeek();
 
@@ -94,15 +92,12 @@ export const DateSelectWeek = ({ className, name = '', submit, isSubmitting }) =
     }
     const handleSubmit = async () => submit && submit(dates);
 
-
-
-
     return (
-        <Grid className={className || ''}>
+        <Grid {...props}>
             <Grid className={classes.root}>
                 <legend>{name}</legend>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <Grid container >
+                    <Grid className={classes.container} >
                         <NavigateBeforeIcon className={classes.arrows} onClick={handlePreviousWeek} />
                         <Grid className={classes.dateContainer}>
                             <KeyboardDatePicker
