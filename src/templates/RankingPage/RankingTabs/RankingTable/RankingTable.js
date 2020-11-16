@@ -138,9 +138,9 @@ const options = {
 
     }
 };
-const renderDataRanking = (arrRanking) => arrRanking.map(({ averagePerHour, percentage, totalProduced, employee }, index) => (
-    [index + 1, employee, `${percentage}%`, averagePerHour, totalProduced]
-));
+const renderDataRanking = (arrRanking) => arrRanking.map(({ averagePerHour, percentage, totalProduced, employee }, index) => {
+    return ([index + 1, employee, `${percentage}%`, averagePerHour, totalProduced])
+});
 
 
 const RankingTable = ({ ranking, name, className }) => {

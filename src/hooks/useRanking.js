@@ -1,20 +1,16 @@
-import { useState, useEffect, useRef } from 'react';
+import { useContext } from 'react';
 import * as rankingApi from '../services/rankingApi';
 import { rankingTypes } from '../utils/conts';
-
+import { RankingContext } from '../Contexts';
+//RankingContext
 const useRanking = () => {
-    const ref = useRef()
+    const { yearRanking, halfYearRanking, quarterRanking, monthRanking, weekRanking, setYearRanking, setHalfYearRanking, setQuarterYearRanking, setMonthRanking, setWeekRanking } = useContext(RankingContext);
 
-    const [yearRanking, setYearRanking] = useState();
-    const [halfYearRanking, setHalfYearRanking] = useState();
-    const [quarterRanking, setQuarterYearRanking] = useState();
-    const [monthRanking, setMonthRanking] = useState();
-    const [weekRanking, setWeekRanking] = useState();
-
-    useEffect(() => {
-        ref.current = true;
-        return () => ref.current = false;
-    }, []);
+    // const [yearRanking, setYearRanking] = useState();
+    // const [halfYearRanking, setHalfYearRanking] = useState();
+    // const [quarterRanking, setQuarterYearRanking] = useState();
+    // const [monthRanking, setMonthRanking] = useState();
+    // const [weekRanking, setWeekRanking] = useState();
 
     const setRankingByTypes = (ranking, type) => {
         switch (type) {
@@ -33,6 +29,7 @@ const useRanking = () => {
         }
     }
     const getReport = (date, type) => {
+
         switch (type) {
             case rankingTypes.YEAR:
                 return rankingApi.createYear(date);
@@ -51,10 +48,10 @@ const useRanking = () => {
 
     const handleGetRanking = (date, type) => {
         return getReport(date, type).then(ranking => {
-            if (ref.current) {
-                setRankingByTypes(ranking, type);
-                return Promise.resolve();
-            }
+            console.log(ranking)
+            setRankingByTypes(ranking, type);
+            return Promise.resolve();
+
         })
     };
     return [{

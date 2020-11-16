@@ -28,6 +28,19 @@ export const ProductsContext = createContext({
     productsList: [],
     setProductsList: '',
 });
+export const RankingContext = createContext({
+    yearRanking: null,
+    setYearRanking: null,
+    halfYearRanking: null,
+    setHalfYearRanking: null,
+    quarterRanking: null,
+    setQuarterYearRanking: null,
+    monthRanking: null,
+    setMonthRanking: null,
+    weekRanking: null,
+    setWeekRanking: null,
+});
+
 
 const Contexts = ({ children }) => {
     let [activeLeftMenu, setActiveLeftMenu] = useState(false);
@@ -39,6 +52,12 @@ const Contexts = ({ children }) => {
     let [linesList, setLinesList] = useState([]);
     let [productsList, setProductsList] = useState([]);
 
+    const [yearRanking, setYearRanking] = useState();
+    const [halfYearRanking, setHalfYearRanking] = useState();
+    const [quarterRanking, setQuarterYearRanking] = useState();
+    const [monthRanking, setMonthRanking] = useState();
+    const [weekRanking, setWeekRanking] = useState();
+
     return (
         <UserContext.Provider value={{ loggedUser, setLoggedUser, activeLeftMenu, setActiveLeftMenu }}>
             <RoleContext.Provider value={{ roleList, setRoleList }}>
@@ -46,7 +65,9 @@ const Contexts = ({ children }) => {
                     <LinesContext.Provider value={{ linesList, setLinesList }}>
                         <UsersContext.Provider value={{ usersList, setUsersList }}>
                             <ProductsContext.Provider value={{ productsList, setProductsList }}>
-                                {children}
+                                <RankingContext.Provider value={{ yearRanking, halfYearRanking, quarterRanking, monthRanking, weekRanking, setYearRanking, setHalfYearRanking, setQuarterYearRanking, setMonthRanking, setWeekRanking }}>
+                                    {children}
+                                </RankingContext.Provider>
                             </ProductsContext.Provider>
                         </UsersContext.Provider>
                     </LinesContext.Provider>
