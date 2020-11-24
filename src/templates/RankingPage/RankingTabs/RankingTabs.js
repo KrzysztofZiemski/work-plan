@@ -37,7 +37,7 @@ export const RankingTabs = ({ ranking, title }) => {
 
     return (
         <Grid className={classes.root}>
-            <h1 className={classes.title}>{title.toUpperCase()}</h1>
+            {title ? <h1 className={classes.title}>{title.toUpperCase()}</h1> : null}
             <TabBars className={classes.rankingTables} headers={headersTab} components={components} />
         </Grid>
     );

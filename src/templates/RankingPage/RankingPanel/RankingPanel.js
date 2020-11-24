@@ -1,88 +1,125 @@
-import React, { useState } from 'react';
-import { Grid, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import React from 'react';
+import 'date-fns';
+import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import {
+    MuiPickersUtilsProvider,
+    KeyboardDatePicker,
+} from '@material-ui/pickers';
+import { IconButton } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
-import { rankingTypes } from './../../../utils/conts';
-import ButtonLoader from '../../../components/ButtonLoader/ButtonLoader';
+import { subtractionDate, additionDays, getDateToShow, getWeekFromPeriod } from '../../../helpers/dateHelper';
+import { useDateWeek } from '../../../hooks/useDateWeek';
+import PeriodList from './PeriodList';
+import { rankingTypes } from '../../../utils/conts';
+import ButtonLoader from '../../../components/ButtonLoader';
 
+const useStyles = makeStyles(({
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+    container: {
         display: 'flex',
         justifyContent: 'center',
-        alignContent: 'center'
     },
-    formControl: {
-        width: 160
-    },
-    datePicker: {
-        display: 'flex',
-        alignItems: 'center'
-    },
-    dateLabel: {
-        marginRight: 20,
-        alignSelf: 'flex-end',
-        paddingBottom: 10
-    },
-    button: {
+    arrows: {
+        fontSize: 60,
         alignSelf: 'center',
-        marginLeft: 5
+        backgroundColor: 'inherit',
+        '&:hover': {
+            color: '#303F9F',
+            cursor: 'pointer',
+            backgroundColor: '#eee'
+        }
     },
-}));
-
-export const RankingPanel = ({ isSubmiting, submit }) => {
-
-    const classes = useStyles();
-    const [date, setDate] = useState(new Date());
-    const [type, setType] = useState(rankingTypes.YEAR);
-    const handleChangeType = (event) => {
-        setType(event.target.value);
-    };
-
-    const handleGetRanking = () => {
-        submit(date, type);
+    dayClassName: {
+        width: 36,
+        height: 36,
+        margin: "0 2px",
+        color: "inherit",
+        fontSize: 14
+    },
+    selected: {
+        backgroundColor: '#457b9d'
+    },
+    selectedStart: {
+        backgroundColor: '#457b9d',
+        borderTopLeftRadius: '25px',
+        borderBottomLeftRadius: '25px',
+    },
+    selectedEnd: {
+        backgroundColor: '#457b9d',
+        borderTopRightRadius: '25px',
+        borderBottomRightRadius: '25px',
+    },
+    dateContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        margin: 3
     }
-    return (
-        <Grid container className={classes.root}>
-            <Grid className={classes.datePicker}>
-                <Grid component='p' className={classes.dateLabel}>
-                    Na dzień:
-                </Grid>
-                <Grid>
+}))
 
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardDatePicker
-                            autoOk={true}
-                            variant="inline"
-                            format="dd/MM/yyyy"
-                            margin="normal"
-                            value={date}
-                            onChange={setDate}
-                            KeyboardButtonProps={{
-                                'aria-label': 'change date',
-                            }}
-                        />
-                    </MuiPickersUtilsProvider>
-                </Grid>
+
+export const RankingPanel = ({ name = '', submit, isSubmitting, ...props }) => {
+    const classes = useStyles()
+    let [dates, setDates] = useDateWeek();
+
+    const handleDateChange = (date) => setDates(date);
+
+    const handleDateChangeByPeriod = (periodNumber) => setDates(getWeekFromPeriod(periodNumber).start)
+
+    const handleNextWeek = () => setDates(additionDays(7, dates.start));
+
+    const handlePreviousWeek = () => setDates(subtractionDate(7, dates.start));
+
+    const renderLabelDate = () => `${getDateToShow(dates.start)} - ${getDateToShow(dates.end)}`
+
+    const renderWrappedWeekDay = (renderingDate, selectedDate, dayInCurrentMonth) => {
+        const getClass = () => {
+            let name;
+            if (renderingDate.getTime() === dates.start.getTime()) name = 'selectedStart'
+            if (renderingDate.getTime() === dates.end.getTime()) name = 'selectedEnd'
+            if (renderingDate > dates.start && renderingDate < dates.end) name = 'selected'
+            return classes[name];
+        }
+
+        return <div className={getClass()}>
+            <IconButton className={classes.dayClassName}>
+                <span> {renderingDate.getDate()} </span>
+            </IconButton>
+        </div>
+    }
+    const handleSubmit = async () => submit && submit(dates);
+
+    return (
+        <Grid {...props}>
+            <Grid className={classes.root}>
+                <legend>{name}</legend>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Grid className={classes.container} >
+                        <NavigateBeforeIcon className={classes.arrows} onClick={handlePreviousWeek} />
+                        <Grid className={classes.dateContainer}>
+                            <KeyboardDatePicker
+                                autoOk={true}
+                                variant="inline"
+                                format="dd/MM/yyyy"
+                                margin="normal"
+                                value={dates.start}
+                                labelFunc={renderLabelDate}
+                                onChange={handleDateChange}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date',
+                                }}
+                                renderDay={renderWrappedWeekDay}
+                            />
+                            <PeriodList onChange={handleDateChangeByPeriod} periodType={rankingTypes.WEEK} numberWeek={dates.numberWeek} />
+                        </Grid>
+                        <NavigateNextIcon className={classes.arrows} onClick={handleNextWeek} />
+                    </Grid>
+                    <ButtonLoader isSubmitting={isSubmitting} onClick={handleSubmit} value={'pobierz'} />
+                </MuiPickersUtilsProvider>
             </Grid>
-            <FormControl className={classes.formControl}>
-                <InputLabel>Typ rankingu</InputLabel>
-                <Select
-                    labelId="label-type-ranking"
-                    id="label-type-ranking"
-                    value={type}
-                    onChange={handleChangeType}
-                >
-                    <MenuItem value={rankingTypes.YEAR}>Roczny</MenuItem>
-                    <MenuItem value={rankingTypes.HALF_YEAR}>Półroczny</MenuItem>
-                    <MenuItem value={rankingTypes.QUARTER}>Kwartalny</MenuItem>
-                    <MenuItem value={rankingTypes.MONTH}>Miesięczny</MenuItem>
-                    <MenuItem value={rankingTypes.WEEK}>Tygodniowy</MenuItem>
-                </Select>
-            </FormControl>
-            <ButtonLoader value='Pobierz' isSubmitting={isSubmiting} onClick={handleGetRanking} className={classes.button} fullWidth={false} value='Pobierz' />
         </Grid>
     );
 };

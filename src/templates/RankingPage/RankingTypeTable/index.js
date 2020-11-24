@@ -1,1 +1,0 @@
-export { RankingTypeTable as default } from './RankingTypeTable';

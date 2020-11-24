@@ -1,17 +1,13 @@
-import React, { useState } from 'react';
-// import { Card, Grid, Typography } from '@material-ui/core';
+import React from 'react';
 import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-// import useRanking, { rankingTypes } from '../../hooks/useRanking';
-// import RankingTabs from './RankingTabs';
-// import DateSelectWeek from '../../components/DateSelectWeek';
-// import RankingPanel from './RankingPanel';
-// import DialogMessage from '../../components/DialogMessage';
+
 import HeaderPage from '../../components/HeaderPage';
-// import { getWeekFromPeriod, getDateToShow } from './../../helpers/dateHelper';
-import RankingTypeTable from './RankingTypeTable';
-import useRanking, { rankingTypes } from '../../hooks/useRanking';
+
+import RankingWeek from './RankingWeek';
+import RankingMonth from './RankingMonth';
+import useRanking from '../../hooks/useRanking';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,9 +35,14 @@ export const RankingPage = () => {
             <HeaderPage title='Ranking'></HeaderPage>
             <Grid container className={classes.tables}>
                 <Grid className={classes.table}>
-                    <RankingTypeTable
-                        title='RANKING TYGODNIOWY'
+                    <RankingWeek
                         ranking={ranking.week}
+                        get={getRanking}
+                    />
+                </Grid>
+                <Grid className={classes.table}>
+                    <RankingMonth
+                        ranking={ranking.month}
                         get={getRanking}
                     />
                 </Grid>

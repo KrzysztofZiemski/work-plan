@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const RankingTypeTable = ({ title, submit, ranking, get }) => {
+export const RankingWeek = ({ submit, ranking, get }) => {
     const [isSubmiting, setIsSubmiting] = useState(false);
     const [error, setError] = useState(false);
 
@@ -69,7 +69,7 @@ export const RankingTypeTable = ({ title, submit, ranking, get }) => {
                     <DateSelectWeek isSubmiting={isSubmiting} submit={handleGetRankingWeek} />
                 </Card>
                 <RankingTabs ranking={ranking}
-                    title={title}
+
                 />
             </Grid>
             <DialogMessage open={error} close={closeErrorMessage} messages={['Wystąpił błąd podczas pobierania rankingu']} />
