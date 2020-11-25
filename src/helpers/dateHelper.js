@@ -49,3 +49,11 @@ export const getWeekFromPeriod = (period, year = new Date().getFullYear()) => {
         end
     }
 }
+
+export const convertDateToPresent = (date) => {
+    const objDate = new Date(date);
+    const year = objDate.getFullYear();
+    const month = objDate.getMonth() + 1 < 10 ? `0${objDate.getMonth() + 1}` : objDate.getMonth() + 1;
+    const day = objDate.getDate() < 10 ? `0${objDate.getDate()}` : objDate.getDate();
+    return `${day}-${month}-${year}`;
+}

@@ -1,0 +1,1 @@
+export { MiniTableReports as default } from './MiniTableReports'
